@@ -1,0 +1,22 @@
+{
+  "typedSentences": 7,
+  "intactInLiveDoc": 7,
+  "missing": [],
+  "partial": [],
+  "notInFileAfterFlush": [],
+  "threads": [
+    {
+      "id": "t99nzhn",
+      "status": "resolved",
+      "orphaned": false,
+      "quote": "on site",
+      "messages": 2
+    }
+  ],
+  "health": {
+    "externalMerges": 0,
+    "storesDeferredForExternalEdit": 0,
+    "stores": 18,
+    "echoesIgnored": 17
+  }
+}

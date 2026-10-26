@@ -1,0 +1,58 @@
+:root {
+  --bg: #f4f4f2;
+  --page: #fff;
+  --ink: #1d1d1d;
+  --line: #d9d9d4;
+  --accent: #4a78c2;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 15px/1.5 system-ui, sans-serif; }
+
+.toolbar {
+  position: sticky; top: 0; z-index: 10;
+  display: flex; flex-wrap: wrap; align-items: center; gap: 4px;
+  padding: 8px 16px; background: #fff; border-bottom: 1px solid var(--line);
+}
+.toolbar button {
+  min-width: 30px; height: 30px; padding: 0 8px; border: 1px solid transparent; border-radius: 6px;
+  background: transparent; font: inherit; cursor: pointer;
+}
+.toolbar button:hover { background: #eee; }
+.toolbar button.active { background: #e3ebf8; border-color: var(--accent); }
+.toolbar .sep { width: 1px; height: 20px; background: var(--line); margin: 0 4px; }
+.toolbar .spacer { flex: 1; }
+.toolbar .status { color: #666; font-size: 13px; margin-right: 8px; }
+.toolbar .status.dirty { color: #b26b00; }
+.toolbar .save { background: var(--accent); color: #fff; }
+.toolbar .save:hover { background: #3a64a8; }
+.docpath { max-width: 880px; margin: 12px auto 0; padding: 0 16px; color: #888; font-size: 12px; font-family: ui-monospace, monospace; }
+
+.page { max-width: 880px; margin: 8px auto 48px; padding: 0 16px; }
+.page .tiptap {
+  background: var(--page); min-height: 70vh; padding: 32px 48px; border: 1px solid var(--line); border-radius: 8px;
+  outline: none; font: 16px/1.55 Georgia, serif;
+}
+.tiptap h1, .tiptap h2, .tiptap h3 { font-family: system-ui, sans-serif; line-height: 1.25; }
+.tiptap code { background: #f0f0ee; padding: 1px 4px; border-radius: 4px; font-size: 0.9em; }
+.tiptap pre { background: #f3f3f3; padding: 10px 12px; border-radius: 6px; overflow: auto; }
+.tiptap pre code { background: none; padding: 0; }
+.tiptap blockquote { border-left: 3px solid var(--line); margin-left: 0; padding-left: 14px; color: #555; }
+.tiptap mark { background: #fff3a3; }
+.tiptap a { color: var(--accent); }
+.tiptap img { max-width: 100%; }
+.tiptap img.ProseMirror-selectednode { outline: 2px solid var(--accent); }
+.tiptap hr { border: none; border-top: 1px solid var(--line); margin: 24px 0; }
+.tiptap table { border-collapse: collapse; width: 100%; margin: 12px 0; table-layout: fixed; }
+.tiptap th, .tiptap td { border: 1px solid #ccc; padding: 6px 8px; vertical-align: top; position: relative; }
+.tiptap th { background: #f6f6f4; text-align: left; }
+.tiptap td p, .tiptap th p { margin: 0; }
+.tiptap .selectedCell::after { content: ''; position: absolute; inset: 0; background: rgba(74, 120, 194, 0.15); pointer-events: none; }
+.tiptap ul[data-type='taskList'] { list-style: none; padding-left: 4px; }
+.tiptap ul[data-type='taskList'] li { display: flex; gap: 8px; align-items: flex-start; }
+.tiptap ul[data-type='taskList'] li > label { margin-top: 3px; }
+.tiptap ul[data-type='taskList'] li > div { flex: 1; }
+.tiptap ul[data-type='taskList'] li > div > p { margin: 0; }
+.tiptap p.is-editor-empty:first-child::before {
+  content: attr(data-placeholder); color: #aaa; float: left; height: 0; pointer-events: none;
+}
+.tiptap li > p { margin: 2px 0; }

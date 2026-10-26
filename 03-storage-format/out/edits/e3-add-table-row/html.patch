@@ -1,0 +1,15 @@
+===================================================================
+--- a/spec.html
++++ b/spec.html
+@@ -147,6 +147,11 @@
+       <td><p>Stale base version</p></td>
+     </tr>
+     <tr>
++      <td><p><code>429</code></p></td>
++      <td><p>Rate limited</p></td>
++      <td><p>Retry after <code>Retry-After</code> seconds</p></td>
++    </tr>
++    <tr>
+       <td colspan="2" style="text-align: center">
+         <p><em>Any 5xx</em></p>
+       </td>

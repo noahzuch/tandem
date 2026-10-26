@@ -1,0 +1,63 @@
+===================================================================
+--- a/spec.json
++++ b/spec.json
+@@ -615,12 +615,28 @@
+                 "content": [
+                   {
+                     "type": "text",
+-                    "text": "Saves are appended to the outbox and replayed "
++                    "text": "Saves are appended to the "
+                   },
+                   {
+                     "type": "text",
+                     "marks": [
+                       {
++                        "type": "bold",
++                        "attrs": {
++                          "htmlAttrs": null
++                        }
++                      }
++                    ],
++                    "text": "durable"
++                  },
++                  {
++                    "type": "text",
++                    "text": " outbox and replayed "
++                  },
++                  {
++                    "type": "text",
++                    "marks": [
++                      {
+                         "type": "underline",
+                         "attrs": {
+                           "htmlAttrs": null
+@@ -631,7 +647,28 @@
+                   },
+                   {
+                     "type": "text",
+-                    "text": " on reconnect."
++                    "text": " on reconnect (see "
++                  },
++                  {
++                    "type": "text",
++                    "marks": [
++                      {
++                        "type": "link",
++                        "attrs": {
++                          "htmlAttrs": null,
++                          "href": "#api",
++                          "target": null,
++                          "rel": null,
++                          "class": null,
++                          "title": null
++                        }
++                      }
++                    ],
++                    "text": "API"
++                  },
++                  {
++                    "type": "text",
++                    "text": ")."
+                   }
+                 ]
+               }

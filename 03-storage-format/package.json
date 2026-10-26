@@ -1,0 +1,46 @@
+{
+  "name": "collab-spike-03-storage-format",
+  "private": true,
+  "type": "module",
+  "description": "Spike 03: what lives on disk? HTML vs ProseMirror JSON vs Yjs state vs hybrid",
+  "scripts": {
+    "start": "tsx scripts/start.ts",
+    "compare": "tsx scripts/compare.ts",
+    "check": "tsx scripts/check.ts",
+    "check-json": "tsx scripts/check-json.ts",
+    "yjs": "tsx scripts/yjs-experiment.ts",
+    "verify": "tsx verify/verify.ts",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@tiptap/core": "^3.32.0",
+    "@tiptap/extension-code": "^3.32.0",
+    "@tiptap/extension-code-block": "^3.32.0",
+    "@tiptap/extension-highlight": "^3.32.0",
+    "@tiptap/extension-image": "^3.32.0",
+    "@tiptap/extension-list": "^3.32.0",
+    "@tiptap/extension-subscript": "^3.32.0",
+    "@tiptap/extension-superscript": "^3.32.0",
+    "@tiptap/extension-table": "^3.32.0",
+    "@tiptap/extension-text-align": "^3.32.0",
+    "@tiptap/extension-text-style": "^3.32.0",
+    "@tiptap/extension-typography": "^3.32.0",
+    "@tiptap/extensions": "^3.32.0",
+    "@tiptap/pm": "^3.32.0",
+    "@tiptap/starter-kit": "^3.32.0",
+    "ajv": "^8.20.0",
+    "diff": "^9.0.0",
+    "js-tiktoken": "^1.0.21",
+    "jsdom": "^30.1.3",
+    "parse5": "^8.0.1",
+    "prettier": "^3.9.10",
+    "tsx": "^4.23.15",
+    "y-prosemirror": "^1.3.7",
+    "yjs": "^13.6.33"
+  },
+  "devDependencies": {
+    "@types/jsdom": "^30.0.0",
+    "@types/node": "^26.6.5",
+    "typescript": "^5.9.3"
+  }
+}

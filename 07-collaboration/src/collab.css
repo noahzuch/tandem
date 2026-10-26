@@ -1,0 +1,40 @@
+/* ---------------------------------------------------------------- spike 07: collaboration UI */
+
+/* presence (toolbar) */
+.presence { display: inline-flex; align-items: center; gap: 6px; margin-right: 10px; font: 12px var(--ui-font); }
+.presence .peer {
+  display: inline-flex; align-items: center; gap: 5px; padding: 2px 8px 2px 6px; border-radius: 999px;
+  background: color-mix(in srgb, var(--peer-color) 14%, #fff); color: #333; border: 1px solid color-mix(in srgb, var(--peer-color) 40%, #fff);
+}
+.presence .peer::before { content: ''; width: 8px; height: 8px; border-radius: 50%; background: var(--peer-color); }
+.presence .peer.me { opacity: 0.75; }
+.presence .peer.active::before { box-shadow: 0 0 0 3px color-mix(in srgb, var(--peer-color) 30%, transparent); animation: peer-pulse 1.2s ease-in-out infinite; }
+@keyframes peer-pulse { 50% { box-shadow: 0 0 0 5px color-mix(in srgb, var(--peer-color) 12%, transparent); } }
+.presence .agent-editing { color: var(--peer-color); font-weight: 600; }
+.presence[data-connection='disconnected'] .peer.me { text-decoration: line-through; }
+
+/* remote carets (CollaborationCaret default markup) */
+.tiptap .collaboration-carets__caret {
+  position: relative; margin-left: -1px; margin-right: -1px; border-left: 1px solid; border-right: 1px solid;
+  pointer-events: none; word-break: normal;
+}
+.tiptap .collaboration-carets__label {
+  position: absolute; top: -1.45em; left: -1px; padding: 1px 6px; border-radius: 4px 4px 4px 0;
+  font: 600 11px/1.4 var(--ui-font); color: #fff; white-space: nowrap; user-select: none; pointer-events: none;
+}
+/* remote selection: the default selectionRender sets inline background (user colour + alpha) */
+.tiptap .collaboration-carets__selection, .tiptap .ProseMirror-yjs-selection { border-radius: 2px; }
+
+/* blocks a remote peer just changed: flash in their colour, then fade */
+.tiptap .agent-changed { position: relative; animation: agent-fade 2.5s ease-out forwards; border-radius: 4px; }
+.tiptap .agent-changed::after {
+  content: attr(data-agent-name); position: absolute; right: -2px; top: -1.2em; padding: 0 6px; border-radius: 3px;
+  background: var(--agent-color, #7a4fc4); color: #fff; font: 600 10px/1.6 var(--ui-font); animation: agent-fade 2.5s ease-out forwards; pointer-events: none;
+}
+@keyframes agent-fade {
+  0% { background-color: color-mix(in srgb, var(--agent-color, #7a4fc4) 28%, transparent); box-shadow: 0 0 0 4px color-mix(in srgb, var(--agent-color, #7a4fc4) 28%, transparent); opacity: 1; }
+  60% { background-color: color-mix(in srgb, var(--agent-color, #7a4fc4) 14%, transparent); box-shadow: 0 0 0 4px color-mix(in srgb, var(--agent-color, #7a4fc4) 14%, transparent); }
+  100% { background-color: transparent; box-shadow: none; }
+}
+.tiptap .agent-changed::after { animation-name: agent-label-fade; }
+@keyframes agent-label-fade { 0%, 60% { opacity: 1; } 100% { opacity: 0; } }

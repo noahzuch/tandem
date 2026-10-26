@@ -1,0 +1,117 @@
+===================================================================
+--- a/spec.json
++++ b/spec.json
+@@ -1049,6 +1049,113 @@
+                 "type": "tableCell",
+                 "attrs": {
+                   "htmlAttrs": null,
++                  "colspan": 1,
++                  "rowspan": 1,
++                  "colwidth": null,
++                  "align": null
++                },
++                "content": [
++                  {
++                    "type": "paragraph",
++                    "attrs": {
++                      "textAlign": null,
++                      "htmlAttrs": null
++                    },
++                    "content": [
++                      {
++                        "type": "text",
++                        "marks": [
++                          {
++                            "type": "code",
++                            "attrs": {
++                              "htmlAttrs": null
++                            }
++                          }
++                        ],
++                        "text": "429"
++                      }
++                    ]
++                  }
++                ]
++              },
++              {
++                "type": "tableCell",
++                "attrs": {
++                  "htmlAttrs": null,
++                  "colspan": 1,
++                  "rowspan": 1,
++                  "colwidth": null,
++                  "align": null
++                },
++                "content": [
++                  {
++                    "type": "paragraph",
++                    "attrs": {
++                      "textAlign": null,
++                      "htmlAttrs": null
++                    },
++                    "content": [
++                      {
++                        "type": "text",
++                        "text": "Rate limited"
++                      }
++                    ]
++                  }
++                ]
++              },
++              {
++                "type": "tableCell",
++                "attrs": {
++                  "htmlAttrs": null,
++                  "colspan": 1,
++                  "rowspan": 1,
++                  "colwidth": null,
++                  "align": null
++                },
++                "content": [
++                  {
++                    "type": "paragraph",
++                    "attrs": {
++                      "textAlign": null,
++                      "htmlAttrs": null
++                    },
++                    "content": [
++                      {
++                        "type": "text",
++                        "text": "Retry after "
++                      },
++                      {
++                        "type": "text",
++                        "marks": [
++                          {
++                            "type": "code",
++                            "attrs": {
++                              "htmlAttrs": null
++                            }
++                          }
++                        ],
++                        "text": "Retry-After"
++                      },
++                      {
++                        "type": "text",
++                        "text": " seconds"
++                      }
++                    ]
++                  }
++                ]
++              }
++            ]
++          },
++          {
++            "type": "tableRow",
++            "attrs": {
++              "htmlAttrs": null
++            },
++            "content": [
++              {
++                "type": "tableCell",
++                "attrs": {
++                  "htmlAttrs": null,
+                   "colspan": 2,
+                   "rowspan": 1,
+                   "colwidth": null,

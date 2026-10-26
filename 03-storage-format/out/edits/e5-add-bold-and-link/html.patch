@@ -1,0 +1,15 @@
+===================================================================
+--- a/spec.html
++++ b/spec.html
+@@ -96,7 +96,10 @@
+   </div>
+   <div>
+     <h3>Offline</h3>
+-    <p>Saves are appended to the outbox and replayed <u>in order</u> on reconnect.</p>
++    <p>
++      Saves are appended to the <strong>durable</strong> outbox and replayed <u>in order</u> on
++      reconnect (see <a href="#api">API</a>).
++    </p>
+   </div>
+ </div>
+ <h2 id="api">3. API</h2>

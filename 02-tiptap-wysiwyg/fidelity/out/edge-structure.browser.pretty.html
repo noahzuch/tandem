@@ -1,0 +1,111 @@
+<h1>Structure edge cases</h1>
+<h4>Heading 4</h4>
+<h5>Heading 5</h5>
+<h6>Heading 6</h6>
+<p></p>
+<p>Paragraph after an empty one.</p>
+<p>Loose text directly in body.</p>
+<p>Text directly in a div, no paragraph.</p>
+<h2>Section element</h2>
+<p>Inside a section.</p>
+<p>Inside an article.</p>
+<ul>
+  <li>
+    <p>List item with paragraph</p>
+    <p>and a second paragraph</p>
+  </li>
+  <li>
+    <p>Item with nested ordered list</p>
+    <ol start="3">
+      <li><p>starts at three</p></li>
+      <li><p>four</p></li>
+    </ol>
+  </li>
+  <li>
+    <p>Item with code block</p>
+    <pre><code>inside list</code></pre>
+  </li>
+</ul>
+<ol>
+  <li><p>reversed list</p></li>
+</ol>
+<ul data-type="taskList">
+  <li data-checked="true" data-type="taskItem">
+    <label><input type="checkbox" checked="checked" /><span></span></label>
+    <div>
+      <p>done task</p>
+      <ul data-type="taskList">
+        <li data-checked="false" data-type="taskItem">
+          <label><input type="checkbox" /><span></span></label>
+          <div><p>nested task</p></div>
+        </li>
+      </ul>
+    </div>
+  </li>
+</ul>
+<ul>
+  <li><p>GitHub-style checkbox item</p></li>
+</ul>
+<p>Term</p>
+<p>Definition</p>
+<table style="min-width: 50px">
+  <colgroup>
+    <col style="min-width: 25px" />
+    <col style="min-width: 25px" />
+  </colgroup>
+  <tbody>
+    <tr>
+      <td><p></p></td>
+      <td><p>Table with caption, colgroup and tfoot</p></td>
+    </tr>
+    <tr>
+      <th><p>A</p></th>
+      <th><p>B</p></th>
+    </tr>
+    <tr>
+      <td>
+        <p>cell para 1</p>
+        <p>cell para 2</p>
+      </td>
+      <td>
+        <ul>
+          <li><p>list in cell</p></li>
+        </ul>
+      </td>
+    </tr>
+    <tr>
+      <th><p>row header</p></th>
+      <td><p>styled cell</p></td>
+    </tr>
+    <tr>
+      <td colspan="2"><p>footer</p></td>
+    </tr>
+  </tbody>
+</table>
+<table style="min-width: 50px">
+  <colgroup>
+    <col style="min-width: 25px" />
+    <col style="min-width: 25px" />
+  </colgroup>
+  <tbody>
+    <tr>
+      <td><p>table without thead/tbody</p></td>
+      <td><p>x</p></td>
+    </tr>
+  </tbody>
+</table>
+<pre><code>pre without code
+    indented line</code></pre>
+<pre><code>// lang- prefix instead of language-
+const x = 1;</code></pre>
+<pre><code>print("data-language attr")</code></pre>
+<blockquote><p>Blockquote without paragraph</p></blockquote>
+<img src="https://example.com/a.png" alt="figure img" />
+<p>Caption text</p>
+<p>Closed details</p>
+<ul>
+  <li><p>list in details</p></li>
+</ul>
+<p>Name Go</p>
+<hr />
+<p>Last paragraph.</p>

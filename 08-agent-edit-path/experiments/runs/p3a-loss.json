@@ -1,0 +1,29 @@
+{
+  "typedSentences": 10,
+  "intactInLiveDoc": 8,
+  "missing": [
+    "u01 (typed at \"Sync completes within\"): Ops wants this confirmed before the pilot (u01)."
+  ],
+  "partial": [
+    "u04: Needs a number from the load test (u04)."
+  ],
+  "notInFileAfterFlush": [
+    "u01",
+    "u04"
+  ],
+  "threads": [
+    {
+      "id": "trd0g02",
+      "status": "resolved",
+      "orphaned": false,
+      "quote": "on site",
+      "messages": 2
+    }
+  ],
+  "health": {
+    "externalMerges": 0,
+    "storesDeferredForExternalEdit": 0,
+    "stores": 25,
+    "echoesIgnored": 25
+  }
+}

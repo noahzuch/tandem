@@ -1,0 +1,24 @@
+{
+  "version": 1,
+  "title": "Brainstorming session · 2026-10-24",
+  "layout": {
+    "left": { "width": 360, "active": "journal" },
+    "right": { "width": 340, "active": "comments" }
+  },
+  "panels": [
+    { "id": "journal", "type": "file", "title": "Journal", "path": "decisions.md", "render": "journal", "side": "left" },
+    { "id": "outline", "type": "outline", "side": "left" },
+    { "id": "comments", "type": "comments", "side": "right" },
+    { "id": "activity", "type": "activity", "title": "Agent", "side": "right" },
+    { "id": "mockup", "type": "file", "title": "Mockup", "path": "banner-mockup.html", "render": "html", "side": "right" },
+    {
+      "id": "links",
+      "type": "links",
+      "side": "right",
+      "links": [
+        { "title": "ADR 0007: conflict handling", "href": "https://example.com/adr/0007" },
+        { "title": "Telemetry export (F-1)", "href": "https://example.com/telemetry/2026-q3" }
+      ]
+    }
+  ]
+}

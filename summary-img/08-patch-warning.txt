@@ -1,0 +1,28 @@
+# same patch without --avoid-caret: applied; the warning names Noah, whose caret is in that block
+$ collab patch <<'EOF'
+<<<<<<< SEARCH
+of reconnecting (median) for a typical day
+=======
+of reconnecting (median) for a full day
+>>>>>>> REPLACE
+EOF
+{
+  "ok": true,
+  "applied": 1,
+  "reparsedBlocks": 1,
+  "replaced": [
+    1
+  ],
+  "fuzzy": [],
+  "touchedBlocks": [
+    4,
+    4
+  ],
+  "updateBytes": 61,
+  "rescuedComments": [],
+  "warnings": [
+    "Noah's caret is in a block you changed (“Sync completes within 10 s of reconnecting (median) for a ty…”): their typing is merged, re-read before editing that block again"
+  ],
+  "ms": 18
+}
+# exit code 0

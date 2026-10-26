@@ -1,0 +1,7 @@
+--- old_string ---
+    <p>Saves are appended to the outbox and replayed <u>in order</u> on reconnect.</p>
+--- new_string ---
+    <p>
+      Saves are appended to the <strong>durable</strong> outbox and replayed <u>in order</u> on
+      reconnect (see <a href="#api">API</a>).
+    </p>

@@ -1,0 +1,55 @@
+===================================================================
+--- a/spec.min.json
++++ b/spec.min.json
+@@ -473,12 +473,25 @@
+                 "content": [
+                   {
+                     "type": "text",
+-                    "text": "Saves are appended to the outbox and replayed "
++                    "text": "Saves are appended to the "
+                   },
+                   {
+                     "type": "text",
+                     "marks": [
+                       {
++                        "type": "bold"
++                      }
++                    ],
++                    "text": "durable"
++                  },
++                  {
++                    "type": "text",
++                    "text": " outbox and replayed "
++                  },
++                  {
++                    "type": "text",
++                    "marks": [
++                      {
+                         "type": "underline"
+                       }
+                     ],
+@@ -486,7 +499,23 @@
+                   },
+                   {
+                     "type": "text",
+-                    "text": " on reconnect."
++                    "text": " on reconnect (see "
++                  },
++                  {
++                    "type": "text",
++                    "marks": [
++                      {
++                        "type": "link",
++                        "attrs": {
++                          "href": "#api"
++                        }
++                      }
++                    ],
++                    "text": "API"
++                  },
++                  {
++                    "type": "text",
++                    "text": ")."
+                   }
+                 ]
+               }

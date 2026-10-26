@@ -1,0 +1,612 @@
+{
+  "sample": "samples/spec.html",
+  "sizes": {
+    "html": {
+      "bytes": 8026,
+      "gzip": 3312
+    },
+    "json": {
+      "bytes": 43942,
+      "gzip": 4638
+    },
+    "json-min": {
+      "bytes": 31969,
+      "gzip": 4258
+    },
+    "yjs": {
+      "bytes": 12634,
+      "gzip": 4903
+    },
+    "hybrid (html + yjs sidecar)": {
+      "bytes": 20660,
+      "gzip": 8215
+    }
+  },
+  "signalRatio": {
+    "html": 0.2636567722624096,
+    "json": 0.048120916892399446,
+    "json-min": 0.06614932098379123
+  },
+  "speedMs": {
+    "html (prettier)": {
+      "load": 12.140499999999975,
+      "save": 5.430667000000085
+    },
+    "html (no prettier)": {
+      "load": 11.681250000000091,
+      "save": 0.7899159999999483
+    },
+    "json": {
+      "load": 0.1490409999998974,
+      "save": 0.07749999999987267
+    },
+    "json-min": {
+      "load": 0.11837500000001455,
+      "save": 0.15258300000004965
+    },
+    "yjs": {
+      "load": 0.299541999999974,
+      "save": 0.3029579999999896
+    }
+  },
+  "yjsGrowth": {
+    "typedChars": 1000,
+    "initial": 12634,
+    "gcOn": 12660,
+    "gcOff": 13660
+  },
+  "yjsNoopUpdateBytes": 735,
+  "edits": [
+    {
+      "id": "e1-rewrite-paragraph",
+      "title": "Rewrite a paragraph (intro, keeps bold/italic/code/link)",
+      "perFormat": {
+        "html": {
+          "editCalls": 1,
+          "emitChars": 489,
+          "emitTokens": 117,
+          "newStringChars": 257,
+          "newStringTokens": 61,
+          "brackets": 0,
+          "depth": 0,
+          "escapes": 0,
+          "tags": 6,
+          "diffAdded": 3,
+          "diffRemoved": 3,
+          "diffChars": 816
+        },
+        "json": {
+          "editCalls": 4,
+          "emitChars": 511,
+          "emitTokens": 107,
+          "newStringChars": 325,
+          "newStringTokens": 68,
+          "brackets": 0,
+          "depth": 0,
+          "escapes": 0,
+          "tags": 0,
+          "diffAdded": 4,
+          "diffRemoved": 4,
+          "diffChars": 1155
+        },
+        "json-min": {
+          "editCalls": 4,
+          "emitChars": 511,
+          "emitTokens": 107,
+          "newStringChars": 325,
+          "newStringTokens": 68,
+          "brackets": 0,
+          "depth": 0,
+          "escapes": 0,
+          "tags": 0,
+          "diffAdded": 4,
+          "diffRemoved": 4,
+          "diffChars": 1176
+        }
+      },
+      "htmlSaveChurn": {
+        "added": 0,
+        "removed": 0
+      },
+      "htmlStableAfterSave": true,
+      "yjs": {
+        "incrementalUpdateBytes": 1652,
+        "stateBytesAfter": 12542,
+        "fullReplaceUpdateBytes": 11650,
+        "equalsTarget": true
+      }
+    },
+    {
+      "id": "e2-add-list-item",
+      "title": "Add a list item (Goals)",
+      "perFormat": {
+        "html": {
+          "editCalls": 1,
+          "emitChars": 130,
+          "emitTokens": 49,
+          "newStringChars": 107,
+          "newStringTokens": 37,
+          "brackets": 0,
+          "depth": 0,
+          "escapes": 0,
+          "tags": 9,
+          "diffAdded": 1,
+          "diffRemoved": 0,
+          "diffChars": 420
+        },
+        "json": {
+          "editCalls": 1,
+          "emitChars": 1161,
+          "emitTokens": 194,
+          "newStringChars": 1090,
+          "newStringTokens": 179,
+          "brackets": 24,
+          "depth": 8,
+          "escapes": 0,
+          "tags": 0,
+          "diffAdded": 37,
+          "diffRemoved": 0,
+          "diffChars": 1381
+        },
+        "json-min": {
+          "editCalls": 1,
+          "emitChars": 866,
+          "emitTokens": 146,
+          "newStringChars": 795,
+          "newStringTokens": 131,
+          "brackets": 18,
+          "depth": 7,
+          "escapes": 0,
+          "tags": 0,
+          "diffAdded": 27,
+          "diffRemoved": 0,
+          "diffChars": 1084
+        }
+      },
+      "htmlSaveChurn": {
+        "added": 3,
+        "removed": 1
+      },
+      "htmlStableAfterSave": true,
+      "yjs": {
+        "incrementalUpdateBytes": 1212,
+        "stateBytesAfter": 12553,
+        "fullReplaceUpdateBytes": 11799,
+        "equalsTarget": true
+      }
+    },
+    {
+      "id": "e3-add-table-row",
+      "title": "Add a table row (error codes)",
+      "perFormat": {
+        "html": {
+          "editCalls": 1,
+          "emitChars": 240,
+          "emitTokens": 90,
+          "newStringChars": 200,
+          "newStringTokens": 75,
+          "brackets": 0,
+          "depth": 0,
+          "escapes": 0,
+          "tags": 22,
+          "diffAdded": 5,
+          "diffRemoved": 0,
+          "diffChars": 446
+        },
+        "json": {
+          "editCalls": 1,
+          "emitChars": 3257,
+          "emitTokens": 507,
+          "newStringChars": 3226,
+          "newStringTokens": 499,
+          "brackets": 64,
+          "depth": 10,
+          "escapes": 0,
+          "tags": 0,
+          "diffAdded": 107,
+          "diffRemoved": 0,
+          "diffChars": 3633
+        },
+        "json-min": {
+          "editCalls": 1,
+          "emitChars": 1943,
+          "emitTokens": 280,
+          "newStringChars": 1891,
+          "newStringTokens": 270,
+          "brackets": 46,
+          "depth": 9,
+          "escapes": 0,
+          "tags": 0,
+          "diffAdded": 65,
+          "diffRemoved": 0,
+          "diffChars": 2212
+        }
+      },
+      "htmlSaveChurn": {
+        "added": 6,
+        "removed": 2
+      },
+      "htmlStableAfterSave": true,
+      "yjs": {
+        "incrementalUpdateBytes": 1339,
+        "stateBytesAfter": 12454,
+        "fullReplaceUpdateBytes": 12145,
+        "equalsTarget": true
+      }
+    },
+    {
+      "id": "e4-add-section-with-diagram",
+      "title": "Add a section with an SVG diagram",
+      "perFormat": {
+        "html": {
+          "editCalls": 1,
+          "emitChars": 1110,
+          "emitTokens": 387,
+          "newStringChars": 1077,
+          "newStringTokens": 373,
+          "brackets": 0,
+          "depth": 0,
+          "escapes": 0,
+          "tags": 24,
+          "diffAdded": 14,
+          "diffRemoved": 0,
+          "diffChars": 1319
+        },
+        "json": {
+          "editCalls": 1,
+          "emitChars": 2115,
+          "emitTokens": 583,
+          "newStringChars": 2090,
+          "newStringTokens": 576,
+          "brackets": 32,
+          "depth": 6,
+          "escapes": 103,
+          "tags": 16,
+          "diffAdded": 51,
+          "diffRemoved": 0,
+          "diffChars": 2378
+        },
+        "json-min": {
+          "editCalls": 1,
+          "emitChars": 1917,
+          "emitTokens": 543,
+          "newStringChars": 1892,
+          "newStringTokens": 536,
+          "brackets": 28,
+          "depth": 5,
+          "escapes": 103,
+          "tags": 16,
+          "diffAdded": 43,
+          "diffRemoved": 0,
+          "diffChars": 2176
+        }
+      },
+      "htmlSaveChurn": {
+        "added": 0,
+        "removed": 0
+      },
+      "htmlStableAfterSave": true,
+      "yjs": {
+        "incrementalUpdateBytes": 2061,
+        "stateBytesAfter": 13559,
+        "fullReplaceUpdateBytes": 12872,
+        "equalsTarget": true
+      }
+    },
+    {
+      "id": "e5-add-bold-and-link",
+      "title": "Extra: add a bold word and a link inside a sentence",
+      "perFormat": {
+        "html": {
+          "editCalls": 1,
+          "emitChars": 244,
+          "emitTokens": 78,
+          "newStringChars": 158,
+          "newStringTokens": 51,
+          "brackets": 0,
+          "depth": 0,
+          "escapes": 0,
+          "tags": 8,
+          "diffAdded": 4,
+          "diffRemoved": 1,
+          "diffChars": 455
+        },
+        "json": {
+          "editCalls": 3,
+          "emitChars": 1477,
+          "emitTokens": 232,
+          "newStringChars": 1351,
+          "newStringTokens": 208,
+          "brackets": 20,
+          "depth": 6,
+          "escapes": 0,
+          "tags": 0,
+          "diffAdded": 39,
+          "diffRemoved": 2,
+          "diffChars": 2066
+        },
+        "json-min": {
+          "editCalls": 3,
+          "emitChars": 1161,
+          "emitTokens": 187,
+          "newStringChars": 1036,
+          "newStringTokens": 163,
+          "brackets": 18,
+          "depth": 6,
+          "escapes": 0,
+          "tags": 0,
+          "diffAdded": 31,
+          "diffRemoved": 2,
+          "diffChars": 1719
+        }
+      },
+      "htmlSaveChurn": {
+        "added": 0,
+        "removed": 0
+      },
+      "htmlStableAfterSave": true,
+      "yjs": {
+        "incrementalUpdateBytes": 1405,
+        "stateBytesAfter": 12672,
+        "fullReplaceUpdateBytes": 11844,
+        "equalsTarget": true
+      }
+    }
+  ],
+  "mistakes": [
+    {
+      "id": "syntax-trailing-comma",
+      "what": "trailing comma after the last array element",
+      "json": {
+        "parse": "✗ Expected double-quoted property name in JSON at position 6124 (line 209 column 19)",
+        "jsonSchema": "–",
+        "prosemirror": "–"
+      },
+      "html": {
+        "worst": "warn unclosed-tag: <strong> is never closed: the browser closes it where it guesses (formatting may leak into following blocks). Add </strong>.",
+        "finding": {
+          "severity": "warn",
+          "rule": "unclosed-tag",
+          "line": 174,
+          "message": "<strong> is never closed: the browser closes it where it guesses (formatting may leak into following blocks). Add </strong>."
+        }
+      }
+    },
+    {
+      "id": "syntax-missing-brace",
+      "what": "one closing } missing in a nested node",
+      "json": {
+        "parse": "✗ Expected ',' or '}' after property value in JSON at position 6140 (line 210 column 17)",
+        "jsonSchema": "–",
+        "prosemirror": "–"
+      },
+      "html": {
+        "worst": "✓ no findings (parser/schema normalise it silently)"
+      }
+    },
+    {
+      "id": "marks-as-strings",
+      "what": "marks written as [\"bold\"] instead of [{\"type\":\"bold\"}]",
+      "json": {
+        "parse": "✓",
+        "jsonSchema": "✗ /content/1/content/1/marks/0 must be object [1 error(s)]",
+        "prosemirror": "✗ There is no mark type undefined in this schema"
+      },
+      "html": {
+        "worst": "info renamed: <b> is saved as <strong> (same rendering).",
+        "finding": {
+          "severity": "info",
+          "rule": "renamed",
+          "line": 174,
+          "message": "<b> is saved as <strong> (same rendering)."
+        }
+      }
+    },
+    {
+      "id": "text-directly-in-listItem",
+      "what": "listItem content = text (paragraph wrapper forgotten)",
+      "json": {
+        "parse": "✓",
+        "jsonSchema": "✓ valid",
+        "prosemirror": "✗ Invalid content for node listItem: <\"Never lose a note.\">"
+      },
+      "html": {
+        "worst": "✓ no findings (parser/schema normalise it silently)"
+      }
+    },
+    {
+      "id": "heading-in-listItem",
+      "what": "listItem starts with a heading (schema: paragraph block*)",
+      "json": {
+        "parse": "✓",
+        "jsonSchema": "✓ valid",
+        "prosemirror": "✗ Invalid content for node listItem: <heading(\"Step\"), paragraph(\"Never lose a note wri"
+      },
+      "html": {
+        "worst": "error structure-changed: \"Step\" is moved out of <li> (ul>li) to the top level — the schema doesn't allow this content there.",
+        "finding": {
+          "severity": "error",
+          "rule": "structure-changed",
+          "line": 174,
+          "message": "\"Step\" is moved out of <li> (ul>li) to the top level — the schema doesn't allow this content there."
+        }
+      }
+    },
+    {
+      "id": "unknown-node-type",
+      "what": "uses a node type the schema lacks (\"figure\")",
+      "json": {
+        "parse": "✓",
+        "jsonSchema": "✗ /content/18/type must be equal to one of the allowed values (24 allowed values) [1 error(s)]",
+        "prosemirror": "✗ Unknown node type: figure"
+      },
+      "html": {
+        "worst": "info island: <figure> becomes a raw HTML island (block): kept byte-for-byte and rendered as-is; users can only edit text-only leaves inside it.",
+        "finding": {
+          "severity": "info",
+          "rule": "island",
+          "line": 174,
+          "message": "<figure> becomes a raw HTML island (block): kept byte-for-byte and rendered as-is; users can only edit text-only leaves inside it."
+        }
+      }
+    },
+    {
+      "id": "attr-typo",
+      "what": "heading attrs {\"lvl\": 2} instead of {\"level\": 2}",
+      "json": {
+        "parse": "✓",
+        "jsonSchema": "✗ /content/18/attrs must NOT have additional properties \"lvl\" [1 error(s)]",
+        "prosemirror": "✓ valid"
+      },
+      "html": {
+        "worst": "✓ no findings (parser/schema normalise it silently)"
+      }
+    },
+    {
+      "id": "empty-text-node",
+      "what": "text node with \"\"",
+      "json": {
+        "parse": "✓",
+        "jsonSchema": "✗ /content/18/content/0/text must NOT have fewer than 1 characters [1 error(s)]",
+        "prosemirror": "✗ Empty text nodes are not allowed"
+      },
+      "html": {
+        "worst": "✓ no findings (parser/schema normalise it silently)"
+      }
+    },
+    {
+      "id": "paragraph-in-paragraph",
+      "what": "paragraph nested in a paragraph",
+      "json": {
+        "parse": "✓",
+        "jsonSchema": "✓ valid",
+        "prosemirror": "✗ Invalid content for node paragraph: <paragraph(\"inner\")>"
+      },
+      "html": {
+        "worst": "✓ no findings (parser/schema normalise it silently)"
+      }
+    },
+    {
+      "id": "ragged-table-row",
+      "what": "table row with 2 cells in a 3-column table",
+      "json": {
+        "parse": "✓",
+        "jsonSchema": "✓ valid",
+        "prosemirror": "✓ valid"
+      },
+      "html": {
+        "worst": "✓ no findings (parser/schema normalise it silently)"
+      }
+    },
+    {
+      "id": "island-with-prose",
+      "what": "prose put into a raw HTML island (only leaf-editable)",
+      "json": {
+        "parse": "✓",
+        "jsonSchema": "✓ valid",
+        "prosemirror": "✓ valid"
+      },
+      "html": {
+        "worst": "warn prose-in-island: <x-card> contains 2 prose block(s) (<h2>, <p>): users can't format, split or extend this text. Use an editable container (<section>, <div>, <aside>, <article>) for prose; keep islands for diagrams/embeds.",
+        "finding": {
+          "severity": "warn",
+          "rule": "prose-in-island",
+          "line": 174,
+          "message": "<x-card> contains 2 prose block(s) (<h2>, <p>): users can't format, split or extend this text. Use an editable container (<section>, <div>, <aside>, <article>) for prose; keep islands for diagrams/embeds."
+        }
+      }
+    },
+    {
+      "id": "island-broken-html",
+      "what": "island html with an unclosed SVG element",
+      "json": {
+        "parse": "✓",
+        "jsonSchema": "✓ valid",
+        "prosemirror": "✓ valid"
+      },
+      "html": {
+        "worst": "warn unclosed-tag: <text> inside the <svg> island is never closed: the browser closes it where it guesses. Add </text>.",
+        "finding": {
+          "severity": "warn",
+          "rule": "unclosed-tag",
+          "line": 174,
+          "message": "<text> inside the <svg> island is never closed: the browser closes it where it guesses. Add </text>."
+        }
+      }
+    }
+  ],
+  "yjsScenarios": [
+    {
+      "id": "different-blocks",
+      "strategy": "naive",
+      "userEditReachedServerFirst": false,
+      "converged": true,
+      "agentEditSurvived": true,
+      "userEditSurvived": false,
+      "note": "user edit counted 0×"
+    },
+    {
+      "id": "different-blocks",
+      "strategy": "naive",
+      "userEditReachedServerFirst": true,
+      "converged": true,
+      "agentEditSurvived": true,
+      "userEditSurvived": false,
+      "note": "user edit counted 0×"
+    },
+    {
+      "id": "different-blocks",
+      "strategy": "2-way",
+      "userEditReachedServerFirst": false,
+      "converged": true,
+      "agentEditSurvived": true,
+      "userEditSurvived": true,
+      "note": "user edit counted 1×"
+    },
+    {
+      "id": "different-blocks",
+      "strategy": "2-way",
+      "userEditReachedServerFirst": true,
+      "converged": true,
+      "agentEditSurvived": true,
+      "userEditSurvived": false,
+      "note": "user edit counted 0×"
+    },
+    {
+      "id": "different-blocks",
+      "strategy": "3-way",
+      "userEditReachedServerFirst": false,
+      "converged": true,
+      "agentEditSurvived": true,
+      "userEditSurvived": true,
+      "note": "user edit counted 1×"
+    },
+    {
+      "id": "different-blocks",
+      "strategy": "3-way",
+      "userEditReachedServerFirst": true,
+      "converged": true,
+      "agentEditSurvived": true,
+      "userEditSurvived": true,
+      "note": "user edit counted 1×"
+    },
+    {
+      "id": "same-paragraph",
+      "strategy": "3-way",
+      "userEditReachedServerFirst": true,
+      "converged": true,
+      "agentEditSurvived": true,
+      "userEditSurvived": true,
+      "note": "merged: \"Field technicians (and auditors) regularly work without connectivity. Notes written offlin…\""
+    },
+    {
+      "id": "same-island",
+      "strategy": "3-way",
+      "userEditReachedServerFirst": true,
+      "converged": true,
+      "agentEditSurvived": false,
+      "userEditSurvived": true,
+      "note": "island = one string attribute → one side wins for the whole island (which one depends on the random Yjs client ids)"
+    }
+  ]
+}

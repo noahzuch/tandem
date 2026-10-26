@@ -1,0 +1,22 @@
+{
+  "typedSentences": 6,
+  "intactInLiveDoc": 6,
+  "missing": [],
+  "partial": [],
+  "notInFileAfterFlush": [],
+  "threads": [
+    {
+      "id": "tva718k",
+      "status": "resolved",
+      "orphaned": false,
+      "quote": "on site",
+      "messages": 2
+    }
+  ],
+  "health": {
+    "externalMerges": 0,
+    "storesDeferredForExternalEdit": 0,
+    "stores": 15,
+    "echoesIgnored": 15
+  }
+}

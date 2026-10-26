@@ -1,0 +1,9 @@
+--- old_string ---
+    </p>
+  </li>
+  <li>
+--- new_string ---
+    </p>
+  </li>
+  <li><p>The outbox survives app restarts and <strong>OS updates</strong>.</p></li>
+  <li>

@@ -1,0 +1,31 @@
+/* ---------------------------------------------------------------- spike 04: islands, callout, details */
+/* defaults with low specificity — the document's own CSS (injected as @scope (.tiptap)) wins */
+:where(.tiptap) .callout { border-left: 4px solid var(--accent); background: #eef3fb; padding: 6px 14px; margin: 16px 0; }
+:where(.tiptap) .callout > p { margin: 6px 0; }
+
+.tiptap .island { position: relative; margin: 12px 0; border-radius: 6px; outline: 1px dashed transparent; outline-offset: 3px; }
+.tiptap .island:hover { outline-color: #b9c9e6; }
+.tiptap .island.island-selected { outline: 2px solid var(--accent); }
+.tiptap .island-inline { display: inline; margin: 0; outline-offset: 1px; }
+.tiptap .island-host { display: block; }
+.tiptap .island-inline > .island-host { display: inline-block; vertical-align: middle; }
+.tiptap .island-bar {
+  position: absolute; top: -13px; right: 6px; z-index: 3; display: none; gap: 4px; align-items: center;
+  font: 11px/1.4 system-ui, sans-serif; background: #fff; border: 1px solid var(--line); border-radius: 4px; padding: 1px 4px;
+}
+.tiptap .island-inline > .island-bar { top: -18px; right: auto; left: 0; white-space: nowrap; }
+.tiptap .island:hover > .island-bar, .tiptap .island-selected > .island-bar { display: inline-flex; }
+.tiptap .island-kind { color: #888; font-family: ui-monospace, monospace; }
+.tiptap .island-bar button { font: inherit; border: 1px solid var(--line); background: #f8f8f6; border-radius: 3px; cursor: pointer; padding: 0 5px; }
+.tiptap .island-src { display: block; margin-top: 6px; }
+.tiptap .island-src textarea { display: block; width: 100%; min-height: 220px; font: 12px/1.45 ui-monospace, monospace; }
+.tiptap .island-src-actions { display: flex; gap: 6px; margin-top: 4px; }
+.tiptap .island-error { display: block; color: #b00020; font: 12px system-ui; }
+
+.tiptap .pm-details { border-left: 3px solid var(--line); padding-left: 12px; margin: 12px 0; position: relative; }
+.tiptap .pm-details[data-open="false"] > .pm-details-content > :not(summary) { opacity: 0.55; }
+.tiptap .pm-details-toggle {
+  position: absolute; right: 0; top: 2px; width: 70px; z-index: 1; font: 11px system-ui; color: #666;
+  background: #fff; border: 1px solid var(--line); border-radius: 4px; cursor: pointer;
+}
+.tiptap summary { display: block; font-weight: 600; font-family: system-ui, sans-serif; }

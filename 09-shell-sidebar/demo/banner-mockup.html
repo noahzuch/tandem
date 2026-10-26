@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Conflict banner mockup</title>
+  <style>
+    body { font: 14px/1.45 system-ui, sans-serif; margin: 16px; color: #1d1d1d; background: #fff; }
+    h1 { font-size: 15px; margin: 0 0 4px; }
+    .muted { color: #777; font-size: 12px; margin: 0 0 14px; }
+    .phone { width: 260px; border: 10px solid #222; border-radius: 26px; padding: 12px 10px; background: #fafafa; }
+    .bar { font-size: 11px; color: #666; display: flex; justify-content: space-between; margin-bottom: 8px; }
+    .banner { background: #fff7e6; border-left: 4px solid #d98e04; padding: 8px 10px; border-radius: 4px; font-size: 12.5px; }
+    .banner b { display: block; }
+    .banner button { margin-top: 6px; font: inherit; font-size: 12px; border: 1px solid #d98e04; background: #fff; border-radius: 4px; padding: 2px 8px; }
+    .note { margin-top: 10px; background: #fff; border: 1px solid #ddd; border-radius: 6px; padding: 8px; font-size: 12.5px; }
+    mark { background: #ffe1a8; }
+    .theirs { background: #dbeafe; }
+  </style>
+</head>
+<body>
+  <h1>Conflict banner (D-5)</h1>
+  <p class="muted">Paragraph merge kept both texts; the overlapping paragraph is marked. Agent-drawn mockup, rendered in a sandboxed frame.</p>
+  <div class="phone">
+    <div class="bar"><span>Notes</span><span>● offline → synced</span></div>
+    <div class="banner"><b>2 versions of one paragraph</b>Jonas edited “Pump P-3” while you were offline.<br><button>Review</button></div>
+    <div class="note">
+      <p><b>Pump P-3, plant room B</b></p>
+      <p><mark>Bearing noise at 60 % load; replaced seal.</mark></p>
+      <p class="theirs">Bearing noise at 60 % load, seal ordered (Jonas).</p>
+      <p>Next inspection: 2026-11-07.</p>
+    </div>
+  </div>
+  <script>document.body.insertAdjacentHTML('beforeend', '<p id="script-ran">a script ran</p>')</script>
+</body>
+</html>

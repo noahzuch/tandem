@@ -1,0 +1,16 @@
+===================================================================
+--- a/spec.html
++++ b/spec.html
+@@ -28,9 +28,9 @@
+   </p>
+ </header>
+ <p>
+-  Field technicians lose connectivity on site. Notes taken offline must
+-  <strong>sync without data loss</strong> once the device is back online. This spec covers the
+-  <em>client-side queue</em>, the <code>/sync</code> endpoint and
++  Field technicians regularly work without connectivity. Notes written offline must
++  <strong>sync without data loss</strong> as soon as the device reconnects. This spec covers the
++  <em>client-side outbox</em>, the <code>/sync</code> endpoint, retries, and
+   <a href="https://example.com/adr/0007" title="ADR 0007">ADR&nbsp;0007</a> on conflict handling.
+ </p>
+ <div class="callout warning" data-kind="warning" id="decision-needed">

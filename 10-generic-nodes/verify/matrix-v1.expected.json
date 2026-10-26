@@ -1,0 +1,938 @@
+{
+  "type/paragraph": {
+    "verdict": "ok",
+    "obs": "target=\"Alpha Xbeta gamma\" doc=\"Before|Alpha Xbeta gamma|After\" tree=p,p,p"
+  },
+  "type/container": {
+    "verdict": "ok",
+    "obs": "target=\"Alpha Xbeta gamma\" doc=\"Before|Left|Alpha Xbeta gamma|Right|Other|After\" tree=p,div(div(h3,p),div(h3,p)),p"
+  },
+  "type/free": {
+    "verdict": "ok",
+    "obs": "target=\"Alpha Xbeta gamma\" doc=\"Before|Card|Alpha Xbeta gamma|After\" tree=p,x-card(x-title,x-note),p"
+  },
+  "type/locked": {
+    "verdict": "ok",
+    "obs": "target=\"Alpha Xbeta gamma\" doc=\"Before|Card|Alpha Xbeta gamma|After\" tree=p,x-card(x-title,x-note),p"
+  },
+  "type/island": {
+    "verdict": "ok",
+    "obs": "target=\"Alpha Xbeta gamma\" doc=\"Before|\u25a1|After\" tree=p,island,p"
+  },
+  "type/svgText": {
+    "verdict": "ok",
+    "obs": "target=\"Alpha Xbeta gamma\" doc=\"Before|Alpha Xbeta gamma|After\" tree=p,svg(rect,text),p"
+  },
+  "bs-start/paragraph": {
+    "verdict": "ok",
+    "obs": "target=null doc=\"BeforeAlpha beta gamma|After\" tree=p,p"
+  },
+  "bs-start/container": {
+    "verdict": "ok",
+    "obs": "target=null doc=\"Before|LeftAlpha beta gamma|Right|Other|After\" tree=p,div(div(h3),div(h3,p)),p"
+  },
+  "bs-start/free": {
+    "verdict": "ok",
+    "obs": "target=null doc=\"Before|CardAlpha beta gamma|After\" tree=p,x-card(x-title),p"
+  },
+  "bs-start/locked": {
+    "verdict": "guarded",
+    "obs": "target=\"Alpha beta gamma\" doc=\"Before|Card|Alpha beta gamma|After\" tree=p,x-card(x-title,x-note),p"
+  },
+  "bs-start/island": {
+    "verdict": "guarded",
+    "obs": "target=\"Alpha beta gamma\" doc=\"Before|\u25a1|After\" tree=p,island,p"
+  },
+  "bs-start/svgText": {
+    "verdict": "broken",
+    "obs": "target=\"Alpha beta gamma\" doc=\"Before|Alpha beta gamma|After\" tree=p,svg(rect(text)),p"
+  },
+  "bs-mid/paragraph": {
+    "verdict": "ok",
+    "obs": "target=\"Alphabeta gamma\" doc=\"Before|Alphabeta gamma|After\" tree=p,p,p"
+  },
+  "bs-mid/container": {
+    "verdict": "ok",
+    "obs": "target=\"Alphabeta gamma\" doc=\"Before|Left|Alphabeta gamma|Right|Other|After\" tree=p,div(div(h3,p),div(h3,p)),p"
+  },
+  "bs-mid/free": {
+    "verdict": "ok",
+    "obs": "target=\"Alphabeta gamma\" doc=\"Before|Card|Alphabeta gamma|After\" tree=p,x-card(x-title,x-note),p"
+  },
+  "bs-mid/locked": {
+    "verdict": "ok",
+    "obs": "target=\"Alphabeta gamma\" doc=\"Before|Card|Alphabeta gamma|After\" tree=p,x-card(x-title,x-note),p"
+  },
+  "bs-mid/island": {
+    "verdict": "ok",
+    "obs": "target=\"Alphabeta gamma\" doc=\"Before|\u25a1|After\" tree=p,island,p"
+  },
+  "bs-mid/svgText": {
+    "verdict": "ok",
+    "obs": "target=\"Alphabeta gamma\" doc=\"Before|Alphabeta gamma|After\" tree=p,svg(rect,text),p"
+  },
+  "bs-end/paragraph": {
+    "verdict": "ok",
+    "obs": "target=\"Alpha beta gamm\" doc=\"Before|Alpha beta gamm|After\" tree=p,p,p"
+  },
+  "bs-end/container": {
+    "verdict": "ok",
+    "obs": "target=\"Alpha beta gamm\" doc=\"Before|Left|Alpha beta gamm|Right|Other|After\" tree=p,div(div(h3,p),div(h3,p)),p"
+  },
+  "bs-end/free": {
+    "verdict": "ok",
+    "obs": "target=\"Alpha beta gamm\" doc=\"Before|Card|Alpha beta gamm|After\" tree=p,x-card(x-title,x-note),p"
+  },
+  "bs-end/locked": {
+    "verdict": "ok",
+    "obs": "target=\"Alpha beta gamm\" doc=\"Before|Card|Alpha beta gamm|After\" tree=p,x-card(x-title,x-note),p"
+  },
+  "bs-end/island": {
+    "verdict": "ok",
+    "obs": "target=\"Alpha beta gamm\" doc=\"Before|\u25a1|After\" tree=p,island,p"
+  },
+  "bs-end/svgText": {
+    "verdict": "broken",
+    "obs": "target=\"Alpa beta gamma\" doc=\"Before|Alpa beta gamma|After\" tree=p,svg(rect,text),p"
+  },
+  "del-start/paragraph": {
+    "verdict": "ok",
+    "obs": "target=\"lpha beta gamma\" doc=\"Before|lpha beta gamma|After\" tree=p,p,p"
+  },
+  "del-start/container": {
+    "verdict": "ok",
+    "obs": "target=\"lpha beta gamma\" doc=\"Before|Left|lpha beta gamma|Right|Other|After\" tree=p,div(div(h3,p),div(h3,p)),p"
+  },
+  "del-start/free": {
+    "verdict": "ok",
+    "obs": "target=\"lpha beta gamma\" doc=\"Before|Card|lpha beta gamma|After\" tree=p,x-card(x-title,x-note),p"
+  },
+  "del-start/locked": {
+    "verdict": "ok",
+    "obs": "target=\"lpha beta gamma\" doc=\"Before|Card|lpha beta gamma|After\" tree=p,x-card(x-title,x-note),p"
+  },
+  "del-start/island": {
+    "verdict": "ok",
+    "obs": "target=\"lpha beta gamma\" doc=\"Before|\u25a1|After\" tree=p,island,p"
+  },
+  "del-start/svgText": {
+    "verdict": "ok",
+    "obs": "target=\"lpha beta gamma\" doc=\"Before|lpha beta gamma|After\" tree=p,svg(rect,text),p"
+  },
+  "del-mid/paragraph": {
+    "verdict": "ok",
+    "obs": "target=\"Alpha eta gamma\" doc=\"Before|Alpha eta gamma|After\" tree=p,p,p"
+  },
+  "del-mid/container": {
+    "verdict": "ok",
+    "obs": "target=\"Alpha eta gamma\" doc=\"Before|Left|Alpha eta gamma|Right|Other|After\" tree=p,div(div(h3,p),div(h3,p)),p"
+  },
+  "del-mid/free": {
+    "verdict": "ok",
+    "obs": "target=\"Alpha eta gamma\" doc=\"Before|Card|Alpha eta gamma|After\" tree=p,x-card(x-title,x-note),p"
+  },
+  "del-mid/locked": {
+    "verdict": "ok",
+    "obs": "target=\"Alpha eta gamma\" doc=\"Before|Card|Alpha eta gamma|After\" tree=p,x-card(x-title,x-note),p"
+  },
+  "del-mid/island": {
+    "verdict": "ok",
+    "obs": "target=\"Alpha eta gamma\" doc=\"Before|\u25a1|After\" tree=p,island,p"
+  },
+  "del-mid/svgText": {
+    "verdict": "ok",
+    "obs": "target=\"Alpha eta gamma\" doc=\"Before|Alpha eta gamma|After\" tree=p,svg(rect,text),p"
+  },
+  "del-end/paragraph": {
+    "verdict": "ok",
+    "obs": "target=\"Alpha beta gammaAfter\" doc=\"Before|Alpha beta gammaAfter\" tree=p,p"
+  },
+  "del-end/container": {
+    "verdict": "broken",
+    "obs": "target=\"Alpha beta gamma\" doc=\"Before|Left|Alpha beta gamma|Right|Other|After\" tree=p,div(div(h3,p,h3,p)),p"
+  },
+  "del-end/free": {
+    "verdict": "broken",
+    "obs": "target=\"Alpha beta gamma\" doc=\"Before|Card|Alpha beta gamma|After|\" tree=p,x-card(x-title,x-note,p),p"
+  },
+  "del-end/locked": {
+    "verdict": "guarded",
+    "obs": "target=\"Alpha beta gamma\" doc=\"Before|Card|Alpha beta gamma|After\" tree=p,x-card(x-title,x-note),p"
+  },
+  "del-end/island": {
+    "verdict": "guarded",
+    "obs": "target=\"Alpha beta gamma\" doc=\"Before|\u25a1|After\" tree=p,island,p"
+  },
+  "del-end/svgText": {
+    "verdict": "broken",
+    "obs": "target=\"Alph beta gamma\" doc=\"Before|Alph beta gamma|After\" tree=p,svg(rect,text),p"
+  },
+  "cross-del/paragraph": {
+    "verdict": "ok",
+    "obs": "target=null doc=\"Befbeta gamma|After\" tree=p,p"
+  },
+  "cross-del/container": {
+    "verdict": "ok",
+    "obs": "target=null doc=\"Befbeta gamma|Right|Other|After\" tree=p,div(div(h3,p)),p"
+  },
+  "cross-del/free": {
+    "verdict": "ok",
+    "obs": "target=null doc=\"Befbeta gamma|After\" tree=p,p"
+  },
+  "cross-del/locked": {
+    "verdict": "guarded",
+    "obs": "target=\"Alpha beta gamma\" doc=\"Before|Card|Alpha beta gamma|After\" tree=p,x-card(x-title,x-note),p guard=\"locked node removed: x-card{\\\"data-edit\\\":\\\"locked\\\"}(x-title{}(\""
+  },
+  "cross-del/island": {
+    "verdict": "guarded",
+    "obs": "target=\"Alpha beta gamma\" doc=\"Bef|\u25a1|After\" tree=p,island,p"
+  },
+  "cross-del/svgText": {
+    "verdict": "ok",
+    "obs": "target=null doc=\"Befbeta gamma|After\" tree=p,p"
+  },
+  "enter/paragraph": {
+    "verdict": "ok",
+    "obs": "target=\"Alpha \" doc=\"Before|Alpha |beta gamma|After\" tree=p,p,p,p"
+  },
+  "enter/container": {
+    "verdict": "ok",
+    "obs": "target=\"Alpha \" doc=\"Before|Left|Alpha |beta gamma|Right|Other|After\" tree=p,div(div(h3,p,p),div(h3,p)),p"
+  },
+  "enter/free": {
+    "verdict": "ok",
+    "obs": "target=\"Alpha \" doc=\"Before|Card|Alpha |beta gamma|After\" tree=p,x-card(x-title,x-note,x-note),p"
+  },
+  "enter/locked": {
+    "verdict": "guarded",
+    "obs": "target=\"Alpha beta gamma\" doc=\"Before|Card|Alpha beta gamma|After\" tree=p,x-card(x-title,x-note),p"
+  },
+  "enter/island": {
+    "verdict": "guarded",
+    "obs": "target=\"Alpha beta gamma\" doc=\"Before|\u25a1|After\" tree=p,island,p"
+  },
+  "enter/svgText": {
+    "verdict": "broken",
+    "obs": "target=\"Alpha \" doc=\"Before|Alpha |beta gamma|After\" tree=p,svg(rect,text,text),p"
+  },
+  "shift-enter/paragraph": {
+    "verdict": "ok",
+    "obs": "target=\"Alpha beta gamma\" doc=\"Before|Alpha \u25a1beta gamma|After\" tree=p,p(br),p br=in-target"
+  },
+  "shift-enter/container": {
+    "verdict": "ok",
+    "obs": "target=\"Alpha beta gamma\" doc=\"Before|Left|Alpha \u25a1beta gamma|Right|Other|After\" tree=p,div(div(h3,p(br)),div(h3,p)),p br=in-target"
+  },
+  "shift-enter/free": {
+    "verdict": "ok",
+    "obs": "target=\"Alpha beta gamma\" doc=\"Before|Card|Alpha \u25a1beta gamma|After\" tree=p,x-card(x-title,x-note(br)),p br=in-target"
+  },
+  "shift-enter/locked": {
+    "verdict": "ok",
+    "obs": "target=\"Alpha beta gamma\" doc=\"Before|Card|Alpha \u25a1beta gamma|After\" tree=p,x-card(x-title,x-note(br)),p br=in-target"
+  },
+  "shift-enter/island": {
+    "verdict": "guarded",
+    "obs": "target=\"Alpha beta gamma\" doc=\"Before|\u25a1|After\" tree=p,island,p br=elsewhere"
+  },
+  "shift-enter/svgText": {
+    "verdict": "broken",
+    "obs": "target=\"Alpha \" doc=\"Before|Alpha |\u25a1beta gamma|After\" tree=p,svg(rect,text),p(br),p br=elsewhere"
+  },
+  "tab/paragraph": {
+    "verdict": "broken",
+    "obs": "target=\"Alpha beta gamma\" doc=\"Before|Alpha beta gamma|After\" tree=p,p,p focus=body"
+  },
+  "tab/container": {
+    "verdict": "broken",
+    "obs": "target=\"Alpha beta gamma\" doc=\"Before|Left|Alpha beta gamma|Right|Other|After\" tree=p,div(div(h3,p),div(h3,p)),p focus=body"
+  },
+  "tab/free": {
+    "verdict": "broken",
+    "obs": "target=\"Alpha beta gamma\" doc=\"Before|Card|Alpha beta gamma|After\" tree=p,x-card(x-title,x-note),p focus=button"
+  },
+  "tab/locked": {
+    "verdict": "broken",
+    "obs": "target=\"Alpha beta gamma\" doc=\"Before|Card|Alpha beta gamma|After\" tree=p,x-card(x-title,x-note),p focus=button"
+  },
+  "tab/island": {
+    "verdict": "broken",
+    "obs": "target=\"Alpha beta gamma\" doc=\"Before|\u25a1|After\" tree=p,island,p focus=button"
+  },
+  "tab/svgText": {
+    "verdict": "broken",
+    "obs": "target=\"Alpha beta gamma\" doc=\"Before|Alpha beta gamma|After\" tree=p,svg(rect,text),p focus=body"
+  },
+  "select-all-type/paragraph": {
+    "verdict": "ok",
+    "obs": "target=null doc=\"Z\" tree=p"
+  },
+  "select-all-type/container": {
+    "verdict": "ok",
+    "obs": "target=null doc=\"Z\" tree=p"
+  },
+  "select-all-type/free": {
+    "verdict": "ok",
+    "obs": "target=null doc=\"Z\" tree=p"
+  },
+  "select-all-type/locked": {
+    "verdict": "guarded",
+    "obs": "target=\"Alpha beta gamma\" doc=\"Before|Card|Alpha beta gamma|After\" tree=p,x-card(x-title,x-note),p guard=\"locked node removed: x-card{\\\"data-edit\\\":\\\"locked\\\"}(x-title{}(\""
+  },
+  "select-all-type/island": {
+    "verdict": "guarded",
+    "obs": "target=\"Z\" doc=\"Before|\u25a1|After\" tree=p,island,p"
+  },
+  "select-all-type/svgText": {
+    "verdict": "ok",
+    "obs": "target=null doc=\"Z\" tree=p"
+  },
+  "select-all-del/paragraph": {
+    "verdict": "ok",
+    "obs": "target=null doc=\"\" tree=p"
+  },
+  "select-all-del/container": {
+    "verdict": "ok",
+    "obs": "target=null doc=\"\" tree=p"
+  },
+  "select-all-del/free": {
+    "verdict": "ok",
+    "obs": "target=null doc=\"\" tree=p"
+  },
+  "select-all-del/locked": {
+    "verdict": "guarded",
+    "obs": "target=\"Alpha beta gamma\" doc=\"Before|Card|Alpha beta gamma|After\" tree=p,x-card(x-title,x-note),p guard=\"locked node removed: x-card{\\\"data-edit\\\":\\\"locked\\\"}(x-title{}(\""
+  },
+  "select-all-del/island": {
+    "verdict": "guarded",
+    "obs": "target=\"\" doc=\"Before|\u25a1|After\" tree=p,island,p"
+  },
+  "select-all-del/svgText": {
+    "verdict": "ok",
+    "obs": "target=null doc=\"\" tree=p"
+  },
+  "dblclick/paragraph": {
+    "verdict": "ok",
+    "obs": "target=\"Alpha beta gamma\" doc=\"Before|Alpha beta gamma|After\" tree=p,p,p selected=\"beta\""
+  },
+  "dblclick/container": {
+    "verdict": "ok",
+    "obs": "target=\"Alpha beta gamma\" doc=\"Before|Left|Alpha beta gamma|Right|Other|After\" tree=p,div(div(h3,p),div(h3,p)),p selected=\"beta\""
+  },
+  "dblclick/free": {
+    "verdict": "ok",
+    "obs": "target=\"Alpha beta gamma\" doc=\"Before|Card|Alpha beta gamma|After\" tree=p,x-card(x-title,x-note),p selected=\"beta\""
+  },
+  "dblclick/locked": {
+    "verdict": "ok",
+    "obs": "target=\"Alpha beta gamma\" doc=\"Before|Card|Alpha beta gamma|After\" tree=p,x-card(x-title,x-note),p selected=\"beta\""
+  },
+  "dblclick/island": {
+    "verdict": "ok",
+    "obs": "target=\"Alpha beta gamma\" doc=\"Before|\u25a1|After\" tree=p,island,p selected=\"beta\""
+  },
+  "dblclick/svgText": {
+    "verdict": "ok",
+    "obs": "target=\"Alpha beta gamma\" doc=\"Before|Alpha beta gamma|After\" tree=p,svg(rect,text),p selected=\"beta\""
+  },
+  "tripleclick/paragraph": {
+    "verdict": "ok",
+    "obs": "target=\"Alpha beta gamma\" doc=\"Before|Alpha beta gamma|After\" tree=p,p,p selected=\"Alpha beta gamma\""
+  },
+  "tripleclick/container": {
+    "verdict": "ok",
+    "obs": "target=\"Alpha beta gamma\" doc=\"Before|Left|Alpha beta gamma|Right|Other|After\" tree=p,div(div(h3,p),div(h3,p)),p selected=\"Alpha beta gamma\""
+  },
+  "tripleclick/free": {
+    "verdict": "ok",
+    "obs": "target=\"Alpha beta gamma\" doc=\"Before|Card|Alpha beta gamma|After\" tree=p,x-card(x-title,x-note),p selected=\"Alpha beta gamma\""
+  },
+  "tripleclick/locked": {
+    "verdict": "ok",
+    "obs": "target=\"Alpha beta gamma\" doc=\"Before|Card|Alpha beta gamma|After\" tree=p,x-card(x-title,x-note),p selected=\"Alpha beta gamma\""
+  },
+  "tripleclick/island": {
+    "verdict": "ok",
+    "obs": "target=\"Alpha beta gamma\" doc=\"Before|\u25a1|After\" tree=p,island,p selected=\"Alpha beta gamma\""
+  },
+  "tripleclick/svgText": {
+    "verdict": "ok",
+    "obs": "target=\"Alpha beta gamma\" doc=\"Before|Alpha beta gamma|After\" tree=p,svg(rect,text),p selected=\"Alpha beta gamma\""
+  },
+  "arrow-in/paragraph": {
+    "verdict": "ok",
+    "obs": "target=\"Alpha beta gamma\" doc=\"Before|Alpha beta gamma|After\" tree=p,p,p caret=p@0 \"Alpha beta g\""
+  },
+  "arrow-in/container": {
+    "verdict": "ok",
+    "obs": "target=\"Alpha beta gamma\" doc=\"Before|Left|Alpha beta gamma|Right|Other|After\" tree=p,div(div(h3,p),div(h3,p)),p caret=h3@0 \"Left\""
+  },
+  "arrow-in/free": {
+    "verdict": "ok",
+    "obs": "target=\"Alpha beta gamma\" doc=\"Before|Card|Alpha beta gamma|After\" tree=p,x-card(x-title,x-note),p caret=x-title@0 \"Card\""
+  },
+  "arrow-in/locked": {
+    "verdict": "ok",
+    "obs": "target=\"Alpha beta gamma\" doc=\"Before|Card|Alpha beta gamma|After\" tree=p,x-card(x-title,x-note),p caret=x-title@0 \"Card\""
+  },
+  "arrow-in/island": {
+    "verdict": "broken",
+    "obs": "target=\"Alpha beta gamma\" doc=\"Before|\u25a1|After\" tree=p,island,p caret=node:island"
+  },
+  "arrow-in/svgText": {
+    "verdict": "ok",
+    "obs": "target=\"Alpha beta gamma\" doc=\"Before|Alpha beta gamma|After\" tree=p,svg(rect,text),p caret=text@0 \"Alpha beta g\""
+  },
+  "arrow-out/paragraph": {
+    "verdict": "ok",
+    "obs": "target=\"Alpha beta gamma\" doc=\"Before|Alpha beta gamma|After\" tree=p,p,p caret=p@0 \"After\""
+  },
+  "arrow-out/container": {
+    "verdict": "ok",
+    "obs": "target=\"Alpha beta gamma\" doc=\"Before|Left|Alpha beta gamma|Right|Other|After\" tree=p,div(div(h3,p),div(h3,p)),p caret=h3@0 \"Right\""
+  },
+  "arrow-out/free": {
+    "verdict": "ok",
+    "obs": "target=\"Alpha beta gamma\" doc=\"Before|Card|Alpha beta gamma|After\" tree=p,x-card(x-title,x-note),p caret=p@0 \"After\""
+  },
+  "arrow-out/locked": {
+    "verdict": "ok",
+    "obs": "target=\"Alpha beta gamma\" doc=\"Before|Card|Alpha beta gamma|After\" tree=p,x-card(x-title,x-note),p caret=p@0 \"After\""
+  },
+  "arrow-out/island": {
+    "verdict": "broken",
+    "obs": "target=\"Alpha beta gamma\" doc=\"Before|\u25a1|After\" tree=p,island,p caret=p@5 \"After\""
+  },
+  "arrow-out/svgText": {
+    "verdict": "broken",
+    "obs": "target=\"Alpha beta gamma\" doc=\"Before|Alpha beta gamma|After\" tree=p,svg(rect,text),p caret=text@5 \"Alpha beta g\""
+  },
+  "arrow-down-out/paragraph": {
+    "verdict": "ok",
+    "obs": "target=\"Alpha beta gamma\" doc=\"Before|Alpha beta gamma|After\" tree=p,p,p caret=p@5 \"After\""
+  },
+  "arrow-down-out/container": {
+    "verdict": "ok",
+    "obs": "target=\"Alpha beta gamma\" doc=\"Before|Left|Alpha beta gamma|Right|Other|After\" tree=p,div(div(h3,p),div(h3,p)),p caret=h3@0 \"Right\""
+  },
+  "arrow-down-out/free": {
+    "verdict": "ok",
+    "obs": "target=\"Alpha beta gamma\" doc=\"Before|Card|Alpha beta gamma|After\" tree=p,x-card(x-title,x-note),p caret=p@5 \"After\""
+  },
+  "arrow-down-out/locked": {
+    "verdict": "ok",
+    "obs": "target=\"Alpha beta gamma\" doc=\"Before|Card|Alpha beta gamma|After\" tree=p,x-card(x-title,x-note),p caret=p@5 \"After\""
+  },
+  "arrow-down-out/island": {
+    "verdict": "ok",
+    "obs": "target=\"Alpha beta gamma\" doc=\"Before|\u25a1|After\" tree=p,island,p caret=p@5 \"After\""
+  },
+  "arrow-down-out/svgText": {
+    "verdict": "ok",
+    "obs": "target=\"Alpha beta gamma\" doc=\"Before|Alpha beta gamma|After\" tree=p,svg(rect,text),p caret=p@5 \"After\""
+  },
+  "cut-paste/paragraph": {
+    "verdict": "ok",
+    "obs": "target=\"Alpha gammabeta \" doc=\"Before|Alpha gammabeta |After\" tree=p,p,p"
+  },
+  "cut-paste/container": {
+    "verdict": "ok",
+    "obs": "target=\"Alpha gammabeta \" doc=\"Before|Left|Alpha gammabeta |Right|Other|After\" tree=p,div(div(h3,p),div(h3,p)),p"
+  },
+  "cut-paste/free": {
+    "verdict": "ok",
+    "obs": "target=\"Alpha gammabeta \" doc=\"Before|Card|Alpha gammabeta |After\" tree=p,x-card(x-title,x-note),p"
+  },
+  "cut-paste/locked": {
+    "verdict": "ok",
+    "obs": "target=\"Alpha gammabeta \" doc=\"Before|Card|Alpha gammabeta |After\" tree=p,x-card(x-title,x-note),p"
+  },
+  "cut-paste/island": {
+    "verdict": "ok",
+    "obs": "target=\"Alpha gammabeta \" doc=\"Before|\u25a1|After\" tree=p,island,p"
+  },
+  "cut-paste/svgText": {
+    "verdict": "broken",
+    "obs": "target=\"Alpha gamma\" doc=\"Before|Alpha gamma|\u25a1|After\" tree=p,svg(rect,text),island,p"
+  },
+  "copy-out/paragraph": {
+    "verdict": "ok",
+    "obs": "target=\"Alpha beta gamma\" doc=\"Before|Alpha beta gamma|Afterbeta\" tree=p,p,p"
+  },
+  "copy-out/container": {
+    "verdict": "ok",
+    "obs": "target=\"Alpha beta gamma\" doc=\"Before|Left|Alpha beta gamma|Right|Other|Afterbeta\" tree=p,div(div(h3,p),div(h3,p)),p"
+  },
+  "copy-out/free": {
+    "verdict": "ok",
+    "obs": "target=\"Alpha beta gamma\" doc=\"Before|Card|Alpha beta gamma|Afterbeta\" tree=p,x-card(x-title,x-note),p"
+  },
+  "copy-out/locked": {
+    "verdict": "ok",
+    "obs": "target=\"Alpha beta gamma\" doc=\"Before|Card|Alpha beta gamma|Afterbeta\" tree=p,x-card(x-title,x-note),p"
+  },
+  "copy-out/island": {
+    "verdict": "ok",
+    "obs": "target=\"Alpha beta gamma\" doc=\"Before|\u25a1|Afterbeta\" tree=p,island,p"
+  },
+  "copy-out/svgText": {
+    "verdict": "broken",
+    "obs": "target=\"Alpha beta gamma\" doc=\"Before|Alpha beta gamma|After|\u25a1|\" tree=p,svg(rect,text),p,island,p"
+  },
+  "copy-block-out/paragraph": {
+    "verdict": "ok",
+    "obs": "target=\"Alpha beta gamma\" doc=\"Before|Alpha beta gamma|AfterAlpha beta gamma\" tree=p,p,p"
+  },
+  "copy-block-out/container": {
+    "verdict": "ok",
+    "obs": "target=\"Alpha beta gamma\" doc=\"Before|Left|Alpha beta gamma|Right|Other|AfterAlpha beta gamma\" tree=p,div(div(h3,p),div(h3,p)),p"
+  },
+  "copy-block-out/free": {
+    "verdict": "ok",
+    "obs": "target=\"Alpha beta gamma\" doc=\"Before|Card|Alpha beta gamma|AfterAlpha beta gamma\" tree=p,x-card(x-title,x-note),p"
+  },
+  "copy-block-out/locked": {
+    "verdict": "ok",
+    "obs": "target=\"Alpha beta gamma\" doc=\"Before|Card|Alpha beta gamma|AfterAlpha beta gamma\" tree=p,x-card(x-title,x-note),p"
+  },
+  "copy-block-out/island": {
+    "verdict": "ok",
+    "obs": "target=\"Alpha beta gamma\" doc=\"Before|\u25a1|AfterAlpha beta gamma\" tree=p,island,p"
+  },
+  "copy-block-out/svgText": {
+    "verdict": "broken",
+    "obs": "target=\"Alpha beta gamma\" doc=\"Before|Alpha beta gamma|After|\u25a1|\" tree=p,svg(rect,text),p,island,p"
+  },
+  "paste-text/paragraph": {
+    "verdict": "ok",
+    "obs": "target=\"Alpha Beforebeta gamma\" doc=\"Before|Alpha Beforebeta gamma|After\" tree=p,p,p"
+  },
+  "paste-text/container": {
+    "verdict": "ok",
+    "obs": "target=\"Alpha Beforebeta gamma\" doc=\"Before|Left|Alpha Beforebeta gamma|Right|Other|After\" tree=p,div(div(h3,p),div(h3,p)),p"
+  },
+  "paste-text/free": {
+    "verdict": "ok",
+    "obs": "target=\"Alpha Beforebeta gamma\" doc=\"Before|Card|Alpha Beforebeta gamma|After\" tree=p,x-card(x-title,x-note),p"
+  },
+  "paste-text/locked": {
+    "verdict": "ok",
+    "obs": "target=\"Alpha Beforebeta gamma\" doc=\"Before|Card|Alpha Beforebeta gamma|After\" tree=p,x-card(x-title,x-note),p"
+  },
+  "paste-text/island": {
+    "verdict": "ok",
+    "obs": "target=\"Alpha Beforebeta gamma\" doc=\"Before|\u25a1|After\" tree=p,island,p"
+  },
+  "paste-text/svgText": {
+    "verdict": "ok",
+    "obs": "target=\"Alpha Beforebeta gamma\" doc=\"Before|Alpha Beforebeta gamma|After\" tree=p,svg(rect,text),p"
+  },
+  "paste-html/paragraph": {
+    "verdict": "ok",
+    "obs": "target=\"Alpha Ext bold\" doc=\"Before|Alpha Ext bold|item onebeta gamma|After\" tree=p,p,ul(li(p)),p into=DIV"
+  },
+  "paste-html/container": {
+    "verdict": "ok",
+    "obs": "target=\"Alpha Ext bold\" doc=\"Before|Left|Alpha Ext bold|item onebeta gamma|Right|Other|After\" tree=p,div(div(h3,p,ul(li(p))),div(h3,p)),p into=DIV"
+  },
+  "paste-html/free": {
+    "verdict": "ok",
+    "obs": "target=\"Alpha Ext bold\" doc=\"Before|Card|Alpha Ext bold|item onebeta gamma|After\" tree=p,x-card(x-title,x-note,ul(li(p))),p into=DIV"
+  },
+  "paste-html/locked": {
+    "verdict": "guarded",
+    "obs": "target=\"Alpha beta gamma\" doc=\"Before|Card|Alpha beta gamma|After\" tree=p,x-card(x-title,x-note),p into=DIV guard=\"locked node structure changed: x-card{\\\"data-edit\\\":\\\"locked\\\"}(\""
+  },
+  "paste-html/island": {
+    "verdict": "ok",
+    "obs": "n/a: plaintext-only leaf in a shadow root: a native paste inserts plain text, a synthetic paste event cannot be aimed at it"
+  },
+  "paste-html/svgText": {
+    "verdict": "ok",
+    "obs": "target=\"Alpha Ext bold\" doc=\"Before|Alpha Ext bold|item onebeta gamma|After\" tree=p,svg(rect,text),ul(li(p)),p into=DIV"
+  },
+  "drag-block/paragraph": {
+    "verdict": "ok",
+    "obs": "target=\"Alpha beta gamma\" doc=\"Before|After|Alpha beta gamma\" tree=p,p,p handle=shown"
+  },
+  "drag-block/container": {
+    "verdict": "ok",
+    "obs": "target=\"Alpha beta gamma\" doc=\"Before|After|Left|Alpha beta gamma|Right|Other|\" tree=p,p,div(div(h3,p),div(h3,p)),p handle=shown"
+  },
+  "drag-block/free": {
+    "verdict": "ok",
+    "obs": "target=\"Alpha beta gamma\" doc=\"Before|After|Card|Alpha beta gamma|\" tree=p,p,x-card(x-title,x-note),p handle=shown"
+  },
+  "drag-block/locked": {
+    "verdict": "ok",
+    "obs": "target=\"Alpha beta gamma\" doc=\"Before|After|Card|Alpha beta gamma|\" tree=p,p,x-card(x-title,x-note),p handle=shown"
+  },
+  "drag-block/island": {
+    "verdict": "ok",
+    "obs": "target=\"Alpha beta gamma\" doc=\"Before|After|\u25a1|\" tree=p,p,island,p handle=shown"
+  },
+  "drag-block/svgText": {
+    "verdict": "ok",
+    "obs": "target=\"Alpha beta gamma\" doc=\"Before|After|Alpha beta gamma|\" tree=p,p,svg(rect,text),p handle=shown"
+  },
+  "drag-text/paragraph": {
+    "verdict": "ok",
+    "obs": "n/a: not automatable: headless Chromium starts no native text drag (dragstart=0 on every kind)"
+  },
+  "drag-text/container": {
+    "verdict": "ok",
+    "obs": "n/a: not automatable: headless Chromium starts no native text drag (dragstart=0 on every kind)"
+  },
+  "drag-text/free": {
+    "verdict": "ok",
+    "obs": "n/a: not automatable: headless Chromium starts no native text drag (dragstart=0 on every kind)"
+  },
+  "drag-text/locked": {
+    "verdict": "ok",
+    "obs": "n/a: not automatable: headless Chromium starts no native text drag (dragstart=0 on every kind)"
+  },
+  "drag-text/island": {
+    "verdict": "ok",
+    "obs": "n/a: not automatable: headless Chromium starts no native text drag (dragstart=0 on every kind)"
+  },
+  "drag-text/svgText": {
+    "verdict": "ok",
+    "obs": "n/a: not automatable: headless Chromium starts no native text drag (dragstart=0 on every kind)"
+  },
+  "undo/paragraph": {
+    "verdict": "ok",
+    "obs": "target=\"Alpha beta gamma one twoX\" doc=\"Before|Alpha beta gamma one twoX|After\" tree=p,p,p undo1=\"Alpha beta gamma one two\" undo2=\"Alpha beta gamma\""
+  },
+  "undo/container": {
+    "verdict": "ok",
+    "obs": "target=\"Alpha beta gamma one twoX\" doc=\"Before|Left|Alpha beta gamma one twoX|Right|Other|After\" tree=p,div(div(h3,p),div(h3,p)),p undo1=\"Alpha beta gamma one two\" undo2=\"Alpha beta gamma\""
+  },
+  "undo/free": {
+    "verdict": "ok",
+    "obs": "target=\"Alpha beta gamma one twoX\" doc=\"Before|Card|Alpha beta gamma one twoX|After\" tree=p,x-card(x-title,x-note),p undo1=\"Alpha beta gamma one two\" undo2=\"Alpha beta gamma\""
+  },
+  "undo/locked": {
+    "verdict": "ok",
+    "obs": "target=\"Alpha beta gamma one twoX\" doc=\"Before|Card|Alpha beta gamma one twoX|After\" tree=p,x-card(x-title,x-note),p undo1=\"Alpha beta gamma one two\" undo2=\"Alpha beta gamma\""
+  },
+  "undo/island": {
+    "verdict": "broken",
+    "obs": "target=\"Alpha beta gamma\" doc=\"Before|\u25a1|After\" tree=p,island,p undo1=\"Alpha beta gamma one two\" undo2=\"Alpha beta gamma\""
+  },
+  "undo/svgText": {
+    "verdict": "broken",
+    "obs": "target=\"Alph one twoXa beta gamma\" doc=\"Before|Alph one twoXa beta gamma|After\" tree=p,svg(rect,text),p undo1=\"Alph one twoa beta gamma\" undo2=\"Alpha beta gamma\""
+  },
+  "ime/paragraph": {
+    "verdict": "ok",
+    "obs": "target=\"Alpha \u65e5\u672cbeta gamma\" doc=\"Before|Alpha \u65e5\u672cbeta gamma|After\" tree=p,p,p mid=\"Alpha \u306b\u307bbeta gamma\""
+  },
+  "ime/container": {
+    "verdict": "ok",
+    "obs": "target=\"Alpha \u65e5\u672cbeta gamma\" doc=\"Before|Left|Alpha \u65e5\u672cbeta gamma|Right|Other|After\" tree=p,div(div(h3,p),div(h3,p)),p mid=\"Alpha \u306b\u307bbeta gamma\""
+  },
+  "ime/free": {
+    "verdict": "ok",
+    "obs": "target=\"Alpha \u65e5\u672cbeta gamma\" doc=\"Before|Card|Alpha \u65e5\u672cbeta gamma|After\" tree=p,x-card(x-title,x-note),p mid=\"Alpha \u306b\u307bbeta gamma\""
+  },
+  "ime/locked": {
+    "verdict": "ok",
+    "obs": "target=\"Alpha \u65e5\u672cbeta gamma\" doc=\"Before|Card|Alpha \u65e5\u672cbeta gamma|After\" tree=p,x-card(x-title,x-note),p mid=\"Alpha \u306b\u307bbeta gamma\""
+  },
+  "ime/island": {
+    "verdict": "ok",
+    "obs": "target=\"Alpha \u65e5\u672cbeta gamma\" doc=\"Before|\u25a1|After\" tree=p,island,p mid=\"Alpha beta gamma\""
+  },
+  "ime/svgText": {
+    "verdict": "ok",
+    "obs": "target=\"Alpha \u65e5\u672cbeta gamma\" doc=\"Before|Alpha \u65e5\u672cbeta gamma|After\" tree=p,svg(rect,text),p mid=\"Alpha \u306b\u307bbeta gamma\""
+  },
+  "slash-h2/paragraph": {
+    "verdict": "ok",
+    "obs": "target=\"Alpha beta gamma \" doc=\"Before|Alpha beta gamma |After\" tree=p,h2,p"
+  },
+  "slash-h2/container": {
+    "verdict": "ok",
+    "obs": "target=\"Alpha beta gamma \" doc=\"Before|Left|Alpha beta gamma |Right|Other|After\" tree=p,div(div(h3,h2),div(h3,p)),p"
+  },
+  "slash-h2/free": {
+    "verdict": "ok",
+    "obs": "target=null doc=\"Before|Card|Alpha beta gamma |After\" tree=p,x-card(x-title,h2),p"
+  },
+  "slash-h2/locked": {
+    "verdict": "guarded",
+    "obs": "target=\"Alpha beta gamma \" doc=\"Before|Card|Alpha beta gamma |After\" tree=p,x-card(x-title,x-note),p guard=\"locked node structure changed: x-card{\\\"data-edit\\\":\\\"locked\\\"}(\""
+  },
+  "slash-h2/island": {
+    "verdict": "guarded",
+    "obs": "target=\"Alpha beta gamma /h2\" doc=\"Before|\u25a1|After\" tree=p,island,p"
+  },
+  "slash-h2/svgText": {
+    "verdict": "broken",
+    "obs": "target=\"Alph h2\" doc=\"Before|Alph h2|/a beta gamma|After\" tree=p,svg(rect,text,text),p"
+  },
+  "slash-list/paragraph": {
+    "verdict": "ok",
+    "obs": "target=\"Alpha beta gamma \" doc=\"Before|Alpha beta gamma |After\" tree=p,ul(li(p)),p"
+  },
+  "slash-list/container": {
+    "verdict": "ok",
+    "obs": "target=\"Alpha beta gamma \" doc=\"Before|Left|Alpha beta gamma |Right|Other|After\" tree=p,div(div(h3,ul(li(p))),div(h3,p)),p"
+  },
+  "slash-list/free": {
+    "verdict": "ok",
+    "obs": "target=null doc=\"Before|Card|Alpha beta gamma |After\" tree=p,x-card(x-title),ul(li(p)),p"
+  },
+  "slash-list/locked": {
+    "verdict": "guarded",
+    "obs": "target=\"Alpha beta gamma \" doc=\"Before|Card|Alpha beta gamma |After\" tree=p,x-card(x-title,x-note),p guard=\"locked node structure changed: x-card{\\\"data-edit\\\":\\\"locked\\\"}(\""
+  },
+  "slash-list/island": {
+    "verdict": "guarded",
+    "obs": "target=\"Alpha beta gamma /bullet\" doc=\"Before|\u25a1|After\" tree=p,island,p"
+  },
+  "slash-list/svgText": {
+    "verdict": "broken",
+    "obs": "target=\"Alph bullet\" doc=\"Before|Alph bullet|/a beta gamma|After\" tree=p,svg(rect,text,text),p"
+  },
+  "slash-table/paragraph": {
+    "verdict": "ok",
+    "obs": "target=\"Alpha beta gamma \" doc=\"Before|Alpha beta gamma ||||||||||After\" tree=p,p,table(tr(th(p),th(p),th(p)),tr(td(p),td(p),td(p)),tr(td(p),td(p),td(p))),p"
+  },
+  "slash-table/container": {
+    "verdict": "ok",
+    "obs": "target=\"Alpha beta gamma \" doc=\"Before|Left|Alpha beta gamma ||||||||||Right|Other|After\" tree=p,div(div(h3,p,table(tr(th(p),th(p),th(p)),tr(td(p),td(p),td(p)),tr(td(p),td(p),td(p)))),div(h3,p)),p"
+  },
+  "slash-table/free": {
+    "verdict": "ok",
+    "obs": "target=\"Alpha beta gamma \" doc=\"Before|Card|Alpha beta gamma ||||||||||After\" tree=p,x-card(x-title,x-note,table(tr(th(p),th(p),th(p)),tr(td(p),td(p),td(p)),tr(td(p),td(p),td(p)))),p"
+  },
+  "slash-table/locked": {
+    "verdict": "guarded",
+    "obs": "target=\"Alpha beta gamma \" doc=\"Before|Card|Alpha beta gamma |After\" tree=p,x-card(x-title,x-note),p guard=\"locked node structure changed: x-card{\\\"data-edit\\\":\\\"locked\\\"}(\""
+  },
+  "slash-table/island": {
+    "verdict": "guarded",
+    "obs": "target=\"Alpha beta gamma /table\" doc=\"Before|\u25a1|After\" tree=p,island,p"
+  },
+  "slash-table/svgText": {
+    "verdict": "broken",
+    "obs": "target=\"Alph table\" doc=\"Before|Alph table|/a beta gamma|After\" tree=p,svg(rect,text,text),p"
+  },
+  "slash-callout/paragraph": {
+    "verdict": "ok",
+    "obs": "target=\"Alpha beta gamma \" doc=\"Before|Alpha beta gamma ||After\" tree=p,p,callout(p),p"
+  },
+  "slash-callout/container": {
+    "verdict": "ok",
+    "obs": "target=\"Alpha beta gamma \" doc=\"Before|Left|Alpha beta gamma ||Right|Other|After\" tree=p,div(div(h3,p,callout(p)),div(h3,p)),p"
+  },
+  "slash-callout/free": {
+    "verdict": "ok",
+    "obs": "target=\"Alpha beta gamma \" doc=\"Before|Card|Alpha beta gamma ||After\" tree=p,x-card(x-title,x-note,callout(p)),p"
+  },
+  "slash-callout/locked": {
+    "verdict": "guarded",
+    "obs": "target=\"Alpha beta gamma \" doc=\"Before|Card|Alpha beta gamma |After\" tree=p,x-card(x-title,x-note),p guard=\"locked node structure changed: x-card{\\\"data-edit\\\":\\\"locked\\\"}(\""
+  },
+  "slash-callout/island": {
+    "verdict": "guarded",
+    "obs": "target=\"Alpha beta gamma /callout\" doc=\"Before|\u25a1|After\" tree=p,island,p"
+  },
+  "slash-callout/svgText": {
+    "verdict": "broken",
+    "obs": "target=\"Alph callout\" doc=\"Before|Alph callout|/a beta gamma|After\" tree=p,svg(rect,text,text),p"
+  },
+  "bold/paragraph": {
+    "verdict": "ok",
+    "obs": "target=\"Alpha beta gamma\" doc=\"Before|Alpha beta gamma|After\" tree=p,p,p html=bold"
+  },
+  "bold/container": {
+    "verdict": "ok",
+    "obs": "target=\"Alpha beta gamma\" doc=\"Before|Left|Alpha beta gamma|Right|Other|After\" tree=p,div(div(h3,p),div(h3,p)),p html=bold"
+  },
+  "bold/free": {
+    "verdict": "ok",
+    "obs": "target=\"Alpha beta gamma\" doc=\"Before|Card|Alpha beta gamma|After\" tree=p,x-card(x-title,x-note),p html=bold"
+  },
+  "bold/locked": {
+    "verdict": "ok",
+    "obs": "target=\"Alpha beta gamma\" doc=\"Before|Card|Alpha beta gamma|After\" tree=p,x-card(x-title,x-note),p html=bold"
+  },
+  "bold/island": {
+    "verdict": "guarded",
+    "obs": "target=\"Alpha beta gamma\" doc=\"Before|\u25a1|After\" tree=p,island,p html=plain"
+  },
+  "bold/svgText": {
+    "verdict": "broken",
+    "obs": "target=\"Alpha beta gamma\" doc=\"Before|Alpha beta gamma|After\" tree=p,svg(rect,text),p html=plain"
+  },
+  "underline/paragraph": {
+    "verdict": "ok",
+    "obs": "target=\"Alpha beta gamma\" doc=\"Before|Alpha beta gamma|After\" tree=p,p,p html=underlined"
+  },
+  "underline/container": {
+    "verdict": "ok",
+    "obs": "target=\"Alpha beta gamma\" doc=\"Before|Left|Alpha beta gamma|Right|Other|After\" tree=p,div(div(h3,p),div(h3,p)),p html=underlined"
+  },
+  "underline/free": {
+    "verdict": "ok",
+    "obs": "target=\"Alpha beta gamma\" doc=\"Before|Card|Alpha beta gamma|After\" tree=p,x-card(x-title,x-note),p html=underlined"
+  },
+  "underline/locked": {
+    "verdict": "guarded",
+    "obs": "target=\"Alpha beta gamma\" doc=\"Before|Card|Alpha beta gamma|After\" tree=p,x-card(x-title,x-note),p html=plain guard=\"mark \\\"underline\\\" not allowed in locked <x-card> (allowed: bo\""
+  },
+  "underline/island": {
+    "verdict": "guarded",
+    "obs": "target=\"Alpha beta gamma\" doc=\"Before|\u25a1|After\" tree=p,island,p html=plain"
+  },
+  "underline/svgText": {
+    "verdict": "broken",
+    "obs": "target=\"Alpha beta gamma\" doc=\"Before|Alpha beta gamma|After\" tree=p,svg(rect,text),p html=plain"
+  },
+  "bubble/paragraph": {
+    "verdict": "ok",
+    "obs": "target=\"Alpha beta gamma\" doc=\"Before|Alpha beta gamma|After\" tree=p,p,p bubble=shown"
+  },
+  "bubble/container": {
+    "verdict": "ok",
+    "obs": "target=\"Alpha beta gamma\" doc=\"Before|Left|Alpha beta gamma|Right|Other|After\" tree=p,div(div(h3,p),div(h3,p)),p bubble=shown"
+  },
+  "bubble/free": {
+    "verdict": "ok",
+    "obs": "target=\"Alpha beta gamma\" doc=\"Before|Card|Alpha beta gamma|After\" tree=p,x-card(x-title,x-note),p bubble=shown"
+  },
+  "bubble/locked": {
+    "verdict": "ok",
+    "obs": "target=\"Alpha beta gamma\" doc=\"Before|Card|Alpha beta gamma|After\" tree=p,x-card(x-title,x-note),p bubble=shown"
+  },
+  "bubble/island": {
+    "verdict": "broken",
+    "obs": "target=\"Alpha beta gamma\" doc=\"Before|\u25a1|After\" tree=p,island,p bubble=hidden"
+  },
+  "bubble/svgText": {
+    "verdict": "ok",
+    "obs": "target=\"Alpha beta gamma\" doc=\"Before|Alpha beta gamma|After\" tree=p,svg(rect,text),p bubble=shown"
+  },
+  "handle/paragraph": {
+    "verdict": "ok",
+    "obs": "target=\"Alpha beta gamma\" doc=\"Before|Alpha beta gamma|After\" tree=p,p,p handle=node:p"
+  },
+  "handle/container": {
+    "verdict": "ok",
+    "obs": "target=\"Alpha beta gamma\" doc=\"Before|Left|Alpha beta gamma|Right|Other|After\" tree=p,div(div(h3,p),div(h3,p)),p handle=node:div"
+  },
+  "handle/free": {
+    "verdict": "ok",
+    "obs": "target=\"Alpha beta gamma\" doc=\"Before|Card|Alpha beta gamma|After\" tree=p,x-card(x-title,x-note),p handle=node:x-card"
+  },
+  "handle/locked": {
+    "verdict": "ok",
+    "obs": "target=\"Alpha beta gamma\" doc=\"Before|Card|Alpha beta gamma|After\" tree=p,x-card(x-title,x-note),p handle=node:x-card"
+  },
+  "handle/island": {
+    "verdict": "ok",
+    "obs": "target=\"Alpha beta gamma\" doc=\"Before|\u25a1|After\" tree=p,island,p handle=node:island"
+  },
+  "handle/svgText": {
+    "verdict": "ok",
+    "obs": "target=\"Alpha beta gamma\" doc=\"Before|Alpha beta gamma|After\" tree=p,svg(rect,text),p handle=node:svg"
+  },
+  "empty/paragraph": {
+    "verdict": "ok",
+    "obs": "target=\"Re\" doc=\"Before|Re|After\" tree=p,p,p emptyHtml=present box=684x26 saved=element-kept"
+  },
+  "empty/container": {
+    "verdict": "ok",
+    "obs": "target=\"Re\" doc=\"Before|Left|Re|Right|Other|After\" tree=p,div(div(h3,p),div(h3,p)),p emptyHtml=present box=334x26 saved=element-kept"
+  },
+  "empty/free": {
+    "verdict": "ok",
+    "obs": "target=\"Re\" doc=\"Before|Card|Re|After\" tree=p,x-card(x-title,x-note),p emptyHtml=present box=654x26 saved=element-kept"
+  },
+  "empty/locked": {
+    "verdict": "ok",
+    "obs": "target=\"Re\" doc=\"Before|Card|Re|After\" tree=p,x-card(x-title,x-note),p emptyHtml=present box=654x26 saved=element-kept"
+  },
+  "empty/island": {
+    "verdict": "ok",
+    "obs": "target=\"Re\" doc=\"Before|\u25a1|After\" tree=p,island,p emptyHtml=present box=654x26 saved=element-kept"
+  },
+  "empty/svgText": {
+    "verdict": "broken",
+    "obs": "target=\"\" doc=\"Before||ReAfter\" tree=p,svg(rect,text),p emptyHtml=present box=0x0 saved=element-kept"
+  },
+  "delete-widget/paragraph": {
+    "verdict": "ok",
+    "obs": "n/a: no widget for schema nodes"
+  },
+  "delete-widget/container": {
+    "verdict": "ok",
+    "obs": "n/a: no widget for schema nodes"
+  },
+  "delete-widget/free": {
+    "verdict": "ok",
+    "obs": "target=null doc=\"Before|After\" tree=p,p widget=shown boxes=2 badge=\"removes 2 elements \u00b7 3 words\""
+  },
+  "delete-widget/locked": {
+    "verdict": "ok",
+    "obs": "target=null doc=\"Before|After\" tree=p,p widget=shown boxes=2 badge=\"removes 2 elements \u00b7 3 words\""
+  },
+  "delete-widget/island": {
+    "verdict": "ok",
+    "obs": "target=null doc=\"Before|After\" tree=p,p widget=shown boxes=4 badge=\"removes 4 elements \u00b7 1 words\""
+  },
+  "delete-widget/svgText": {
+    "verdict": "ok",
+    "obs": "n/a: widget covers generic nodes and islands"
+  },
+  "concurrent/paragraph": {
+    "verdict": "ok",
+    "obs": "A=\"AAAparagraph alpha beta gammaBBB\" B=\"AAAparagraph alpha beta gammaBBB\""
+  },
+  "agent/paragraph": {
+    "verdict": "ok",
+    "obs": "exit=0 target=\"UUAAAparagraph ALPHA beta gammaBBB\""
+  },
+  "concurrent/container": {
+    "verdict": "ok",
+    "obs": "A=\"AAAcontainer alpha beta gammaBBB\" B=\"AAAcontainer alpha beta gammaBBB\""
+  },
+  "agent/container": {
+    "verdict": "ok",
+    "obs": "exit=0 target=\"UUAAAcontainer ALPHA beta gammaBBB\""
+  },
+  "concurrent/free": {
+    "verdict": "ok",
+    "obs": "A=\"AAAfree alpha beta gammaBBB\" B=\"AAAfree alpha beta gammaBBB\""
+  },
+  "agent/free": {
+    "verdict": "ok",
+    "obs": "exit=0 target=\"UUAAAfree ALPHA beta gammaBBB\""
+  },
+  "concurrent/locked": {
+    "verdict": "ok",
+    "obs": "A=\"AAAlocked alpha beta gammaBBB\" B=\"AAAlocked alpha beta gammaBBB\""
+  },
+  "agent/locked": {
+    "verdict": "ok",
+    "obs": "exit=0 target=\"UUAAAlocked ALPHA beta gammaBBB\""
+  },
+  "concurrent/island": {
+    "verdict": "broken",
+    "obs": "one side lost (last writer wins per island), both clients agree: \"island alpha beta gamma\" + the winner's text"
+  },
+  "agent/island": {
+    "verdict": "guarded",
+    "obs": "exit=5 target=\"UUisland alpha beta gamma + the winner's text\" locked=Ann"
+  },
+  "concurrent/svgText": {
+    "verdict": "broken",
+    "obs": "A=\"AAAsvgTBBBext alpha beta gamma\" B=\"AAAsvgTBBBext alpha beta gamma\""
+  },
+  "agent/svgText": {
+    "verdict": "ok",
+    "obs": "exit=0 target=\"UUAAAsvgTBBBext ALPHA beta gamma\""
+  }
+}

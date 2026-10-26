@@ -1,0 +1,28 @@
+{
+  "typedSentences": 10,
+  "intactInLiveDoc": 8,
+  "missing": [],
+  "partial": [
+    "u01: Ops wants this confirmed before the pilot (u01).",
+    "u07: This came up twice in the interviews (u07)."
+  ],
+  "notInFileAfterFlush": [
+    "u01",
+    "u07"
+  ],
+  "threads": [
+    {
+      "id": "tv96sh6",
+      "status": "resolved",
+      "orphaned": false,
+      "quote": "on site",
+      "messages": 2
+    }
+  ],
+  "health": {
+    "externalMerges": 0,
+    "storesDeferredForExternalEdit": 0,
+    "stores": 26,
+    "echoesIgnored": 26
+  }
+}

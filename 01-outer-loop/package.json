@@ -1,0 +1,23 @@
+{
+  "name": "collab-spike-01-outer-loop",
+  "private": true,
+  "type": "module",
+  "description": "Spike 01: skill <-> local server <-> browser <-> Claude session event loop",
+  "scripts": {
+    "start": "tsx bin/collab.ts open samples/spec.html && tsx bin/collab.ts watch samples/spec.html --consumer terminal",
+    "collab": "tsx bin/collab.ts",
+    "stop": "tsx bin/collab.ts stop samples/spec.html",
+    "verify": "tsx verify/verify.ts",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "tsx": "^4.20.0",
+    "ws": "^8.18.0"
+  },
+  "devDependencies": {
+    "@types/node": "^24.0.0",
+    "@types/ws": "^8.5.12",
+    "playwright": "^1.55.0",
+    "typescript": "^5.9.0"
+  }
+}

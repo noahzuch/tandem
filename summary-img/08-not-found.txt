@@ -1,0 +1,35 @@
+# the user typed “(median)” inside the SEARCH text after the agent read it → NOT_FOUND, `closest` has the current HTML
+$ collab patch <<'EOF'
+<<<<<<< SEARCH
+of reconnecting for a typical day
+=======
+of reconnecting for a full day
+>>>>>>> REPLACE
+EOF
+{
+  "status": "error",
+  "ok": false,
+  "code": "NOT_FOUND",
+  "error": "edit 1/1: old string not found in the live document. The document may have changed since you read it (the user is editing too), or the string never matched. The closest block is at line 21; its CURRENT html is in \"closest\". Copy old from there and retry.",
+  "edit": 1
+}
+--- closest block, line 21 (current html):
+<ul data-bid="lbc2kj">
+  <li><p data-bid="norh74">Never lose a note written offline.</p></li>
+  <li>
+    <p data-bid="8axldq">
+      Sync completes within <strong>10&nbsp;s</strong> of reconnecting (median) for a typical day of
+      notes.
+    </p>
+  </li>
+  <li>
+    <p data-bid="jpgjjm">Conflicts are visible to the user, never <em>silently</em> dropped.</p>
+    <ul data-bid="44fb9i">
+      <li><p data-bid="ff9xuv">Shown as a banner on the note.</p></li>
+      <li>
+        <p data-bid="uhzkg1">Listed in the <code>Conflicts</code> inbox.</p>
+      </li>
+    </ul>
+  </li>
+</ul>
+# exit code 1

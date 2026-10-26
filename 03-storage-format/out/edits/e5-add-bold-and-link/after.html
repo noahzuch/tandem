@@ -1,0 +1,210 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Spec: Offline sync for field notes</title>
+  <!-- Generated during brainstorming session 2026-10-24; edited by user + agent -->
+  <style>
+    :root { --accent: #4a78c2; --warn: #d98e04; }
+    body { font: 16px/1.55 Georgia, serif; max-width: 880px; margin: 32px auto; padding: 0 16px; color: #1d1d1d; }
+    h1, h2, h3 { font-family: system-ui, sans-serif; }
+    table { border-collapse: collapse; width: 100%; }
+    th, td { border: 1px solid #ccc; padding: 6px 8px; text-align: left; vertical-align: top; }
+    .callout { border-left: 4px solid var(--accent); background: #eef3fb; padding: 10px 14px; margin: 16px 0; }
+    .callout.warning { border-left-color: var(--warn); background: #fff7e6; }
+    .status-badge { display: inline-block; padding: 1px 8px; border-radius: 10px; background: #e3f5e1; font-size: 13px; }
+    pre { background: #f3f3f3; padding: 10px; overflow: auto; }
+    figure.diagram { margin: 16px 0; }
+    .muted { color: #666; }
+  </style>
+</head>
+<body>
+<header class="doc-meta" data-doc-id="spec-offline-sync" data-status="draft">
+  <h1 id="title">Spec: Offline sync for field notes</h1>
+  <p class="muted">
+    Status: <span class="status-badge" data-status="draft">Draft</span> · Owner: Noah · Last
+    updated: 2026-10-24
+  </p>
+</header>
+<p>
+  Field technicians lose connectivity on site. Notes taken offline must
+  <strong>sync without data loss</strong> once the device is back online. This spec covers the
+  <em>client-side queue</em>, the <code>/sync</code> endpoint and
+  <a href="https://example.com/adr/0007" title="ADR 0007">ADR&nbsp;0007</a> on conflict handling.
+</p>
+<div class="callout warning" data-kind="warning" id="decision-needed">
+  <p>
+    <strong>Decision needed:</strong> last-writer-wins vs. CRDT merge for concurrent edits of the
+    same note. See <a href="#conflicts">Conflict handling</a>.
+  </p>
+</div>
+<h2 id="goals">1. Goals</h2>
+<ul>
+  <li><p>Never lose a note written offline.</p></li>
+  <li>
+    <p>
+      Sync completes within <strong>10&nbsp;s</strong> of reconnecting for a typical day of notes.
+    </p>
+  </li>
+  <li>
+    <p>Conflicts are visible to the user, never <em>silently</em> dropped.</p>
+    <ul>
+      <li><p>Shown as a banner on the note.</p></li>
+      <li>
+        <p>Listed in the <code>Conflicts</code> inbox.</p>
+      </li>
+    </ul>
+  </li>
+</ul>
+<h3 id="non-goals">1.1 Non-goals</h3>
+<ol>
+  <li><p>Real-time collaboration between technicians.</p></li>
+  <li>
+    <p>Syncing attachments larger than 25&nbsp;MB.</p>
+    <ol type="a">
+      <li><p>Those are uploaded separately via the media service.</p></li>
+    </ol>
+  </li>
+  <li><p>Web client support (mobile only for v1).</p></li>
+</ol>
+<h2 id="flow">2. Flow</h2>
+<figure class="diagram">
+    <svg width="620" height="120" viewBox="0 0 620 120" role="img" aria-label="device to queue to server flow" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+          <path d="M 0 0 L 10 5 L 0 10 z" fill="#4a78c2"/>
+        </marker>
+      </defs>
+      <rect x="10" y="35" width="150" height="50" rx="8" fill="#e7f0ff" stroke="#4a78c2"/>
+      <text x="85" y="65" text-anchor="middle" font-family="sans-serif" font-size="14">Device editor</text>
+      <rect x="235" y="35" width="150" height="50" rx="8" fill="#fff7e6" stroke="#d98e04"/>
+      <text x="310" y="65" text-anchor="middle" font-family="sans-serif" font-size="14">Outbox queue</text>
+      <rect x="460" y="35" width="150" height="50" rx="8" fill="#e3f5e1" stroke="#3a8a35"/>
+      <text x="535" y="65" text-anchor="middle" font-family="sans-serif" font-size="14">Sync server</text>
+      <line x1="160" y1="60" x2="233" y2="60" stroke="#4a78c2" stroke-width="2" marker-end="url(#arrow)"/>
+      <line x1="385" y1="60" x2="458" y2="60" stroke="#4a78c2" stroke-width="2" marker-end="url(#arrow)"/>
+      <text x="196" y="50" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#555">save</text>
+      <text x="421" y="50" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#555">POST /sync</text>
+    </svg>
+    <figcaption>Figure 1: Notes flow from the editor into a durable outbox, then to the server.</figcaption>
+  </figure>
+<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px" class="two-col">
+  <div>
+    <h3>Online</h3>
+    <p>Each save is pushed immediately. The outbox stays empty.</p>
+  </div>
+  <div>
+    <h3>Offline</h3>
+    <p>
+      Saves are appended to the <strong>durable</strong> outbox and replayed <u>in order</u> on
+      reconnect (see <a href="#api">API</a>).
+    </p>
+  </div>
+</div>
+<h2 id="api">3. API</h2>
+<p>
+  The client sends batches of operations. Each operation carries a
+  <mark>client-generated id</mark> so retries are idempotent.
+</p>
+<pre><code class="language-typescript">interface SyncBatch {
+  deviceId: string;
+  ops: Array&lt;{ id: string; noteId: string; kind: "upsert" | "delete"; at: number }&gt;;
+}
+
+async function flush(outbox: Outbox): Promise&lt;void&gt; {
+  const batch = await outbox.take(50);
+  if (batch.ops.length === 0) return;
+  await fetch("/sync", { method: "POST", body: JSON.stringify(batch) });
+}</code></pre>
+<table class="spec-table" id="error-codes" style="min-width: 75px">
+  <colgroup>
+    <col style="min-width: 25px" />
+    <col style="min-width: 25px" />
+    <col style="min-width: 25px" />
+  </colgroup>
+  <tbody>
+    <tr>
+      <th><p>Status</p></th>
+      <th><p>Meaning</p></th>
+      <th><p>Client action</p></th>
+    </tr>
+    <tr>
+      <td>
+        <p><code>200</code></p>
+      </td>
+      <td><p>All ops applied</p></td>
+      <td><p>Drop ops from outbox</p></td>
+    </tr>
+    <tr>
+      <td>
+        <p><code>409</code></p>
+      </td>
+      <td><p>Conflict on at least one note</p></td>
+      <td rowspan="2"><p>Keep ops, show conflict banner</p></td>
+    </tr>
+    <tr>
+      <td>
+        <p><code>412</code></p>
+      </td>
+      <td><p>Stale base version</p></td>
+    </tr>
+    <tr>
+      <td colspan="2" style="text-align: center">
+        <p><em>Any 5xx</em></p>
+      </td>
+      <td><p>Retry with exponential backoff</p></td>
+    </tr>
+  </tbody>
+</table>
+<h2 id="conflicts">4. Conflict handling</h2>
+<blockquote>
+  <p>“If two technicians edit the same note offline, neither should lose their text.”</p>
+  <p>— Field ops lead, interview 2026-10-12</p>
+</blockquote>
+<p style="text-align: center">
+  We merge at <strong><em>paragraph</em></strong> granularity and mark overlapping edits.
+</p>
+<p>
+  <img
+    class="mockup"
+    data-figure="2"
+    src="https://example.com/img/conflict-banner.png"
+    alt="Mockup of the conflict banner"
+    width="480"
+  />
+</p>
+<h2 id="tasks">5. Open tasks</h2>
+<ul data-type="taskList">
+  <li data-checked="true" data-type="taskItem">
+    <label><input type="checkbox" checked="checked" /><span></span></label>
+    <div><p>Agree on outbox storage (SQLite)</p></div>
+  </li>
+  <li data-checked="false" data-type="taskItem">
+    <label><input type="checkbox" /><span></span></label>
+    <div>
+      <p>Decide LWW vs. CRDT (see <a href="#decision-needed">callout</a>)</p>
+    </div>
+  </li>
+  <li data-checked="false" data-type="taskItem">
+    <label><input type="checkbox" /><span></span></label>
+    <div>
+      <p>Load-test <code>/sync</code> with 500 devices</p>
+    </div>
+  </li>
+</ul>
+<details class="appendix" open="">
+  <summary>Appendix A: rejected alternatives</summary>
+  <p>Full-document sync was rejected: it re-sends every note on each reconnect.</p>
+</details>
+<hr />
+<p class="muted">
+  <small
+    >Glossary: <abbr title="Last Writer Wins">LWW</abbr>,
+    <abbr title="Conflict-free Replicated Data Type">CRDT</abbr>. Press <kbd>Ctrl</kbd>+<kbd>S</kbd>
+    to force a sync.</small
+  >
+</p>
+<x-agent-note data-agent="claude" data-ts="2026-10-24T10:15:00Z">Agent: I assumed SQLite on the device; please confirm.</x-agent-note>
+</body>
+</html>

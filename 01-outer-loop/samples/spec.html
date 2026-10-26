@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Spec: Offline sync for field notes</title>
+<style>
+  body { font: 16px/1.55 Georgia, serif; max-width: 860px; margin: 32px auto; padding: 0 16px; color: #1d1d1d; }
+  h1, h2 { font-family: system-ui, sans-serif; }
+  table { border-collapse: collapse; width: 100%; }
+  th, td { border: 1px solid #ccc; padding: 6px 8px; text-align: left; }
+  .callout { border-left: 4px solid #d98e04; background: #fff7e6; padding: 10px 14px; margin: 16px 0; }
+  .cols { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+  pre { background: #f3f3f3; padding: 10px; overflow: auto; }
+</style>
+</head>
+<body>
+<h1 id="title">Spec: Offline sync for field notes</h1>
+<p>Field technicians lose connectivity on site. Notes taken offline must sync without data loss once the device is back online.</p>
+
+<div class="callout"><strong>Decision needed:</strong> last-writer-wins vs. CRDT merge for concurrent edits of the same note.</div>
+
+<h2>Goals</h2>
+<ul>
+  <li>Never lose a note written offline.</li>
+  <li>Sync completes within 10 s of reconnecting for a typical day of notes.</li>
+  <li>Conflicts are visible to the user, never silently dropped.</li>
+</ul>
+
+<h2>Flow</h2>
+<svg width="560" height="90" viewBox="0 0 560 90" role="img" aria-label="device to queue to server flow">
+  <rect x="10" y="20" width="140" height="50" rx="8" fill="#e7f0ff" stroke="#4a78c2"/>
+  <text x="80" y="50" text-anchor="middle" font-family="sans-serif" font-size="14">Device store</text>
+  <rect x="210" y="20" width="140" height="50" rx="8" fill="#eef8ee" stroke="#4a9a4a"/>
+  <text x="280" y="50" text-anchor="middle" font-family="sans-serif" font-size="14">Outbox queue</text>
+  <rect x="410" y="20" width="140" height="50" rx="8" fill="#fff1e0" stroke="#c27a2c"/>
+  <text x="480" y="50" text-anchor="middle" font-family="sans-serif" font-size="14">Sync API</text>
+  <path d="M150 45 H205 M350 45 H405" stroke="#555" stroke-width="2" marker-end="url(#a)"/>
+  <defs><marker id="a" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0 L8 4 L0 8 z" fill="#555"/></marker></defs>
+</svg>
+
+<h2>Options</h2>
+<div class="cols">
+  <div><h3>Last writer wins</h3><p>Simple, but the earlier edit is lost unless we keep revisions.</p></div>
+  <div><h3>CRDT merge</h3><p>No loss, more complex storage, larger payloads.</p></div>
+</div>
+
+<h2>API sketch</h2>
+<pre><code>POST /notes/sync
+{ "since": 1712, "changes": [ { "id": "n1", "rev": 4, "body": "…" } ] }</code></pre>
+
+<h2>Milestones</h2>
+<table>
+  <tr><th>Milestone</th><th>Scope</th><th>Estimate</th></tr>
+  <tr><td>M1</td><td>Outbox queue + retry</td><td>1 week</td></tr>
+  <tr><td>M2</td><td>Conflict detection UI</td><td>2 weeks</td></tr>
+</table>
+</body>
+</html>

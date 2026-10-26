@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>collab spike 01</title>
+<style>
+  * { box-sizing: border-box; }
+  body { margin: 0; font: 14px/1.4 system-ui, sans-serif; display: grid; grid-template-columns: minmax(0,1fr) 340px; height: 100vh; background: #f6f6f4; color: #222; }
+  iframe { width: 100%; height: 100%; border: 0; background: #fff; }
+  aside { border-left: 1px solid #ddd; padding: 12px; display: flex; flex-direction: column; gap: 10px; overflow: auto; }
+  .pill { display: inline-block; padding: 2px 8px; border-radius: 999px; font-size: 12px; background: #eee; }
+  .ok { background: #d8f3dc; } .bad { background: #ffd6d6; } .warn { background: #fff1c2; }
+  textarea { width: 100%; min-height: 70px; font: inherit; }
+  button { font: inherit; padding: 4px 10px; cursor: pointer; }
+  #pushes { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 6px; }
+  #pushes li { background: #fff; border: 1px solid #ddd; border-radius: 6px; padding: 6px 8px; white-space: pre-wrap; }
+  #log { font: 12px ui-monospace, monospace; color: #666; white-space: pre-wrap; }
+  h3 { margin: 6px 0 0; font-size: 13px; text-transform: uppercase; color: #777; }
+</style>
+</head>
+<body>
+<iframe id="doc" src="/doc" title="document"></iframe>
+<aside>
+  <div>
+    <span id="status" class="pill bad">connecting…</span>
+    <span id="agent" class="pill warn" title="Is a `collab wait` currently blocked on this doc?">agent: not listening</span>
+  </div>
+
+  <h3>Feedback to agent</h3>
+  <textarea id="feedback" placeholder="Tell the agent something…"></textarea>
+  <div>
+    <button id="send">Send feedback</button>
+    <button id="edited" title="Simulates the user editing the document">I edited the doc</button>
+    <button id="annotate" title="Annotates the current text selection in the document">Annotate selection</button>
+  </div>
+
+  <h3>From the agent</h3>
+  <ul id="pushes"></ul>
+
+  <h3>Log</h3>
+  <div id="log"></div>
+</aside>
+<script>
+const $ = (id) => document.getElementById(id);
+let ws, retry = 0;
+const logLine = (s) => { $("log").textContent = new Date().toLocaleTimeString() + " " + s + "\n" + $("log").textContent; };
+
+function showPush(p) {
+  if (document.querySelector(`#pushes li[data-id="${p.id}"]`)) return;
+  const li = document.createElement("li");
+  li.dataset.id = p.id;
+  li.textContent = p.text ?? JSON.stringify(p);
+  $("pushes").prepend(li);
+}
+function setAgent(list) {
+  const on = list && list.length > 0;
+  $("agent").textContent = on ? "agent: listening" : "agent: not listening";
+  $("agent").className = "pill " + (on ? "ok" : "warn");
+}
+function connect() {
+  ws = new WebSocket(`ws://${location.host}/ws`);
+  ws.onopen = () => { retry = 0; $("status").textContent = "connected"; $("status").className = "pill ok"; };
+  ws.onclose = () => {
+    $("status").textContent = "disconnected – retrying"; $("status").className = "pill bad";
+    setTimeout(connect, Math.min(5000, 250 * 2 ** retry++)); // server restart -> page reconnects by itself
+  };
+  ws.onmessage = (m) => {
+    const msg = JSON.parse(m.data);
+    if (msg.type === "hello") { msg.pushes.forEach(showPush); setAgent(msg.agentListening); }
+    else if (msg.type === "presence") setAgent(msg.agentListening);
+    else if (msg.type === "agent-push") showPush(msg.push);
+    else if (msg.type === "doc-changed") { $("doc").contentWindow.location.reload(); logLine("doc changed on disk, reloaded"); }
+    else if (msg.type === "queued") logLine(`queued ${msg.eventType} #${msg.seq}`);
+    else if (msg.type === "server-stopped") logLine("server stopped: " + msg.reason);
+  };
+}
+function send(obj) {
+  if (ws?.readyState !== 1) { logLine("not connected – event NOT sent"); return; }
+  ws.send(JSON.stringify(obj));
+}
+$("send").onclick = () => {
+  const text = $("feedback").value.trim();
+  if (!text) return;
+  send({ type: "feedback", text });
+  $("feedback").value = "";
+};
+$("edited").onclick = () => send({ type: "edit", summary: "user edited the document (simulated)" });
+$("annotate").onclick = () => {
+  const sel = $("doc").contentWindow.getSelection();
+  const quote = sel ? String(sel).trim() : "";
+  const comment = $("feedback").value.trim() || "(no comment)";
+  send({ type: "annotation", quote: quote || "(nothing selected)", comment });
+  $("feedback").value = "";
+};
+connect();
+</script>
+</body>
+</html>

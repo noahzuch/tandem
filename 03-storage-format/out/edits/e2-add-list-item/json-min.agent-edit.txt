@@ -1,0 +1,31 @@
+--- old_string ---
+                    "text": "Conflicts are visible to the user, never "
+--- new_string ---
+                    "text": "The outbox survives app restarts and "
+                  },
+                  {
+                    "type": "text",
+                    "marks": [
+                      {
+                        "type": "bold"
+                      }
+                    ],
+                    "text": "OS updates"
+                  },
+                  {
+                    "type": "text",
+                    "text": "."
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "listItem",
+            "content": [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "Conflicts are visible to the user, never "

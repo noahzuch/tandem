@@ -1,0 +1,15 @@
+# user Noah has the caret inside the SVG label "POST /sync" (island soft lock via awareness)
+$ npm run agent -- set-island-text '>save<' '>save (local)<' --lock-timeout 1500
+connected to ws://127.0.0.1:53672/collab as "Claude" in 8 ms (25 blocks)
+via: ws
+op: set-island-text
+locked: true
+lockedBy: Noah
+island: <figure class="diagram">
+waitedMs: 1518
+(exit 5)
+
+$ npm run agent -- set-island-text '>save<' '>save (local)<' --lock-timeout 1500 --json
+connected to ws://127.0.0.1:53672/collab as "Claude" in 8 ms (25 blocks)
+{"via":"ws","op":"set-island-text","locked":true,"lockedBy":"Noah","island":"<figure class=\"diagram\">","waitedMs":1516}
+(exit 5)

@@ -1,0 +1,1662 @@
+{
+  "format": "collab-pm-json",
+  "version": 1,
+  "shell": {
+    "before": "<!doctype html>\n<html lang=\"en\">\n<head>\n  <meta charset=\"utf-8\">\n  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n  <title>Spec: Offline sync for field notes</title>\n  <!-- Generated during brainstorming session 2026-10-24; edited by user + agent -->\n  <style>\n    :root { --accent: #4a78c2; --warn: #d98e04; }\n    body { font: 16px/1.55 Georgia, serif; max-width: 880px; margin: 32px auto; padding: 0 16px; color: #1d1d1d; }\n    h1, h2, h3 { font-family: system-ui, sans-serif; }\n    table { border-collapse: collapse; width: 100%; }\n    th, td { border: 1px solid #ccc; padding: 6px 8px; text-align: left; vertical-align: top; }\n    .callout { border-left: 4px solid var(--accent); background: #eef3fb; padding: 10px 14px; margin: 16px 0; }\n    .callout.warning { border-left-color: var(--warn); background: #fff7e6; }\n    .status-badge { display: inline-block; padding: 1px 8px; border-radius: 10px; background: #e3f5e1; font-size: 13px; }\n    pre { background: #f3f3f3; padding: 10px; overflow: auto; }\n    figure.diagram { margin: 16px 0; }\n    .muted { color: #666; }\n  </style>\n</head>\n<body>",
+    "after": "</body>\n</html>\n"
+  },
+  "doc": {
+    "type": "doc",
+    "content": [
+      {
+        "type": "container",
+        "attrs": {
+          "htmlAttrs": {
+            "class": "doc-meta",
+            "data-doc-id": "spec-offline-sync",
+            "data-status": "draft"
+          },
+          "tag": "header"
+        },
+        "content": [
+          {
+            "type": "heading",
+            "attrs": {
+              "textAlign": null,
+              "htmlAttrs": {
+                "id": "title"
+              },
+              "level": 1
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "Spec: Offline sync for field notes"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "attrs": {
+              "textAlign": null,
+              "htmlAttrs": {
+                "class": "muted"
+              }
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "Status: "
+              },
+              {
+                "type": "text",
+                "marks": [
+                  {
+                    "type": "inlineTag",
+                    "attrs": {
+                      "tag": "span",
+                      "attrs": {
+                        "class": "status-badge",
+                        "data-status": "draft"
+                      }
+                    }
+                  }
+                ],
+                "text": "Draft"
+              },
+              {
+                "type": "text",
+                "text": " · Owner: Noah · Last updated: 2026-10-24"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "attrs": {
+          "textAlign": null,
+          "htmlAttrs": null
+        },
+        "content": [
+          {
+            "type": "text",
+            "text": "Field technicians lose connectivity on site. Notes taken offline must "
+          },
+          {
+            "type": "text",
+            "marks": [
+              {
+                "type": "bold",
+                "attrs": {
+                  "htmlAttrs": null
+                }
+              }
+            ],
+            "text": "sync without data loss"
+          },
+          {
+            "type": "text",
+            "text": " once the device is back online. This spec covers the "
+          },
+          {
+            "type": "text",
+            "marks": [
+              {
+                "type": "italic",
+                "attrs": {
+                  "htmlAttrs": null
+                }
+              }
+            ],
+            "text": "client-side queue"
+          },
+          {
+            "type": "text",
+            "text": ", the "
+          },
+          {
+            "type": "text",
+            "marks": [
+              {
+                "type": "code",
+                "attrs": {
+                  "htmlAttrs": null
+                }
+              }
+            ],
+            "text": "/sync"
+          },
+          {
+            "type": "text",
+            "text": " endpoint and "
+          },
+          {
+            "type": "text",
+            "marks": [
+              {
+                "type": "link",
+                "attrs": {
+                  "htmlAttrs": null,
+                  "href": "https://example.com/adr/0007",
+                  "target": null,
+                  "rel": null,
+                  "class": null,
+                  "title": "ADR 0007"
+                }
+              }
+            ],
+            "text": "ADR 0007"
+          },
+          {
+            "type": "text",
+            "text": " on conflict handling."
+          }
+        ]
+      },
+      {
+        "type": "callout",
+        "attrs": {
+          "htmlAttrs": {
+            "class": "callout warning",
+            "data-kind": "warning",
+            "id": "decision-needed"
+          }
+        },
+        "content": [
+          {
+            "type": "paragraph",
+            "attrs": {
+              "textAlign": null,
+              "htmlAttrs": null
+            },
+            "content": [
+              {
+                "type": "text",
+                "marks": [
+                  {
+                    "type": "bold",
+                    "attrs": {
+                      "htmlAttrs": null
+                    }
+                  }
+                ],
+                "text": "Decision needed:"
+              },
+              {
+                "type": "text",
+                "text": " last-writer-wins vs. CRDT merge for concurrent edits of the same note. See "
+              },
+              {
+                "type": "text",
+                "marks": [
+                  {
+                    "type": "link",
+                    "attrs": {
+                      "htmlAttrs": null,
+                      "href": "#conflicts",
+                      "target": null,
+                      "rel": null,
+                      "class": null,
+                      "title": null
+                    }
+                  }
+                ],
+                "text": "Conflict handling"
+              },
+              {
+                "type": "text",
+                "text": "."
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "heading",
+        "attrs": {
+          "textAlign": null,
+          "htmlAttrs": {
+            "id": "goals"
+          },
+          "level": 2
+        },
+        "content": [
+          {
+            "type": "text",
+            "text": "1. Goals"
+          }
+        ]
+      },
+      {
+        "type": "bulletList",
+        "attrs": {
+          "htmlAttrs": null
+        },
+        "content": [
+          {
+            "type": "listItem",
+            "attrs": {
+              "htmlAttrs": null
+            },
+            "content": [
+              {
+                "type": "paragraph",
+                "attrs": {
+                  "textAlign": null,
+                  "htmlAttrs": null
+                },
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "Never lose a note written offline."
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "listItem",
+            "attrs": {
+              "htmlAttrs": null
+            },
+            "content": [
+              {
+                "type": "paragraph",
+                "attrs": {
+                  "textAlign": null,
+                  "htmlAttrs": null
+                },
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "Sync completes within "
+                  },
+                  {
+                    "type": "text",
+                    "marks": [
+                      {
+                        "type": "bold",
+                        "attrs": {
+                          "htmlAttrs": null
+                        }
+                      }
+                    ],
+                    "text": "10 s"
+                  },
+                  {
+                    "type": "text",
+                    "text": " of reconnecting for a typical day of notes."
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "listItem",
+            "attrs": {
+              "htmlAttrs": null
+            },
+            "content": [
+              {
+                "type": "paragraph",
+                "attrs": {
+                  "textAlign": null,
+                  "htmlAttrs": null
+                },
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "Conflicts are visible to the user, never "
+                  },
+                  {
+                    "type": "text",
+                    "marks": [
+                      {
+                        "type": "italic",
+                        "attrs": {
+                          "htmlAttrs": null
+                        }
+                      }
+                    ],
+                    "text": "silently"
+                  },
+                  {
+                    "type": "text",
+                    "text": " dropped."
+                  }
+                ]
+              },
+              {
+                "type": "bulletList",
+                "attrs": {
+                  "htmlAttrs": null
+                },
+                "content": [
+                  {
+                    "type": "listItem",
+                    "attrs": {
+                      "htmlAttrs": null
+                    },
+                    "content": [
+                      {
+                        "type": "paragraph",
+                        "attrs": {
+                          "textAlign": null,
+                          "htmlAttrs": null
+                        },
+                        "content": [
+                          {
+                            "type": "text",
+                            "text": "Shown as a banner on the note."
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "type": "listItem",
+                    "attrs": {
+                      "htmlAttrs": null
+                    },
+                    "content": [
+                      {
+                        "type": "paragraph",
+                        "attrs": {
+                          "textAlign": null,
+                          "htmlAttrs": null
+                        },
+                        "content": [
+                          {
+                            "type": "text",
+                            "text": "Listed in the "
+                          },
+                          {
+                            "type": "text",
+                            "marks": [
+                              {
+                                "type": "code",
+                                "attrs": {
+                                  "htmlAttrs": null
+                                }
+                              }
+                            ],
+                            "text": "Conflicts"
+                          },
+                          {
+                            "type": "text",
+                            "text": " inbox."
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "heading",
+        "attrs": {
+          "textAlign": null,
+          "htmlAttrs": {
+            "id": "non-goals"
+          },
+          "level": 3
+        },
+        "content": [
+          {
+            "type": "text",
+            "text": "1.1 Non-goals"
+          }
+        ]
+      },
+      {
+        "type": "orderedList",
+        "attrs": {
+          "htmlAttrs": null,
+          "start": 1,
+          "type": null
+        },
+        "content": [
+          {
+            "type": "listItem",
+            "attrs": {
+              "htmlAttrs": null
+            },
+            "content": [
+              {
+                "type": "paragraph",
+                "attrs": {
+                  "textAlign": null,
+                  "htmlAttrs": null
+                },
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "Real-time collaboration between technicians."
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "listItem",
+            "attrs": {
+              "htmlAttrs": null
+            },
+            "content": [
+              {
+                "type": "paragraph",
+                "attrs": {
+                  "textAlign": null,
+                  "htmlAttrs": null
+                },
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "Syncing attachments larger than 25 MB."
+                  }
+                ]
+              },
+              {
+                "type": "orderedList",
+                "attrs": {
+                  "htmlAttrs": null,
+                  "start": 1,
+                  "type": "a"
+                },
+                "content": [
+                  {
+                    "type": "listItem",
+                    "attrs": {
+                      "htmlAttrs": null
+                    },
+                    "content": [
+                      {
+                        "type": "paragraph",
+                        "attrs": {
+                          "textAlign": null,
+                          "htmlAttrs": null
+                        },
+                        "content": [
+                          {
+                            "type": "text",
+                            "text": "Those are uploaded separately via the media service."
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "listItem",
+            "attrs": {
+              "htmlAttrs": null
+            },
+            "content": [
+              {
+                "type": "paragraph",
+                "attrs": {
+                  "textAlign": null,
+                  "htmlAttrs": null
+                },
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "Web client support (mobile only for v1)."
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "heading",
+        "attrs": {
+          "textAlign": null,
+          "htmlAttrs": {
+            "id": "flow"
+          },
+          "level": 2
+        },
+        "content": [
+          {
+            "type": "text",
+            "text": "2. Flow"
+          }
+        ]
+      },
+      {
+        "type": "htmlIsland",
+        "attrs": {
+          "html": "<figure class=\"diagram\">\n    <svg width=\"620\" height=\"120\" viewBox=\"0 0 620 120\" role=\"img\" aria-label=\"device to queue to server flow\" xmlns=\"http://www.w3.org/2000/svg\">\n      <defs>\n        <marker id=\"arrow\" viewBox=\"0 0 10 10\" refX=\"9\" refY=\"5\" markerWidth=\"7\" markerHeight=\"7\" orient=\"auto-start-reverse\">\n          <path d=\"M 0 0 L 10 5 L 0 10 z\" fill=\"#4a78c2\"/>\n        </marker>\n      </defs>\n      <rect x=\"10\" y=\"35\" width=\"150\" height=\"50\" rx=\"8\" fill=\"#e7f0ff\" stroke=\"#4a78c2\"/>\n      <text x=\"85\" y=\"65\" text-anchor=\"middle\" font-family=\"sans-serif\" font-size=\"14\">Device editor</text>\n      <rect x=\"235\" y=\"35\" width=\"150\" height=\"50\" rx=\"8\" fill=\"#fff7e6\" stroke=\"#d98e04\"/>\n      <text x=\"310\" y=\"65\" text-anchor=\"middle\" font-family=\"sans-serif\" font-size=\"14\">Outbox queue</text>\n      <rect x=\"460\" y=\"35\" width=\"150\" height=\"50\" rx=\"8\" fill=\"#e3f5e1\" stroke=\"#3a8a35\"/>\n      <text x=\"535\" y=\"65\" text-anchor=\"middle\" font-family=\"sans-serif\" font-size=\"14\">Sync server</text>\n      <line x1=\"160\" y1=\"60\" x2=\"233\" y2=\"60\" stroke=\"#4a78c2\" stroke-width=\"2\" marker-end=\"url(#arrow)\"/>\n      <line x1=\"385\" y1=\"60\" x2=\"458\" y2=\"60\" stroke=\"#4a78c2\" stroke-width=\"2\" marker-end=\"url(#arrow)\"/>\n      <text x=\"196\" y=\"50\" text-anchor=\"middle\" font-family=\"sans-serif\" font-size=\"11\" fill=\"#555\">save</text>\n      <text x=\"421\" y=\"50\" text-anchor=\"middle\" font-family=\"sans-serif\" font-size=\"11\" fill=\"#555\">POST /sync</text>\n    </svg>\n    <figcaption>Figure 1: Notes flow from the editor into a durable outbox, then to the server.</figcaption>\n  </figure>"
+        }
+      },
+      {
+        "type": "container",
+        "attrs": {
+          "htmlAttrs": {
+            "style": "display: grid; grid-template-columns: 1fr 1fr; gap: 24px",
+            "class": "two-col"
+          },
+          "tag": "div"
+        },
+        "content": [
+          {
+            "type": "container",
+            "attrs": {
+              "htmlAttrs": null,
+              "tag": "div"
+            },
+            "content": [
+              {
+                "type": "heading",
+                "attrs": {
+                  "textAlign": null,
+                  "htmlAttrs": null,
+                  "level": 3
+                },
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "Online"
+                  }
+                ]
+              },
+              {
+                "type": "paragraph",
+                "attrs": {
+                  "textAlign": null,
+                  "htmlAttrs": null
+                },
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "Each save is pushed immediately. The outbox stays empty."
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "container",
+            "attrs": {
+              "htmlAttrs": null,
+              "tag": "div"
+            },
+            "content": [
+              {
+                "type": "heading",
+                "attrs": {
+                  "textAlign": null,
+                  "htmlAttrs": null,
+                  "level": 3
+                },
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "Offline"
+                  }
+                ]
+              },
+              {
+                "type": "paragraph",
+                "attrs": {
+                  "textAlign": null,
+                  "htmlAttrs": null
+                },
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "Saves are appended to the outbox and replayed "
+                  },
+                  {
+                    "type": "text",
+                    "marks": [
+                      {
+                        "type": "underline",
+                        "attrs": {
+                          "htmlAttrs": null
+                        }
+                      }
+                    ],
+                    "text": "in order"
+                  },
+                  {
+                    "type": "text",
+                    "text": " on reconnect."
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "heading",
+        "attrs": {
+          "textAlign": null,
+          "htmlAttrs": {
+            "id": "api"
+          },
+          "level": 2
+        },
+        "content": [
+          {
+            "type": "text",
+            "text": "3. API"
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "attrs": {
+          "textAlign": null,
+          "htmlAttrs": null
+        },
+        "content": [
+          {
+            "type": "text",
+            "text": "The client sends batches of operations. Each operation carries a "
+          },
+          {
+            "type": "text",
+            "marks": [
+              {
+                "type": "highlight",
+                "attrs": {
+                  "htmlAttrs": null,
+                  "color": ""
+                }
+              }
+            ],
+            "text": "client-generated id"
+          },
+          {
+            "type": "text",
+            "text": " so retries are idempotent."
+          }
+        ]
+      },
+      {
+        "type": "codeBlock",
+        "attrs": {
+          "htmlAttrs": null,
+          "language": "typescript",
+          "codeAttrs": null
+        },
+        "content": [
+          {
+            "type": "text",
+            "text": "interface SyncBatch {\n  deviceId: string;\n  ops: Array<{ id: string; noteId: string; kind: \"upsert\" | \"delete\"; at: number }>;\n}\n\nasync function flush(outbox: Outbox): Promise<void> {\n  const batch = await outbox.take(50);\n  if (batch.ops.length === 0) return;\n  await fetch(\"/sync\", { method: \"POST\", body: JSON.stringify(batch) });\n}"
+          }
+        ]
+      },
+      {
+        "type": "table",
+        "attrs": {
+          "htmlAttrs": {
+            "class": "spec-table",
+            "id": "error-codes"
+          }
+        },
+        "content": [
+          {
+            "type": "tableRow",
+            "attrs": {
+              "htmlAttrs": null
+            },
+            "content": [
+              {
+                "type": "tableHeader",
+                "attrs": {
+                  "htmlAttrs": null,
+                  "colspan": 1,
+                  "rowspan": 1,
+                  "colwidth": null,
+                  "align": null
+                },
+                "content": [
+                  {
+                    "type": "paragraph",
+                    "attrs": {
+                      "textAlign": null,
+                      "htmlAttrs": null
+                    },
+                    "content": [
+                      {
+                        "type": "text",
+                        "text": "Status"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "tableHeader",
+                "attrs": {
+                  "htmlAttrs": null,
+                  "colspan": 1,
+                  "rowspan": 1,
+                  "colwidth": null,
+                  "align": null
+                },
+                "content": [
+                  {
+                    "type": "paragraph",
+                    "attrs": {
+                      "textAlign": null,
+                      "htmlAttrs": null
+                    },
+                    "content": [
+                      {
+                        "type": "text",
+                        "text": "Meaning"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "tableHeader",
+                "attrs": {
+                  "htmlAttrs": null,
+                  "colspan": 1,
+                  "rowspan": 1,
+                  "colwidth": null,
+                  "align": null
+                },
+                "content": [
+                  {
+                    "type": "paragraph",
+                    "attrs": {
+                      "textAlign": null,
+                      "htmlAttrs": null
+                    },
+                    "content": [
+                      {
+                        "type": "text",
+                        "text": "Client action"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "tableRow",
+            "attrs": {
+              "htmlAttrs": null
+            },
+            "content": [
+              {
+                "type": "tableCell",
+                "attrs": {
+                  "htmlAttrs": null,
+                  "colspan": 1,
+                  "rowspan": 1,
+                  "colwidth": null,
+                  "align": null
+                },
+                "content": [
+                  {
+                    "type": "paragraph",
+                    "attrs": {
+                      "textAlign": null,
+                      "htmlAttrs": null
+                    },
+                    "content": [
+                      {
+                        "type": "text",
+                        "marks": [
+                          {
+                            "type": "code",
+                            "attrs": {
+                              "htmlAttrs": null
+                            }
+                          }
+                        ],
+                        "text": "200"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "tableCell",
+                "attrs": {
+                  "htmlAttrs": null,
+                  "colspan": 1,
+                  "rowspan": 1,
+                  "colwidth": null,
+                  "align": null
+                },
+                "content": [
+                  {
+                    "type": "paragraph",
+                    "attrs": {
+                      "textAlign": null,
+                      "htmlAttrs": null
+                    },
+                    "content": [
+                      {
+                        "type": "text",
+                        "text": "All ops applied"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "tableCell",
+                "attrs": {
+                  "htmlAttrs": null,
+                  "colspan": 1,
+                  "rowspan": 1,
+                  "colwidth": null,
+                  "align": null
+                },
+                "content": [
+                  {
+                    "type": "paragraph",
+                    "attrs": {
+                      "textAlign": null,
+                      "htmlAttrs": null
+                    },
+                    "content": [
+                      {
+                        "type": "text",
+                        "text": "Drop ops from outbox"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "tableRow",
+            "attrs": {
+              "htmlAttrs": null
+            },
+            "content": [
+              {
+                "type": "tableCell",
+                "attrs": {
+                  "htmlAttrs": null,
+                  "colspan": 1,
+                  "rowspan": 1,
+                  "colwidth": null,
+                  "align": null
+                },
+                "content": [
+                  {
+                    "type": "paragraph",
+                    "attrs": {
+                      "textAlign": null,
+                      "htmlAttrs": null
+                    },
+                    "content": [
+                      {
+                        "type": "text",
+                        "marks": [
+                          {
+                            "type": "code",
+                            "attrs": {
+                              "htmlAttrs": null
+                            }
+                          }
+                        ],
+                        "text": "409"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "tableCell",
+                "attrs": {
+                  "htmlAttrs": null,
+                  "colspan": 1,
+                  "rowspan": 1,
+                  "colwidth": null,
+                  "align": null
+                },
+                "content": [
+                  {
+                    "type": "paragraph",
+                    "attrs": {
+                      "textAlign": null,
+                      "htmlAttrs": null
+                    },
+                    "content": [
+                      {
+                        "type": "text",
+                        "text": "Conflict on at least one note"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "tableCell",
+                "attrs": {
+                  "htmlAttrs": null,
+                  "colspan": 1,
+                  "rowspan": 2,
+                  "colwidth": null,
+                  "align": null
+                },
+                "content": [
+                  {
+                    "type": "paragraph",
+                    "attrs": {
+                      "textAlign": null,
+                      "htmlAttrs": null
+                    },
+                    "content": [
+                      {
+                        "type": "text",
+                        "text": "Keep ops, show conflict banner"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "tableRow",
+            "attrs": {
+              "htmlAttrs": null
+            },
+            "content": [
+              {
+                "type": "tableCell",
+                "attrs": {
+                  "htmlAttrs": null,
+                  "colspan": 1,
+                  "rowspan": 1,
+                  "colwidth": null,
+                  "align": null
+                },
+                "content": [
+                  {
+                    "type": "paragraph",
+                    "attrs": {
+                      "textAlign": null,
+                      "htmlAttrs": null
+                    },
+                    "content": [
+                      {
+                        "type": "text",
+                        "marks": [
+                          {
+                            "type": "code",
+                            "attrs": {
+                              "htmlAttrs": null
+                            }
+                          }
+                        ],
+                        "text": "412"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "tableCell",
+                "attrs": {
+                  "htmlAttrs": null,
+                  "colspan": 1,
+                  "rowspan": 1,
+                  "colwidth": null,
+                  "align": null
+                },
+                "content": [
+                  {
+                    "type": "paragraph",
+                    "attrs": {
+                      "textAlign": null,
+                      "htmlAttrs": null
+                    },
+                    "content": [
+                      {
+                        "type": "text",
+                        "text": "Stale base version"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "tableRow",
+            "attrs": {
+              "htmlAttrs": null
+            },
+            "content": [
+              {
+                "type": "tableCell",
+                "attrs": {
+                  "htmlAttrs": null,
+                  "colspan": 1,
+                  "rowspan": 1,
+                  "colwidth": null,
+                  "align": null
+                },
+                "content": [
+                  {
+                    "type": "paragraph",
+                    "attrs": {
+                      "textAlign": null,
+                      "htmlAttrs": null
+                    },
+                    "content": [
+                      {
+                        "type": "text",
+                        "marks": [
+                          {
+                            "type": "code",
+                            "attrs": {
+                              "htmlAttrs": null
+                            }
+                          }
+                        ],
+                        "text": "429"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "tableCell",
+                "attrs": {
+                  "htmlAttrs": null,
+                  "colspan": 1,
+                  "rowspan": 1,
+                  "colwidth": null,
+                  "align": null
+                },
+                "content": [
+                  {
+                    "type": "paragraph",
+                    "attrs": {
+                      "textAlign": null,
+                      "htmlAttrs": null
+                    },
+                    "content": [
+                      {
+                        "type": "text",
+                        "text": "Rate limited"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "tableCell",
+                "attrs": {
+                  "htmlAttrs": null,
+                  "colspan": 1,
+                  "rowspan": 1,
+                  "colwidth": null,
+                  "align": null
+                },
+                "content": [
+                  {
+                    "type": "paragraph",
+                    "attrs": {
+                      "textAlign": null,
+                      "htmlAttrs": null
+                    },
+                    "content": [
+                      {
+                        "type": "text",
+                        "text": "Retry after "
+                      },
+                      {
+                        "type": "text",
+                        "marks": [
+                          {
+                            "type": "code",
+                            "attrs": {
+                              "htmlAttrs": null
+                            }
+                          }
+                        ],
+                        "text": "Retry-After"
+                      },
+                      {
+                        "type": "text",
+                        "text": " seconds"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "tableRow",
+            "attrs": {
+              "htmlAttrs": null
+            },
+            "content": [
+              {
+                "type": "tableCell",
+                "attrs": {
+                  "htmlAttrs": null,
+                  "colspan": 2,
+                  "rowspan": 1,
+                  "colwidth": null,
+                  "align": "center"
+                },
+                "content": [
+                  {
+                    "type": "paragraph",
+                    "attrs": {
+                      "textAlign": null,
+                      "htmlAttrs": null
+                    },
+                    "content": [
+                      {
+                        "type": "text",
+                        "marks": [
+                          {
+                            "type": "italic",
+                            "attrs": {
+                              "htmlAttrs": null
+                            }
+                          }
+                        ],
+                        "text": "Any 5xx"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "tableCell",
+                "attrs": {
+                  "htmlAttrs": null,
+                  "colspan": 1,
+                  "rowspan": 1,
+                  "colwidth": null,
+                  "align": null
+                },
+                "content": [
+                  {
+                    "type": "paragraph",
+                    "attrs": {
+                      "textAlign": null,
+                      "htmlAttrs": null
+                    },
+                    "content": [
+                      {
+                        "type": "text",
+                        "text": "Retry with exponential backoff"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "heading",
+        "attrs": {
+          "textAlign": null,
+          "htmlAttrs": {
+            "id": "conflicts"
+          },
+          "level": 2
+        },
+        "content": [
+          {
+            "type": "text",
+            "text": "4. Conflict handling"
+          }
+        ]
+      },
+      {
+        "type": "blockquote",
+        "attrs": {
+          "htmlAttrs": null
+        },
+        "content": [
+          {
+            "type": "paragraph",
+            "attrs": {
+              "textAlign": null,
+              "htmlAttrs": null
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "“If two technicians edit the same note offline, neither should lose their text.”"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "attrs": {
+              "textAlign": null,
+              "htmlAttrs": null
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "— Field ops lead, interview 2026-10-12"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "attrs": {
+          "textAlign": "center",
+          "htmlAttrs": null
+        },
+        "content": [
+          {
+            "type": "text",
+            "text": "We merge at "
+          },
+          {
+            "type": "text",
+            "marks": [
+              {
+                "type": "bold",
+                "attrs": {
+                  "htmlAttrs": null
+                }
+              },
+              {
+                "type": "italic",
+                "attrs": {
+                  "htmlAttrs": null
+                }
+              }
+            ],
+            "text": "paragraph"
+          },
+          {
+            "type": "text",
+            "text": " granularity and mark overlapping edits."
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "attrs": {
+          "textAlign": null,
+          "htmlAttrs": null
+        },
+        "content": [
+          {
+            "type": "image",
+            "attrs": {
+              "htmlAttrs": {
+                "class": "mockup",
+                "data-figure": "2"
+              },
+              "src": "https://example.com/img/conflict-banner.png",
+              "alt": "Mockup of the conflict banner",
+              "title": null,
+              "width": 480,
+              "height": null
+            }
+          }
+        ]
+      },
+      {
+        "type": "heading",
+        "attrs": {
+          "textAlign": null,
+          "htmlAttrs": {
+            "id": "tasks"
+          },
+          "level": 2
+        },
+        "content": [
+          {
+            "type": "text",
+            "text": "5. Open tasks"
+          }
+        ]
+      },
+      {
+        "type": "taskList",
+        "attrs": {
+          "htmlAttrs": null
+        },
+        "content": [
+          {
+            "type": "taskItem",
+            "attrs": {
+              "htmlAttrs": null,
+              "checked": true
+            },
+            "content": [
+              {
+                "type": "paragraph",
+                "attrs": {
+                  "textAlign": null,
+                  "htmlAttrs": null
+                },
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "Agree on outbox storage (SQLite)"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "taskItem",
+            "attrs": {
+              "htmlAttrs": null,
+              "checked": false
+            },
+            "content": [
+              {
+                "type": "paragraph",
+                "attrs": {
+                  "textAlign": null,
+                  "htmlAttrs": null
+                },
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "Decide LWW vs. CRDT (see "
+                  },
+                  {
+                    "type": "text",
+                    "marks": [
+                      {
+                        "type": "link",
+                        "attrs": {
+                          "htmlAttrs": null,
+                          "href": "#decision-needed",
+                          "target": null,
+                          "rel": null,
+                          "class": null,
+                          "title": null
+                        }
+                      }
+                    ],
+                    "text": "callout"
+                  },
+                  {
+                    "type": "text",
+                    "text": ")"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "taskItem",
+            "attrs": {
+              "htmlAttrs": null,
+              "checked": false
+            },
+            "content": [
+              {
+                "type": "paragraph",
+                "attrs": {
+                  "textAlign": null,
+                  "htmlAttrs": null
+                },
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "Load-test "
+                  },
+                  {
+                    "type": "text",
+                    "marks": [
+                      {
+                        "type": "code",
+                        "attrs": {
+                          "htmlAttrs": null
+                        }
+                      }
+                    ],
+                    "text": "/sync"
+                  },
+                  {
+                    "type": "text",
+                    "text": " with 500 devices"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "details",
+        "attrs": {
+          "htmlAttrs": {
+            "class": "appendix"
+          },
+          "open": true
+        },
+        "content": [
+          {
+            "type": "detailsSummary",
+            "attrs": {
+              "htmlAttrs": null
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "Appendix A: rejected alternatives"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "attrs": {
+              "textAlign": null,
+              "htmlAttrs": null
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "Full-document sync was rejected: it re-sends every note on each reconnect."
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "horizontalRule",
+        "attrs": {
+          "htmlAttrs": null
+        }
+      },
+      {
+        "type": "paragraph",
+        "attrs": {
+          "textAlign": null,
+          "htmlAttrs": {
+            "class": "muted"
+          }
+        },
+        "content": [
+          {
+            "type": "text",
+            "marks": [
+              {
+                "type": "inlineTag",
+                "attrs": {
+                  "tag": "small",
+                  "attrs": null
+                }
+              }
+            ],
+            "text": "Glossary: "
+          },
+          {
+            "type": "text",
+            "marks": [
+              {
+                "type": "inlineTag",
+                "attrs": {
+                  "tag": "small",
+                  "attrs": null
+                }
+              },
+              {
+                "type": "inlineTag",
+                "attrs": {
+                  "tag": "abbr",
+                  "attrs": {
+                    "title": "Last Writer Wins"
+                  }
+                }
+              }
+            ],
+            "text": "LWW"
+          },
+          {
+            "type": "text",
+            "marks": [
+              {
+                "type": "inlineTag",
+                "attrs": {
+                  "tag": "small",
+                  "attrs": null
+                }
+              }
+            ],
+            "text": ", "
+          },
+          {
+            "type": "text",
+            "marks": [
+              {
+                "type": "inlineTag",
+                "attrs": {
+                  "tag": "small",
+                  "attrs": null
+                }
+              },
+              {
+                "type": "inlineTag",
+                "attrs": {
+                  "tag": "abbr",
+                  "attrs": {
+                    "title": "Conflict-free Replicated Data Type"
+                  }
+                }
+              }
+            ],
+            "text": "CRDT"
+          },
+          {
+            "type": "text",
+            "marks": [
+              {
+                "type": "inlineTag",
+                "attrs": {
+                  "tag": "small",
+                  "attrs": null
+                }
+              }
+            ],
+            "text": ". Press "
+          },
+          {
+            "type": "text",
+            "marks": [
+              {
+                "type": "inlineTag",
+                "attrs": {
+                  "tag": "small",
+                  "attrs": null
+                }
+              },
+              {
+                "type": "inlineTag",
+                "attrs": {
+                  "tag": "kbd",
+                  "attrs": null
+                }
+              }
+            ],
+            "text": "Ctrl"
+          },
+          {
+            "type": "text",
+            "marks": [
+              {
+                "type": "inlineTag",
+                "attrs": {
+                  "tag": "small",
+                  "attrs": null
+                }
+              }
+            ],
+            "text": "+"
+          },
+          {
+            "type": "text",
+            "marks": [
+              {
+                "type": "inlineTag",
+                "attrs": {
+                  "tag": "small",
+                  "attrs": null
+                }
+              },
+              {
+                "type": "inlineTag",
+                "attrs": {
+                  "tag": "kbd",
+                  "attrs": null
+                }
+              }
+            ],
+            "text": "S"
+          },
+          {
+            "type": "text",
+            "marks": [
+              {
+                "type": "inlineTag",
+                "attrs": {
+                  "tag": "small",
+                  "attrs": null
+                }
+              }
+            ],
+            "text": " to force a sync."
+          }
+        ]
+      },
+      {
+        "type": "htmlIsland",
+        "attrs": {
+          "html": "<x-agent-note data-agent=\"claude\" data-ts=\"2026-10-24T10:15:00Z\">Agent: I assumed SQLite on the device; please confirm.</x-agent-note>"
+        }
+      }
+    ]
+  }
+}

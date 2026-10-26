@@ -1,0 +1,22 @@
+{
+  "typedSentences": 6,
+  "intactInLiveDoc": 6,
+  "missing": [],
+  "partial": [],
+  "notInFileAfterFlush": [],
+  "threads": [
+    {
+      "id": "t0jq6e7",
+      "status": "open",
+      "orphaned": false,
+      "quote": "on site",
+      "messages": 1
+    }
+  ],
+  "health": {
+    "externalMerges": 2,
+    "storesDeferredForExternalEdit": 0,
+    "stores": 14,
+    "echoesIgnored": 14
+  }
+}

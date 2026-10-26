@@ -1,0 +1,26 @@
+{
+  "typedSentences": 15,
+  "intactInLiveDoc": 14,
+  "missing": [],
+  "partial": [
+    "u08: Keep it short, the ops lead reads this on a phone (u08)."
+  ],
+  "notInFileAfterFlush": [
+    "u08"
+  ],
+  "threads": [
+    {
+      "id": "twodhkw",
+      "status": "resolved",
+      "orphaned": false,
+      "quote": "on site",
+      "messages": 2
+    }
+  ],
+  "health": {
+    "externalMerges": 9,
+    "storesDeferredForExternalEdit": 0,
+    "stores": 34,
+    "echoesIgnored": 34
+  }
+}

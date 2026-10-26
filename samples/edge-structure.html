@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><title>Edge cases: structure</title><script>console.log("head script")</script></head>
+<body>
+<h1>Structure edge cases</h1>
+<h4>Heading 4</h4>
+<h5>Heading 5</h5>
+<h6>Heading 6</h6>
+<p></p>
+<p>Paragraph after an empty one.</p>
+Loose text directly in body.
+<div>Text directly in a div, no paragraph.</div>
+<section id="sec-1" class="card"><h2>Section element</h2><p>Inside a section.</p></section>
+<article><p>Inside an article.</p></article>
+<ul>
+  <li><p>List item with paragraph</p><p>and a second paragraph</p></li>
+  <li>Item with nested ordered list
+    <ol start="3"><li>starts at three</li><li>four</li></ol>
+  </li>
+  <li>Item with code block<pre><code>inside list</code></pre></li>
+</ul>
+<ol reversed><li>reversed list</li></ol>
+<ul data-type="taskList">
+  <li data-type="taskItem" data-checked="true">done task
+    <ul data-type="taskList"><li data-type="taskItem" data-checked="false">nested task</li></ul>
+  </li>
+</ul>
+<ul><li><input type="checkbox" checked> GitHub-style checkbox item</li></ul>
+<dl><dt>Term</dt><dd>Definition</dd></dl>
+<table>
+  <caption>Table with caption, colgroup and tfoot</caption>
+  <colgroup><col style="width:120px"><col></colgroup>
+  <thead><tr><th>A</th><th>B</th></tr></thead>
+  <tbody>
+    <tr><td><p>cell para 1</p><p>cell para 2</p></td><td><ul><li>list in cell</li></ul></td></tr>
+    <tr><th scope="row">row header</th><td style="background:#eee" class="hl">styled cell</td></tr>
+  </tbody>
+  <tfoot><tr><td colspan="2">footer</td></tr></tfoot>
+</table>
+<table><tr><td>table without thead/tbody</td><td>x</td></tr></table>
+<pre>pre without code
+    indented line</pre>
+<pre><code class="lang-js">// lang- prefix instead of language-
+const x = 1;</code></pre>
+<pre><code data-language="python">print("data-language attr")</code></pre>
+<blockquote cite="https://example.com">Blockquote without paragraph</blockquote>
+<figure><img src="https://example.com/a.png" alt="figure img"><figcaption>Caption text</figcaption></figure>
+<iframe src="https://example.com/embed" width="300" height="150"></iframe>
+<video src="https://example.com/v.mp4" controls></video>
+<details><summary>Closed details</summary><ul><li>list in details</li></ul></details>
+<form><label>Name <input type="text" value="x"></label><button>Go</button></form>
+<script>console.log("body script")</script>
+<noscript>noscript text</noscript>
+<!-- block-level comment -->
+<hr class="fancy">
+<p>Last paragraph.</p>
+</body>
+</html>

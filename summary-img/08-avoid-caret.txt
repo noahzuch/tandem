@@ -1,0 +1,22 @@
+# Noah's caret is in the block → --avoid-caret refuses, exit 5 USER_IN_BLOCK
+$ collab patch --avoid-caret <<'EOF'
+<<<<<<< SEARCH
+of reconnecting (median) for a typical day
+=======
+of reconnecting (median) for a full day
+>>>>>>> REPLACE
+EOF
+{
+  "status": "error",
+  "ok": false,
+  "code": "USER_IN_BLOCK",
+  "error": "Noah is typing in a block this patch changes (“Sync completes within 10 s of reconnecting (median) for a ty…”). Retry in a few seconds, make the edit smaller, or propose it (--propose).",
+  "carets": [
+    {
+      "name": "Noah",
+      "block": "lbc2kj",
+      "text": "Sync completes within 10 s of reconnecting (median) for a ty"
+    }
+  ]
+}
+# exit code 5

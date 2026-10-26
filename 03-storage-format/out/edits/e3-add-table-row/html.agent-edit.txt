@@ -1,0 +1,9 @@
+--- old_string ---
+      <td><p>Stale base version</p></td>
+--- new_string ---
+      <td><p>Stale base version</p></td>
+    </tr>
+    <tr>
+      <td><p><code>429</code></p></td>
+      <td><p>Rate limited</p></td>
+      <td><p>Retry after <code>Retry-After</code> seconds</p></td>

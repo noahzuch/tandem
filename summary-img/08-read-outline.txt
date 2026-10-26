@@ -1,0 +1,29 @@
+# Noah's caret is in the “Sync completes …” list; ✎ Noah marks that block
+$ collab read --outline
+# rev 9653pe · Noah is typing in block lbc2kj (“Sync completes within 10 s of reconnecting (median) for a ty…”)
+   1  <header>     yef30k                   Spec: Offline sync for field notes Status: Draft · Owner: Noah · Last 
+   8  paragraph    sf8zz3                   Field technicians lose connectivity on site. Notes taken offline must 
+  14  callout      n9h6vs  #decision-needed Decision needed: last-writer-wins vs. CRDT merge for concurrent edits 
+  20  h2           ptpvhn  #goals           1. Goals
+  21  bulletList   lbc2kj                   Never lose a note written offline. Sync completes within 10 s of recon   ✎ Noah
+  39  h3           bk93hi  #non-goals       1.1 Non-goals
+  40  orderedList  gj8dal                   Real-time collaboration between technicians. Syncing attachments large
+  50  h2           xa1v5m  #flow            2. Flow
+  51  htmlIsland   -                        <figure class="diagram"> <svg width="620" height="120" viewBox="0 0 62
+  71  <div>        y5b353                   Online Each save is pushed immediately. The outbox stays empty. Offlin
+  87  h2           cae1p2  #api             3. API
+  88  paragraph    5mncyl                   The client sends batches of operations. Each operation carries a clien
+  92  codeBlock    m2hmsi                   interface SyncBatch { deviceId: string; ops: Array<{ id: string; noteI
+ 102  table        ke09tl  #error-codes     Status Meaning Client action 200 All ops applied Drop ops from outbox 
+ 142  h2           c6maue  #conflicts       4. Conflict handling
+ 143  blockquote   19eeae                   “If two technicians edit the same note offline, neither should lose th
+ 149  paragraph    734oct                   We merge at paragraph granularity and mark overlapping edits.
+ 152  paragraph    ocyp1o                   
+ 161  h2           0vzjdb  #tasks           5. Open tasks
+ 162  taskList     f8zaay                   Agree on outbox storage (SQLite) Decide LWW vs. CRDT (see callout) Loa
+ 180  details      av60ei                   Appendix A: rejected alternatives Full-document sync was rejected: it 
+ 186  horizontalRule -                        
+ 187  paragraph    1p6q3y                   Glossary: LWW, CRDT. Press Ctrl+S to force a sync.
+ 194  htmlIsland   -                        <x-agent-note data-agent="claude" data-ts="2026-10-24T10:15:00Z">Agent
+ 195  paragraph    j2d62n
+# exit code 0

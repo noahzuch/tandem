@@ -1,0 +1,16 @@
+--- old_string ---
+            "text": "Field technicians lose connectivity on site. Notes taken offline must "
+--- next edit ---
+            "text": " once the device is back online. This spec covers the "
+--- next edit ---
+            "text": "client-side queue"
+--- next edit ---
+            "text": " endpoint and "
+--- new_string ---
+            "text": "Field technicians regularly work without connectivity. Notes written offline must "
+--- next edit ---
+            "text": " as soon as the device reconnects. This spec covers the "
+--- next edit ---
+            "text": "client-side outbox"
+--- next edit ---
+            "text": " endpoint, retries, and "

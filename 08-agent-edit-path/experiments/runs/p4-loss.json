@@ -1,0 +1,26 @@
+{
+  "typedSentences": 8,
+  "intactInLiveDoc": 7,
+  "missing": [
+    "u04 (typed at \"Stale base version\"): Needs a number from the load test (u04)."
+  ],
+  "partial": [],
+  "notInFileAfterFlush": [
+    "u04"
+  ],
+  "threads": [
+    {
+      "id": "tmg0xm6",
+      "status": "resolved",
+      "orphaned": false,
+      "quote": "on site",
+      "messages": 2
+    }
+  ],
+  "health": {
+    "externalMerges": 0,
+    "storesDeferredForExternalEdit": 0,
+    "stores": 18,
+    "echoesIgnored": 18
+  }
+}

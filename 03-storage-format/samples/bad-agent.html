@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Deliberately bad agent HTML</title>
+</head>
+<body>
+  <h1>Retry design</h1>
+  <p>Intro with <b>old-style bold</b> and a <a href="javascript:void(0)">fake button</a>.</p>
+  <p onclick="track()">Paragraph with an inline event handler.</p>
+
+  <x-card data-kind="summary">
+    <h2>Summary</h2>
+    <p>This prose sits inside a custom element, so users can't format or extend it.</p>
+  </x-card>
+
+  <pre><code class="language-js"><span class="kw">const</span> delay = <span class="num">2</span> ** attempt;</code></pre>
+
+  <ul>
+    stray text in a list
+    <li>first</li>
+    <!-- TODO: more items -->
+    <li>second</li>
+  </ul>
+
+  <span class="note"><p>Block A inside a span.</p><p>Block B inside a span.</p></span>
+
+  <table>
+    <caption>Retry budget</caption>
+    <tr><th>Attempt</th><th>Delay</th></tr>
+    <tr><td>1</td><td>2 s</td></tr>
+  </table>
+
+  <dl>
+    <dt>Backoff</dt>
+    <dd>Delay doubles after each failure.</dd>
+  </dl>
+
+  <!-- the next three are only caught by the ground-truth layer (real schema round trip), not by a lint rule -->
+  <ul class="steps">
+    <li><h3>Heading inside a list item</h3><p>Body of the step.</p></li>
+  </ul>
+  <details><p>Details without a summary.</p></details>
+  <p>Styled <span style="font-weight: bold">bold span</span> next to a <span class="tag">plain span</span>.</p>
+
+  <section class="ok">
+    <h2>Fine section</h2>
+    <p>Prose in a section stays fully editable.</p>
+  </section>
+</body>
+</html>

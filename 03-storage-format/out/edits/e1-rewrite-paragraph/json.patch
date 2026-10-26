@@ -1,0 +1,39 @@
+===================================================================
+--- a/spec.json
++++ b/spec.json
+@@ -81,7 +81,7 @@
+         "content": [
+           {
+             "type": "text",
+-            "text": "Field technicians lose connectivity on site. Notes taken offline must "
++            "text": "Field technicians regularly work without connectivity. Notes written offline must "
+           },
+           {
+             "type": "text",
+@@ -97,7 +97,7 @@
+           },
+           {
+             "type": "text",
+-            "text": " once the device is back online. This spec covers the "
++            "text": " as soon as the device reconnects. This spec covers the "
+           },
+           {
+             "type": "text",
+@@ -109,7 +109,7 @@
+                 }
+               }
+             ],
+-            "text": "client-side queue"
++            "text": "client-side outbox"
+           },
+           {
+             "type": "text",
+@@ -129,7 +129,7 @@
+           },
+           {
+             "type": "text",
+-            "text": " endpoint and "
++            "text": " endpoint, retries, and "
+           },
+           {
+             "type": "text",

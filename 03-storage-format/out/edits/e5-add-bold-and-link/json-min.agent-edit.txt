@@ -1,0 +1,41 @@
+--- old_string ---
+                    "text": "Saves are appended to the outbox and replayed "
+--- next edit ---
+                        "type": "underline"
+--- next edit ---
+                    "text": " on reconnect."
+--- new_string ---
+                    "text": "Saves are appended to the "
+--- next edit ---
+                        "type": "bold"
+                      }
+                    ],
+                    "text": "durable"
+                  },
+                  {
+                    "type": "text",
+                    "text": " outbox and replayed "
+                  },
+                  {
+                    "type": "text",
+                    "marks": [
+                      {
+                        "type": "underline"
+--- next edit ---
+                    "text": " on reconnect (see "
+                  },
+                  {
+                    "type": "text",
+                    "marks": [
+                      {
+                        "type": "link",
+                        "attrs": {
+                          "href": "#api"
+                        }
+                      }
+                    ],
+                    "text": "API"
+                  },
+                  {
+                    "type": "text",
+                    "text": ")."

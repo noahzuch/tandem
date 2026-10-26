@@ -1,0 +1,60 @@
+/* ---------------------------------------------------------------- spike 10: generic nodes + delete UI */
+/* generic nodes and containers carry data-generic / data-tag as node DECORATIONS (never saved) */
+.tiptap [data-generic] { position: relative; outline: 1px dashed transparent; outline-offset: 3px; border-radius: 4px; }
+.tiptap [data-generic]:hover { outline-color: #c9d5ea; }
+.tiptap [data-generic='locked']:hover { outline-color: #d98e04; }
+.tiptap [data-generic]:hover::before {
+  content: '<' attr(data-tag) '>'; position: absolute; top: -13px; left: 6px; z-index: 3; pointer-events: none;
+  font: 11px/1.4 ui-monospace, monospace; color: #888; background: #fff; border: 1px solid var(--line); border-radius: 4px; padding: 0 4px;
+}
+.tiptap [data-generic='locked']:hover::before { content: '<' attr(data-tag) '> locked'; color: #b26b00; }
+/* only the innermost hovered element shows its chip (nested chips overlapped in round 1) */
+.tiptap [data-generic]:hover:has([data-generic]:hover)::before { display: none; }
+.tiptap [data-generic]:hover:has([data-generic]:hover) { outline-color: transparent; }
+/* an element whose text was emptied must stay clickable: the Placeholder decoration gives it text, this a size */
+.tiptap [data-generic].is-empty { min-height: 1.4em; min-width: 3em; }
+.tiptap [data-generic='free'].is-empty::before, .tiptap [data-generic='locked'].is-empty::before { position: static; content: attr(data-placeholder); color: #b3b5b9; font: inherit; border: 0; background: transparent; padding: 0; }
+.tiptap x-badge[data-generic] { outline-offset: 1px; }
+.tiptap x-badge[data-generic]:hover::before { display: none; }
+/* a selected element (Escape from inside, or the block handle's grip) */
+.tiptap [data-generic].ProseMirror-selectednode { outline: 2px solid var(--accent); outline-offset: 3px; }
+
+/* ---------------------------------------------------------------- delete UI (round 2) */
+/* the ghost trash button at the element's top-right; grows into the summary while previewing */
+.dw-btn[hidden], .dw-bar[hidden] { display: none; }
+.dw-btn {
+  position: absolute; z-index: 30; display: inline-flex; align-items: center; gap: 6px; height: 22px; padding: 0 4px;
+  font: 500 12px/1 var(--ui-font); color: #8a8f98; background: #fff; border: 1px solid var(--line); border-radius: 6px;
+  cursor: pointer; box-shadow: 0 1px 2px rgba(20, 24, 31, 0.06); transition: color 0.12s, border-color 0.12s;
+}
+.dw-btn:hover, .dw-btn:focus-visible, .dw-btn.labelled { color: var(--danger); border-color: #e8c4bf; background: #fff; outline: none; }
+.dw-btn:focus-visible { box-shadow: 0 0 0 2px rgba(192, 57, 43, 0.25); }
+.dw-btn svg { flex: none; }
+.dw-label { display: none; white-space: nowrap; padding-right: 3px; }
+.dw-btn.labelled .dw-label { display: inline; }
+
+/* the preview layer: one overlay over the union area (a light red-tinted wash fades the content that would go)
+   + a softer wash over everything else. Pure overlay: the editor's DOM is never touched. */
+.dw-layer { position: absolute; left: 0; top: 0; pointer-events: none; z-index: 29; }
+.dw-overlay {
+  position: absolute; border-radius: 5px; background: rgba(253, 240, 238, 0.55); outline: 1.5px solid rgba(192, 57, 43, 0.55); outline-offset: 2px;
+  box-shadow: 0 0 0 100vmax rgba(246, 246, 244, 0.4);
+}
+/* the element's own box when absolutely positioned / transformed children made the union larger */
+.dw-bounds { position: absolute; outline: 1px dashed rgba(192, 57, 43, 0.35); outline-offset: 1px; border-radius: 4px; }
+
+/* the confirm bar for the keyboard path (select element → Backspace / Delete) */
+.dw-bar {
+  position: absolute; z-index: 31; display: inline-flex; align-items: center; gap: 8px; padding: 6px 8px 6px 10px;
+  font: 13px var(--ui-font); color: var(--ink); background: #fff; border: 1px solid var(--line); border-radius: 8px; box-shadow: var(--shadow);
+}
+.dw-bar-text { font-family: ui-monospace, monospace; font-size: 12px; color: #4b4f56; white-space: nowrap; }
+.dw-confirm, .dw-cancel { display: inline-flex; align-items: center; gap: 5px; height: 26px; padding: 0 9px; border-radius: 6px; border: 1px solid var(--line-strong); background: #fff; font: 500 12px var(--ui-font); cursor: pointer; }
+.dw-confirm { color: #fff; background: var(--danger); border-color: var(--danger); }
+.dw-confirm:hover { background: #a93226; }
+.dw-confirm:focus-visible, .dw-cancel:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+.dw-hint { color: var(--muted); font-size: 11px; white-space: nowrap; }
+
+/* block menu: the delete item carries the summary and previews on hover */
+.block-menu { width: 272px; }
+.menu-item.danger .menu-sub { display: block; font: 11px ui-monospace, monospace; color: #9a9ea5; margin-top: 1px; white-space: normal; }

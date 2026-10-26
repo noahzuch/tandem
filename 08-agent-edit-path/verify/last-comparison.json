@@ -1,0 +1,159 @@
+[
+  {
+    "path": "P1 Edit tool on the file",
+    "typed": 7,
+    "lost": [],
+    "tasksOk": [
+      "T1",
+      "T2",
+      "T3",
+      "T4",
+      "T5",
+      "T6",
+      "T7",
+      "T8"
+    ],
+    "tasksFailed": [],
+    "retries": 0,
+    "sentChars": 2951,
+    "converged": true,
+    "threadOk": true,
+    "health": {
+      "externalMerges": 8,
+      "stores": 4,
+      "storesDeferredForExternalEdit": 1
+    }
+  },
+  {
+    "path": "P2 CLI ops",
+    "typed": 7,
+    "lost": [],
+    "tasksOk": [
+      "T1",
+      "T2",
+      "T3",
+      "T4",
+      "T5",
+      "T6",
+      "T7",
+      "T8"
+    ],
+    "tasksFailed": [],
+    "retries": 0,
+    "sentChars": 1375,
+    "converged": true,
+    "threadOk": true,
+    "health": {
+      "externalMerges": 0,
+      "stores": 16,
+      "storesDeferredForExternalEdit": 0
+    }
+  },
+  {
+    "path": "P3 patch op",
+    "typed": 7,
+    "lost": [],
+    "tasksOk": [
+      "T1",
+      "T2",
+      "T3",
+      "T4",
+      "T5",
+      "T6",
+      "T7",
+      "T8"
+    ],
+    "tasksFailed": [],
+    "retries": 0,
+    "sentChars": 2963,
+    "converged": true,
+    "threadOk": true,
+    "health": {
+      "externalMerges": 0,
+      "stores": 11,
+      "storesDeferredForExternalEdit": 0
+    }
+  },
+  {
+    "path": "P4 export → edit → apply",
+    "typed": 7,
+    "lost": [],
+    "tasksOk": [
+      "T1",
+      "T2",
+      "T3",
+      "T4",
+      "T5",
+      "T6",
+      "T7",
+      "T8"
+    ],
+    "tasksFailed": [],
+    "retries": 0,
+    "sentChars": 2951,
+    "converged": true,
+    "threadOk": true,
+    "health": {
+      "externalMerges": 0,
+      "stores": 6,
+      "storesDeferredForExternalEdit": 0
+    }
+  },
+  {
+    "path": "P1 Edit tool on the file [--naive-merge --no-store-guard]",
+    "typed": 7,
+    "lost": [
+      "v03@\"Stale base version\": MISSING"
+    ],
+    "tasksOk": [
+      "T1",
+      "T2",
+      "T3",
+      "T4",
+      "T5",
+      "T6",
+      "T7"
+    ],
+    "tasksFailed": [
+      "T8"
+    ],
+    "retries": 0,
+    "sentChars": 2951,
+    "converged": true,
+    "threadOk": true,
+    "health": {
+      "externalMerges": 7,
+      "stores": 5,
+      "storesDeferredForExternalEdit": 0
+    }
+  },
+  {
+    "path": "P3 patch op [--naive-merge]",
+    "typed": 8,
+    "lost": [
+      "v03@\"Stale base version\": MANGLED",
+      "v05@\"Never lose a note\": MANGLED",
+      "v06@\"Full-document sync\": MANGLED"
+    ],
+    "tasksOk": [
+      "T1",
+      "T2",
+      "T3",
+      "T4",
+      "T5",
+      "T6",
+      "T7",
+      "T8"
+    ],
+    "tasksFailed": [],
+    "retries": 5,
+    "sentChars": 2977,
+    "converged": true,
+    "threadOk": true,
+    "health": {
+      "externalMerges": 0,
+      "stores": 11,
+      "storesDeferredForExternalEdit": 0
+    }
+  }
+]

@@ -1,0 +1,11 @@
+===================================================================
+--- a/spec.html
++++ b/spec.html
+@@ -47,6 +47,7 @@
+       Sync completes within <strong>10&nbsp;s</strong> of reconnecting for a typical day of notes.
+     </p>
+   </li>
++  <li><p>The outbox survives app restarts and <strong>OS updates</strong>.</p></li>
+   <li>
+     <p>Conflicts are visible to the user, never <em>silently</em> dropped.</p>
+     <ul>

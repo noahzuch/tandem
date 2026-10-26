@@ -1,0 +1,8 @@
+--- old_string ---
+  Field technicians lose connectivity on site. Notes taken offline must
+  <strong>sync without data loss</strong> once the device is back online. This spec covers the
+  <em>client-side queue</em>, the <code>/sync</code> endpoint and
+--- new_string ---
+  Field technicians regularly work without connectivity. Notes written offline must
+  <strong>sync without data loss</strong> as soon as the device reconnects. This spec covers the
+  <em>client-side outbox</em>, the <code>/sync</code> endpoint, retries, and
