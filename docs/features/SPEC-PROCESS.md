@@ -7,8 +7,8 @@ Inputs:
 
 From the spike branch:
 - the feature page — overview, what the spikes settled, open points, links;
-- [`SUMMARY.html`](../SUMMARY.html) — the sections and notes (`#nX`) the feature page links;
-- the spikes (`../NN-…/`) — README and code;
+- [`SUMMARY.html`](../../SUMMARY.html) — the sections and notes (`#nX`) the feature page links;
+- the spikes (`../../NN-…/`) — README and code;
 
 From the templates/ folder:
 - [`templates/spec-template.html`](templates/spec-template.html) — the structure and the rules for every section,

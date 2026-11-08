@@ -7,9 +7,9 @@
 <!--
   SPEC TEMPLATE
 
-  Copy this file to features/‹NN›-‹feature-slug›.html; the spec replaces the feature page of the same name.
+  Copy this file to docs/features/‹NN›-‹feature-slug›.html; the spec replaces the feature page of the same name.
   All files named in these comments (the example and the diagram parts files) live next to this template in
-  features/templates/; from a spec in features/, link them as templates/‹file›.
+  docs/features/templates/; from a spec in docs/features/, link them as templates/‹file›.
   spec-example.html is the same template filled in for a small mock system (a link shortener). When a guidance
   comment below is unclear, look at the matching section there.
 
@@ -137,7 +137,7 @@ The guidance for each section is in HTML comments in the source. Delete this not
     for every rule that isn't obvious.
   - No implementation: no components, protocols or storage. If a rule exists for a technical reason, state the
     rule here and link to the Solution design subsection that explains it.
-  - Show what the user will see. Either a screenshot (e.g. from a spike: <img src="../‹NN-spike›/screenshot.png">)
+  - Show what the user will see. Either a screenshot (e.g. from a spike: <img src="../../‹NN-spike›/screenshot.png">)
     or an HTML mockup built from the mock-* classes in <style>, inside a <figure> whose caption starts with
     "Mockup:". Mockups are static HTML and CSS only, never scripts (tandem shows scripts as inert chips). Use
     realistic content, and show the states that matter, not only the happy path. Say in the caption what is

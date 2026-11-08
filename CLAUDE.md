@@ -13,20 +13,24 @@ F00 · Project setup.
 
 ## Where things are
 
-- `features/index.html` — the feature list (F00–F12). Each `‹NN›-‹slug›.html` is either a feature page
+- `docs/` — all documentation (feature pages and specs, architecture decisions, …). Its HTML files are tandem
+  documents: `docs/` is excluded from code formatting.
+- `docs/features/index.html` — the feature list (F00–F12). Each `‹NN›-‹slug›.html` is either a feature page
   (badge "specification pending") or, once specified, the full spec.
-- `features/SPEC-PROCESS.md` — how a feature page becomes a spec. Read it before working on a spec.
-- `features/templates/` — spec template, a filled-in example and the diagram templates.
-- `features/‹NN›-‹slug›-decisions.md` — brainstorming journal of a feature (local while it is being written).
+- `docs/features/SPEC-PROCESS.md` — how a feature page becomes a spec. Read it before working on a spec.
+- `docs/features/templates/` — spec template, a filled-in example and the diagram templates.
+- `docs/features/‹NN›-‹slug›-decisions.md` — brainstorming journal of a feature (local while it is being written).
 - Branch `spike` — the throwaway spikes `01-…`–`11-…` and `SUMMARY.html` (results, notes `N1`–`N24`, risks).
-  Feature pages link to them with `../`; read them in a worktree: `git worktree add ../tandem-spike spike`.
+  Feature pages link to them with `../../`; read them in a worktree: `git worktree add ../tandem-spike spike`.
 
 ## Working rules
 
 - Changes reach `main` only through pull requests; `main` is protected and requires green CI.
 - Never push unless the user explicitly asks for it. Commit only when asked.
+- Never skip git hooks (`git commit --no-verify`, `git push --no-verify` or similar) unless the user explicitly asks.
+  If a hook fails, fix the cause.
 - Spikes are loose evidence, not a blueprint: every decision a spike made is open until a feature spec revalidates
-  it, and spike code is never copied in as the design (see `features/SPEC-PROCESS.md`).
+  it, and spike code is never copied in as the design (see `docs/features/SPEC-PROCESS.md`).
 - "tandem" is only a working name and is taken by a similar project: keep the name in as few places as possible so
   renaming stays cheap.
 
