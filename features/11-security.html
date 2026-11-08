@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>F11 · Security &amp; sanitising</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<main>
+<nav class="crumbs"><a href="index.html">Features</a> / F11</nav>
+<h1>F11 · Security &amp; sanitising <span class="status">specification pending</span></h1>
+<p class="tagline">Untrusted HTML and a local server that feeds prompts to the agent.</p>
+
+<h2>Overview</h2>
+<p>The server accepts events that become prompt input for the agent and renders HTML the agent (or anyone) wrote. Covers
+endpoint protection (Host allow-list, Origin checks, a secret token), sanitising islands and panels for display, and restricting what
+file panels may read.</p>
+
+<h2>What the spikes settled</h2>
+<ul>
+<li>Listens on 127.0.0.1 only; no auth on any endpoint (01, 06, 07, 08).</li>
+<li>Islands are display-sanitised (event handlers and <code>javascript:</code> URLs removed, iframes sandboxed, scripts never run); storage stays verbatim (04).</li>
+<li>Lavish blocks malicious websites (Host + Origin checks) but not local processes; the spikes block neither (01).</li>
+</ul>
+
+<h2>Open / to decide</h2>
+<ul>
+<li>Real sanitiser (DOMPurify in a structure-keeping mode) or islands in sandboxed iframes; shadow root isolates CSS, not JS (N7).</li>
+<li>Browser WebSocket accepts any page — a visited website could likely send fake feedback (01, read from code, untested).</li>
+<li>File panels can show any readable file (09). Auth tokens — not verified.</li>
+</ul>
+
+<h2>Summary sections &amp; notes</h2>
+<div class="card"><table>
+<tbody>
+<tr><td><a href="../SUMMARY.html#s01">Spike 01 · outer loop</a></td><td>Summary section</td></tr>
+<tr><td><a href="../SUMMARY.html#s04">Spike 04 · html islands</a></td><td>Summary section</td></tr>
+<tr><td><a href="../SUMMARY.html#risks">Risks, ranked</a></td><td>Summary section</td></tr>
+<tr><td><a href="../SUMMARY.html#open">Not verified — needs a further spike</a></td><td>Summary section</td></tr>
+<tr><td><a href="../SUMMARY.html#n7">N7</a></td><td>Do we have sanitizing?</td></tr>
+</tbody>
+</table></div>
+
+<h2>Spikes worth reading</h2>
+<div class="card"><table>
+<tbody>
+<tr><td><a href="../01-outer-loop/README.md">01-outer-loop</a></td><td>Security comparison with lavish</td></tr>
+<tr><td><a href="../04-html-islands/README.md">04-html-islands</a></td><td>Display sanitising of islands</td></tr>
+<tr><td><a href="../09-shell-sidebar/README.md">09-shell-sidebar</a></td><td>Sandboxed panels</td></tr>
+</tbody>
+</table></div>
+
+<p class="crumbs" style="margin-top:32px">← <a href="10-agent-skill.html">Agent skill &amp; guard rails</a> · <a href="12-publishing.html">Publishing</a> →</p>
+</main>
+</body>
+</html>

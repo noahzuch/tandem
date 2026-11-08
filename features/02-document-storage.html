@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>F02 · Document storage &amp; round trip</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<main>
+<nav class="crumbs"><a href="index.html">Features</a> / F02</nav>
+<h1>F02 · Document storage &amp; round trip <span class="status">specification pending</span></h1>
+<p class="tagline">HTML stays the file on disk; the live Y.Doc is written back without losing anything.</p>
+
+<h2>Overview</h2>
+<p>While a document is open the live truth is a Yjs document in the server; the server renders HTML from it, pretty-prints it,
+restores island source byte-for-byte, splices it into the original <code>&lt;head&gt;</code> and writes <code>spec.html</code> plus
+<code>.ystate</code>. When closed, the HTML file is all there is. Includes the fidelity guarantees, the <code>collab check</code> linter,
+startup (load <code>.ystate</code> if the hash matches, else parse HTML headlessly), restart behaviour and the file-watcher safety net
+that 3-way-merges direct edits to <code>spec.html</code>.</p>
+
+<h2>What the spikes settled</h2>
+<ul>
+<li>HTML is the storage format and the agent's language — not ProseMirror JSON or Yjs (03).</li>
+<li>Plain Tiptap drops diagrams, layout, ids and classes on first load (02); with islands and attribute preservation: 0 dropped / 0 altered on all three samples (04).</li>
+<li><code>&lt;head&gt;</code> split off and kept byte-identical; prettier on save turns a one-word edit into a 127-char diff (02).</li>
+<li>Store debounced (0.8 s after last change, at most every 3.2 s), skipped if HTML is unchanged (arch).</li>
+<li><code>collab check</code> flags HTML that edits badly, each rule with a fix (03).</li>
+</ul>
+
+<h2>Open / to decide</h2>
+<ul>
+<li>Reduce <code>&lt;p&gt;</code> injected into block containers via an “implicit paragraph” (N23).</li>
+<li>Audit every extension for attributes it writes into the HTML; vendor small ones (N8).</li>
+<li>Block ids (<code>data-bid</code>) visible in the saved HTML — decision pending (decisions).</li>
+<li>Offline edits in a tab are lost if <code>spec.html</code> changed while the server was down (arch).</li>
+</ul>
+
+<h2>Summary sections &amp; notes</h2>
+<div class="card"><table>
+<tbody>
+<tr><td><a href="../SUMMARY.html#s02">Spike 02 · tiptap wysiwyg</a></td><td>Summary section</td></tr>
+<tr><td><a href="../SUMMARY.html#s03">Spike 03 · storage format</a></td><td>Summary section</td></tr>
+<tr><td><a href="../SUMMARY.html#s04">Spike 04 · html islands</a></td><td>Summary section</td></tr>
+<tr><td><a href="../SUMMARY.html#arch">How the parts work together</a></td><td>Summary section</td></tr>
+<tr><td><a href="../SUMMARY.html#decisions">Decisions for you</a></td><td>Summary section</td></tr>
+<tr><td><a href="../SUMMARY.html#n8">N8</a></td><td>Audit extensions for attributes they write</td></tr>
+<tr><td><a href="../SUMMARY.html#n23">N23</a></td><td>Fewer injected &lt;p&gt;</td></tr>
+</tbody>
+</table></div>
+
+<h2>Spikes worth reading</h2>
+<div class="card"><table>
+<tbody>
+<tr><td><a href="../02-tiptap-wysiwyg/README.md">02-tiptap-wysiwyg</a></td><td>Fidelity script and shared samples; what plain Tiptap loses</td></tr>
+<tr><td><a href="../03-storage-format/README.md">03-storage-format</a></td><td>Storage comparison, 3-way merge, <code>collab check</code> rules, <code>samples/bad-agent.html</code></td></tr>
+<tr><td><a href="../04-html-islands/README.md">04-html-islands</a></td><td>Head splicing, store path with island source restore, fidelity numbers</td></tr>
+<tr><td><a href="../07-collaboration/README.md">07-collaboration</a></td><td><code>.ystate</code> load/rebuild, server restart, headless initialisation</td></tr>
+</tbody>
+</table></div>
+
+<p class="crumbs" style="margin-top:32px">← <a href="01-session-loop.html">Session loop</a> · <a href="03-content-model.html">Content model: islands &amp; generic nodes</a> →</p>
+</main>
+</body>
+</html>

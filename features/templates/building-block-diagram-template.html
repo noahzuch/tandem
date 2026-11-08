@@ -1,0 +1,340 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Building block diagram parts</title>
+<!--
+  BUILDING BLOCK DIAGRAM TEMPLATE
+
+  Parts for the diagrams in a spec's Building blocks section: one diagram per section, showing the direct parts of
+  one component and the public interface of each. What each section must contain, which components get a part,
+  what counts as a class's interface and how it is described in prose is defined in
+  spec-template.html § Building blocks; this file only covers how to draw the diagram. Each part is an SVG <g>
+  with its origin at its top-left corner: copy it, set transform="translate(x,y)", change the labels.
+
+  How to draw a building block diagram
+  - A frame for the component the section describes, titled with its name and code location, nothing else.
+    Inside the frame exactly the parts the section describes — no more, no fewer.
+  - To show a system's endpoints (or a library's API), draw a separate diagram in which the system is a part:
+    a Subject box listing its interface, its callers as dashed neighbours pointing at the items they call.
+  - Every class box has a compartment below its name listing its interface (class="d-member"), one item per
+    line, typed: name(param: Type): ReturnType, name: Type. A package box shows only its name; its classes are
+    drawn one level down. A module without exports (an entry point) shows its name and its role.
+  - Outside the frame, dashed, only the neighbours a part talks to directly. They list only the interface items
+    used in this diagram; a neighbour nothing is used of (a caller, an implementer) shows its name only.
+    Group several neighbours from the same package into a dashed neighbour package titled with its name.
+  - A class implementing an interface drawn in the same diagram or as a neighbour may show
+    "implements ‹Interface›" instead of repeating its methods.
+  - Interface lines are highlighted with <tspan>s: class="sx-fn" for method, function and endpoint names,
+    "sx-ty" for types, "sx-kw" for HTTP methods and "implements", "sx-p" for punctuation; parameter names
+    stay plain. Copy a highlighted line from a part or the example and change the words.
+  - Signature lines: at most about 40 characters (≈ 240 px at 10 px). Break a longer one after a comma or
+    before the return type and indent the continuation by moving its x 14 px right (SVG drops leading spaces). Rows are 16 px apart; a box is
+    28 (name) + 16 × lines + 10 px high. Write < > & in signatures as &lt; &gt; &amp;.
+  - Arrows show dependencies: from the part that uses, implements or owns to the part it depends on. Place
+    dependents above or left of their dependencies so that arrows run in one direction; an arrow going against
+    that direction is a hint at a dependency cycle.
+  - No transitive arrows: if A uses B and B uses C, draw A → C only if A also uses C directly.
+  - Label an arrow when the relation type alone doesn't say enough; otherwise leave it.
+  - Mark parts that have their own subsection with a double border, so the reader knows where the drill-down
+    continues.
+  - Size: viewBox 720 wide, as tall as the interfaces need — stack boxes vertically rather than shrinking text.
+    Name the markers uniquely per diagram.
+  The parts and relations in this file are a starting set, not an exhaustive list. If a diagram needs a node
+  type, relation or notation that is missing here, add it: draw it with the existing d-* classes in the same
+  style, and explain it in the caption so the reader doesn't have to guess what it means.
+  An example that combines the parts is at the end of this file; spec-example.html shows a full three-level
+  drill-down.
+-->
+<style>
+:root {
+  --bg: #f7f6f3; --surface: #ffffff; --text: #1d1d1b; --muted: #6b6a66; --line: #e3e1db; --line-strong: #b9b6ae;
+  --accent: #3b5bdb; --accent-soft: #e7ecff; --code: #f0eee9; --note: #fff8e6;
+  --sx-fn: #3b5bdb; --sx-ty: #0f7b6c; --sx-kw: #9c36b5;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #161615; --surface: #1f1f1d; --text: #ecebe7; --muted: #a09e98; --line: #33322f; --line-strong: #5a5853;
+    --accent: #8ea6ff; --accent-soft: #232a45; --code: #2a2927; --note: #2b2618;
+    --sx-fn: #8ea6ff; --sx-ty: #4fd1b8; --sx-kw: #da77f2;
+  }
+}
+body { margin: 0; background: var(--bg); color: var(--text);
+  font: 15px/1.6 -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, sans-serif; }
+main { max-width: 860px; margin: 0 auto; padding: 32px 16px 64px; }
+a { color: var(--accent); }
+h1 { font-size: 28px; margin: 0 0 4px; letter-spacing: -0.01em; }
+h2 { font-size: 21px; margin: 48px 0 12px; padding-top: 8px; border-top: 1px solid var(--line); }
+.meta { color: var(--muted); margin: 0 0 24px; }
+code { font-family: ui-monospace, "SF Mono", Menlo, monospace; font-size: 13px; background: var(--code); padding: 1px 4px; border-radius: 4px; }
+figure { margin: 16px 0; }
+figcaption { color: var(--muted); font-size: 13px; margin-top: 4px; }
+.parts { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 16px; }
+.parts figure { margin: 0; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 10px; }
+svg.diagram { display: block; width: 100%; height: auto; }
+.parts svg.diagram { width: auto; max-width: 100%; height: auto; }
+svg.diagram text { fill: var(--text); font: 13px -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, sans-serif; }
+svg.diagram text.d-small { fill: var(--muted); font-size: 11px; }
+svg.diagram text.d-title { fill: var(--muted); font-size: 12px; font-weight: 600; }
+.d-box { fill: var(--surface); stroke: var(--text); stroke-width: 1.2; }
+.d-focus { fill: var(--accent-soft); stroke: var(--accent); stroke-width: 1.6; }
+.d-ext { fill: var(--bg); stroke: var(--muted); stroke-width: 1.2; stroke-dasharray: 5 4; }
+.d-frame { fill: none; stroke: var(--line-strong); stroke-width: 1.2; }
+.d-bound { fill: none; stroke: var(--muted); stroke-width: 1.2; stroke-dasharray: 2 4; }
+.d-line { fill: none; stroke: var(--muted); stroke-width: 1.3; }
+.d-ret { stroke-dasharray: 4 3; }
+.d-head { fill: var(--muted); }
+.d-life { stroke: var(--line-strong); stroke-width: 1; stroke-dasharray: 3 4; }
+.d-solid { fill: var(--text); }
+.d-act { fill: var(--surface); stroke: var(--muted); stroke-width: 1.2; }
+.d-note { fill: var(--note); stroke: var(--line-strong); stroke-width: 1; }
+.d-hollow { fill: var(--surface); stroke: var(--muted); stroke-width: 1.2; }
+.d-lane { fill: none; stroke: var(--line-strong); stroke-width: 1; }
+svg.diagram text.d-name { font-weight: 600; }
+svg.diagram text.d-field { font: 12px ui-monospace, "SF Mono", Menlo, monospace; }
+svg.diagram text.d-member { font: 10px ui-monospace, "SF Mono", Menlo, monospace; }
+svg.diagram .sx-fn { fill: var(--sx-fn); }
+svg.diagram .sx-ty { fill: var(--sx-ty); }
+svg.diagram .sx-kw { fill: var(--sx-kw); }
+svg.diagram .sx-p { fill: var(--muted); }
+</style>
+</head>
+<body>
+<main>
+
+<h1>Building block diagram parts</h1>
+<p class="meta">Building parts for the diagrams in a spec's Building blocks section. How to use them is explained
+in the comments in the source. Back to the <a href="spec-template.html">spec template</a>. The parts are not exhaustive; add what a diagram needs.</p>
+
+<h2 id="nodes">Nodes</h2>
+<div class="parts">
+
+<!--
+  FRAME — the component the section describes. Title: its name and code location ("core/ · src/core"), no
+  interface. Resize to fit its parts with 20–30 px padding. Exactly one per diagram.
+-->
+<figure>
+<svg class="diagram" width="300" height="110" viewBox="0 0 300 110" role="img" aria-label="Frame">
+  <g transform="translate(10,10)">
+    <rect class="d-frame" width="280" height="90" rx="8"/>
+    <text class="d-title" x="14" y="20">‹component› · ‹path›</text>
+  </g>
+</svg>
+<figcaption>Frame</figcaption>
+</figure>
+
+<!--
+  SUBJECT — the described system (or library) as a part, for the diagram that shows its interface: accent box,
+  its name only (no code location), then its endpoints typed like a class's methods. Its callers sit around it as
+  neighbours. Not used inside a parts diagram.
+-->
+<figure>
+<svg class="diagram" width="300" height="100" viewBox="0 0 300 100" role="img" aria-label="Subject">
+  <g transform="translate(10,10)">
+    <rect class="d-focus" width="280" height="70" rx="6"/>
+    <text class="d-name" x="12" y="19">‹system›</text>
+    <line class="d-line" x1="0" y1="28" x2="280" y2="28"/>
+    <text class="d-member" x="12" y="44"><tspan class="sx-fn">‹METHOD path›</tspan><tspan class="sx-p">(</tspan>‹body›<tspan class="sx-p">:</tspan> <tspan class="sx-ty">‹Type›</tspan><tspan class="sx-p">):</tspan> ‹status›</text>
+    <text class="d-member" x="12" y="60"><tspan class="sx-fn">‹METHOD path›</tspan><tspan class="sx-p">():</tspan> ‹status› <tspan class="sx-ty">‹Type›</tspan></text>
+  </g>
+</svg>
+<figcaption>Subject</figcaption>
+</figure>
+
+<!--
+  CLASS — a direct part of the framed component that is a class, or a module exporting plain functions. Name
+  (d-name) top-left, separator at 28 px, then its interface: constructor, public methods, public attributes.
+  200–300 wide. A complex class gets its own subsection and a double border, but still lists its interface.
+-->
+<figure>
+<svg class="diagram" width="280" height="110" viewBox="0 0 280 110" role="img" aria-label="Class">
+  <g transform="translate(10,10)">
+    <rect class="d-box" width="260" height="86" rx="6"/>
+    <text class="d-name" x="12" y="19">‹Class›</text>
+    <line class="d-line" x1="0" y1="28" x2="260" y2="28"/>
+    <text class="d-member" x="12" y="44"><tspan class="sx-fn">constructor</tspan><tspan class="sx-p">(</tspan>‹p›<tspan class="sx-p">:</tspan> <tspan class="sx-ty">‹Type›</tspan><tspan class="sx-p">)</tspan></text>
+    <text class="d-member" x="12" y="60"><tspan class="sx-fn">‹method›</tspan><tspan class="sx-p">(</tspan>‹p›<tspan class="sx-p">:</tspan> <tspan class="sx-ty">‹Type›</tspan><tspan class="sx-p">):</tspan> <tspan class="sx-ty">‹Return›</tspan></text>
+    <text class="d-member" x="12" y="76">‹attribute›<tspan class="sx-p">:</tspan> <tspan class="sx-ty">‹Type›</tspan></text>
+  </g>
+</svg>
+<figcaption>Class</figcaption>
+</figure>
+
+<!--
+  PACKAGE — a folder or package that is split up further and described in a subsection one level down (double
+  border). Name only; no interface — its classes are drawn in its own section.
+-->
+<figure>
+<svg class="diagram" width="280" height="60" viewBox="0 0 280 60" role="img" aria-label="Package">
+  <g transform="translate(10,10)">
+    <rect class="d-box" width="260" height="40" rx="6"/>
+    <rect class="d-frame" x="3" y="3" width="254" height="34" rx="4"/>
+    <text class="d-name" x="12" y="25">‹package/›</text>
+  </g>
+</svg>
+<figcaption>Package</figcaption>
+</figure>
+
+<!--
+  INTERFACE — a contract that one part defines and another implements, drawn when it decides the direction of a
+  dependency (the core defines the repository interface, storage implements it). Lists its methods like a class.
+-->
+<figure>
+<svg class="diagram" width="280" height="100" viewBox="0 0 280 100" role="img" aria-label="Interface">
+  <g transform="translate(10,10)">
+    <rect class="d-box" width="260" height="76" rx="6"/>
+    <text class="d-small" x="130" y="15" text-anchor="middle">«interface»</text>
+    <text class="d-name" x="130" y="32" text-anchor="middle">‹Interface›</text>
+    <line class="d-line" x1="0" y1="40" x2="260" y2="40"/>
+    <text class="d-member" x="12" y="56"><tspan class="sx-fn">‹method›</tspan><tspan class="sx-p">(</tspan>‹p›<tspan class="sx-p">:</tspan> <tspan class="sx-ty">‹Type›</tspan><tspan class="sx-p">):</tspan> <tspan class="sx-ty">‹Return›</tspan></text>
+  </g>
+</svg>
+<figcaption>Interface</figcaption>
+</figure>
+
+<!--
+  NEIGHBOUR — a component outside the frame that a part talks to directly: a sibling at the same level, a part of
+  another feature, an external system (its endpoints). Dashed, outside the frame, prefixed with its location when
+  that helps ("core/LinkService"). Lists only the items used in this diagram; name only if none are used.
+-->
+<figure>
+<svg class="diagram" width="280" height="80" viewBox="0 0 280 80" role="img" aria-label="Neighbour">
+  <g transform="translate(10,10)">
+    <rect class="d-ext" width="260" height="54" rx="6"/>
+    <text class="d-name" x="12" y="19">‹neighbour›</text>
+    <line class="d-line" x1="0" y1="28" x2="260" y2="28"/>
+    <text class="d-member" x="12" y="44"><tspan class="sx-fn">‹used method›</tspan><tspan class="sx-p">(</tspan>‹p›<tspan class="sx-p">:</tspan> <tspan class="sx-ty">‹Type›</tspan><tspan class="sx-p">):</tspan> <tspan class="sx-ty">‹Return›</tspan></text>
+  </g>
+</svg>
+<figcaption>Neighbour</figcaption>
+</figure>
+
+<!--
+  NEIGHBOUR PACKAGE — groups two or more neighbours from the same package, so the reader sees where they live
+  without a prefix on every box. Dashed, titled with the package name (d-title); the neighbours inside drop the
+  package prefix. Resize to fit them with 12 px padding.
+-->
+<figure>
+<svg class="diagram" width="280" height="124" viewBox="0 0 280 124" role="img" aria-label="Neighbour package">
+  <g transform="translate(10,10)">
+    <rect class="d-ext" width="260" height="104" rx="8"/>
+    <text class="d-title" x="14" y="20">‹package/›</text>
+    <rect class="d-ext" x="12" y="30" width="236" height="54" rx="6"/>
+    <text class="d-name" x="24" y="49">‹neighbour›</text>
+    <line class="d-line" x1="12" y1="58" x2="248" y2="58"/>
+    <text class="d-member" x="24" y="74"><tspan class="sx-fn">‹used method›</tspan><tspan class="sx-p">(</tspan>‹p›<tspan class="sx-p">):</tspan> <tspan class="sx-ty">‹Return›</tspan></text>
+  </g>
+</svg>
+<figcaption>Neighbour package</figcaption>
+</figure>
+
+<!--
+  LIBRARY — a third-party package a part builds on, drawn only when the choice matters for understanding the part
+  (Tiptap, Hocuspocus, y-tiptap), not for every import. Dashed, outside the frame; lists the functions and classes
+  used in this diagram, typed like a class.
+-->
+<figure>
+<svg class="diagram" width="280" height="96" viewBox="0 0 280 96" role="img" aria-label="Library">
+  <g transform="translate(10,10)">
+    <rect class="d-ext" width="260" height="70" rx="6"/>
+    <text class="d-small" x="130" y="15" text-anchor="middle">«library»</text>
+    <text class="d-name" x="130" y="32" text-anchor="middle">‹package›</text>
+    <line class="d-line" x1="0" y1="40" x2="260" y2="40"/>
+    <text class="d-member" x="12" y="56"><tspan class="sx-fn">‹used fn›</tspan><tspan class="sx-p">(</tspan>‹p›<tspan class="sx-p">:</tspan> <tspan class="sx-ty">‹Type›</tspan><tspan class="sx-p">):</tspan> <tspan class="sx-ty">‹Return›</tspan></text>
+  </g>
+</svg>
+<figcaption>Library</figcaption>
+</figure>
+
+</div>
+
+<h2 id="relations">Relations</h2>
+
+<!--
+  RELATIONS — always from the dependent part to what it depends on.
+  - Uses (solid, filled head): calls, imports, reads from.
+  - Implements (dashed, hollow triangle at the interface): the part fulfils an interface defined elsewhere.
+  - Creates / owns (solid, filled diamond at the owner, no head): the owner creates the part and controls its
+    lifetime (a composition root wiring everything, a server owning its document).
+  - Sends events / data (dashed, filled head): the part emits something the other consumes, without calling it.
+-->
+<figure>
+<svg class="diagram" viewBox="0 0 720 100" role="img" aria-label="Relations">
+  <defs>
+    <marker id="m-bbp" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="d-head" d="M0,0 L10,5 L0,10 z"/></marker>
+    <marker id="m-bbp-tri" viewBox="0 0 12 12" refX="11" refY="6" markerWidth="12" markerHeight="12" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="d-hollow" d="M1,1 L11,6 L1,11 z"/></marker>
+    <marker id="m-bbp-dia" viewBox="0 0 14 8" refX="0" refY="4" markerWidth="14" markerHeight="8" markerUnits="userSpaceOnUse" orient="auto"><path class="d-head" d="M0,4 L7,0 L14,4 L7,8 z"/></marker>
+  </defs>
+  <line class="d-line" x1="20" y1="40" x2="160" y2="40" marker-end="url(#m-bbp)"/>
+  <text x="90" y="75" text-anchor="middle">Uses</text>
+  <line class="d-line d-ret" x1="200" y1="40" x2="340" y2="40" marker-end="url(#m-bbp-tri)"/>
+  <text x="270" y="75" text-anchor="middle">Implements</text>
+  <line class="d-line" x1="380" y1="40" x2="520" y2="40" marker-start="url(#m-bbp-dia)"/>
+  <text x="450" y="75" text-anchor="middle">Creates / owns</text>
+  <line class="d-line d-ret" x1="560" y1="40" x2="700" y2="40" marker-end="url(#m-bbp)"/>
+  <text x="630" y="75" text-anchor="middle">Sends events / data</text>
+</svg>
+<figcaption>The four relation types.</figcaption>
+</figure>
+
+<h2 id="example">Example</h2>
+
+<!--
+  EXAMPLE — the api/ level of the link shortener from spec-example.html. Note the package frame without an
+  interface line, the classes listing their typed interfaces, and the core/ neighbours, grouped in a dashed neighbour
+  package, listing only the methods api/ uses.
+-->
+<figure>
+<svg class="diagram" viewBox="0 0 720 384" role="img" aria-label="Example building block diagram">
+  <defs><marker id="m-bbx" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="d-head" d="M0,0 L10,5 L0,10 z"/></marker></defs>
+  <rect class="d-frame" x="10" y="10" width="415" height="364" rx="8"/>
+  <text class="d-title" x="24" y="30">api/ · src/api</text>
+  <rect class="d-box" x="24" y="44" width="290" height="198" rx="6"/>
+  <text class="d-name" x="36" y="63">LinkController</text>
+  <line class="d-line" x1="24" y1="72" x2="314" y2="72"/>
+  <text class="d-member" x="36" y="88"><tspan class="sx-fn">constructor</tspan><tspan class="sx-p">(</tspan>links<tspan class="sx-p">:</tspan> <tspan class="sx-ty">LinkService</tspan><tspan class="sx-p">,</tspan></text>
+  <text class="d-member" x="50" y="104">resolver<tspan class="sx-p">:</tspan> <tspan class="sx-ty">LinkResolver</tspan><tspan class="sx-p">,</tspan></text>
+  <text class="d-member" x="50" y="120">clicks<tspan class="sx-p">:</tspan> <tspan class="sx-ty">ClickCounter</tspan><tspan class="sx-p">,</tspan> auth<tspan class="sx-p">:</tspan> <tspan class="sx-ty">Auth</tspan><tspan class="sx-p">)</tspan></text>
+  <text class="d-member" x="36" y="136"><tspan class="sx-fn">register</tspan><tspan class="sx-p">(</tspan>app<tspan class="sx-p">:</tspan> <tspan class="sx-ty">FastifyInstance</tspan><tspan class="sx-p">):</tspan> <tspan class="sx-ty">void</tspan></text>
+  <text class="d-member" x="36" y="152"><tspan class="sx-fn">shorten</tspan><tspan class="sx-p">(</tspan>req<tspan class="sx-p">:</tspan> <tspan class="sx-ty">FastifyRequest</tspan><tspan class="sx-p">,</tspan></text>
+  <text class="d-member" x="50" y="168">reply<tspan class="sx-p">:</tspan> <tspan class="sx-ty">FastifyReply</tspan><tspan class="sx-p">):</tspan> <tspan class="sx-ty">Promise</tspan><tspan class="sx-p">&lt;</tspan><tspan class="sx-ty">void</tspan><tspan class="sx-p">&gt;</tspan></text>
+  <text class="d-member" x="36" y="184"><tspan class="sx-fn">list</tspan><tspan class="sx-p">(</tspan>req<tspan class="sx-p">:</tspan> <tspan class="sx-ty">FastifyRequest</tspan><tspan class="sx-p">,</tspan></text>
+  <text class="d-member" x="50" y="200">reply<tspan class="sx-p">:</tspan> <tspan class="sx-ty">FastifyReply</tspan><tspan class="sx-p">):</tspan> <tspan class="sx-ty">Promise</tspan><tspan class="sx-p">&lt;</tspan><tspan class="sx-ty">void</tspan><tspan class="sx-p">&gt;</tspan></text>
+  <text class="d-member" x="36" y="216"><tspan class="sx-fn">redirect</tspan><tspan class="sx-p">(</tspan>req<tspan class="sx-p">:</tspan> <tspan class="sx-ty">FastifyRequest</tspan><tspan class="sx-p">,</tspan></text>
+  <text class="d-member" x="50" y="232">reply<tspan class="sx-p">:</tspan> <tspan class="sx-ty">FastifyReply</tspan><tspan class="sx-p">):</tspan> <tspan class="sx-ty">Promise</tspan><tspan class="sx-p">&lt;</tspan><tspan class="sx-ty">void</tspan><tspan class="sx-p">&gt;</tspan></text>
+  <rect class="d-box" x="24" y="272" width="290" height="86" rx="6"/>
+  <text class="d-name" x="36" y="291">Auth</text>
+  <line class="d-line" x1="24" y1="300" x2="314" y2="300"/>
+  <text class="d-member" x="36" y="316"><tspan class="sx-fn">constructor</tspan><tspan class="sx-p">(</tspan>jwksUrl<tspan class="sx-p">:</tspan> <tspan class="sx-ty">string</tspan><tspan class="sx-p">)</tspan></text>
+  <text class="d-member" x="36" y="332"><tspan class="sx-fn">authenticate</tspan><tspan class="sx-p">(</tspan>req<tspan class="sx-p">:</tspan> <tspan class="sx-ty">FastifyRequest</tspan><tspan class="sx-p">):</tspan></text>
+  <text class="d-member" x="50" y="348"><tspan class="sx-ty">Promise</tspan><tspan class="sx-p">&lt;</tspan><tspan class="sx-ty">void</tspan><tspan class="sx-p">&gt;</tspan></text>
+  <rect class="d-ext" x="430" y="10" width="285" height="306" rx="8"/>
+  <text class="d-title" x="444" y="30">core/</text>
+  <rect class="d-ext" x="442" y="40" width="262" height="102" rx="6"/>
+  <text class="d-name" x="454" y="59">LinkService</text>
+  <line class="d-line" x1="442" y1="68" x2="704" y2="68"/>
+  <text class="d-member" x="454" y="84"><tspan class="sx-fn">shorten</tspan><tspan class="sx-p">(</tspan>url<tspan class="sx-p">:</tspan> <tspan class="sx-ty">string</tspan><tspan class="sx-p">,</tspan> owner<tspan class="sx-p">:</tspan> <tspan class="sx-ty">string</tspan><tspan class="sx-p">):</tspan></text>
+  <text class="d-member" x="468" y="100"><tspan class="sx-ty">Promise</tspan><tspan class="sx-p">&lt;</tspan><tspan class="sx-ty">ShortenResult</tspan><tspan class="sx-p">&gt;</tspan></text>
+  <text class="d-member" x="454" y="116"><tspan class="sx-fn">listOwned</tspan><tspan class="sx-p">(</tspan>owner<tspan class="sx-p">:</tspan> <tspan class="sx-ty">string</tspan><tspan class="sx-p">):</tspan></text>
+  <text class="d-member" x="468" y="132"><tspan class="sx-ty">Promise</tspan><tspan class="sx-p">&lt;</tspan><tspan class="sx-ty">Link</tspan><tspan class="sx-p">[]&gt;</tspan></text>
+  <rect class="d-ext" x="442" y="160" width="262" height="70" rx="6"/>
+  <text class="d-name" x="454" y="179">LinkResolver</text>
+  <line class="d-line" x1="442" y1="188" x2="704" y2="188"/>
+  <text class="d-member" x="454" y="204"><tspan class="sx-fn">resolve</tspan><tspan class="sx-p">(</tspan>code<tspan class="sx-p">:</tspan> <tspan class="sx-ty">string</tspan><tspan class="sx-p">):</tspan></text>
+  <text class="d-member" x="468" y="220"><tspan class="sx-ty">Promise</tspan><tspan class="sx-p">&lt;</tspan><tspan class="sx-ty">string</tspan> <tspan class="sx-p">|</tspan> <tspan class="sx-ty">null</tspan><tspan class="sx-p">&gt;</tspan></text>
+  <rect class="d-ext" x="442" y="248" width="262" height="54" rx="6"/>
+  <text class="d-name" x="454" y="267">ClickCounter</text>
+  <line class="d-line" x1="442" y1="276" x2="704" y2="276"/>
+  <text class="d-member" x="454" y="292"><tspan class="sx-fn">increment</tspan><tspan class="sx-p">(</tspan>code<tspan class="sx-p">:</tspan> <tspan class="sx-ty">string</tspan><tspan class="sx-p">):</tspan> <tspan class="sx-ty">void</tspan></text>
+  <line class="d-line" x1="314" y1="100" x2="440" y2="95" marker-end="url(#m-bbx)"/>
+  <line class="d-line" x1="314" y1="190" x2="440" y2="200" marker-end="url(#m-bbx)"/>
+  <line class="d-line" x1="314" y1="225" x2="440" y2="280" marker-end="url(#m-bbx)"/>
+  <line class="d-line" x1="170" y1="242" x2="170" y2="270" marker-end="url(#m-bbx)"/>
+</svg>
+<figcaption>Example: the <code>api/</code> level of the link shortener (<a href="spec-example.html#bb-api">spec example</a>). Illustration only.</figcaption>
+</figure>
+
+</main>
+</body>
+</html>

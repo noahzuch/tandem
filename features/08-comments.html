@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>F08 · Comments</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<main>
+<nav class="crumbs"><a href="index.html">Features</a> / F08</nav>
+<h1>F08 · Comments <span class="status">specification pending</span></h1>
+<p class="tagline">Threads on text, blocks, diagrams or the whole document — sent to Claude, answered in place.</p>
+
+<h2>Overview</h2>
+<p>Comments live next to the text (Yjs relative positions in a comments map), never as markup in the HTML, and are mirrored to
+<code>.collab/&lt;doc&gt;.comments.json</code>. The server turns them into events for <code>collab wait</code>; the agent answers with
+<code>collab reply</code> / <code>resolve</code>, visible live in the margin. The spike data model is an artefact — this feature needs a
+proper design phase.</p>
+
+<h2>What the spikes settled</h2>
+<ul>
+<li>Relative-position anchors survive concurrent edits, overlaps and block/diagram comments; a mark inside the text doesn't (06, 14 scenarios).</li>
+<li>Re-anchoring by stored quote inside the same block after agent edits (06).</li>
+<li>Event queued 4 ms after the comment; wait exits ~420 ms later, 400 ms of it the settle window (06).</li>
+<li>Spike recommendation: review round by default, “Ask agent” immediate (06) — still a decision for you.</li>
+</ul>
+
+<h2>Open / to decide</h2>
+<ul>
+<li>Thorough design of the data model: <code>kind</code> vs <code>ask</code>, two author shapes, delivery state over four fields (N12).</li>
+<li>Intent per thread entry, not per thread (N22); document-level comments (N16); threads tracking the changes made for them (N17).</li>
+<li>Events as pointers, not work packages — don't narrow the agent's view (N11).</li>
+<li>Comments on journal entries are events only; doc id so comments survive renames (06, 09).</li>
+</ul>
+
+<h2>Summary sections &amp; notes</h2>
+<div class="card"><table>
+<tbody>
+<tr><td><a href="../SUMMARY.html#s06">Spike 06 · annotations</a></td><td>Summary section</td></tr>
+<tr><td><a href="../SUMMARY.html#decisions">Decisions for you</a></td><td>Summary section</td></tr>
+<tr><td><a href="../SUMMARY.html#n11">N11</a></td><td>Comment events must not narrow the agent&#x27;s view</td></tr>
+<tr><td><a href="../SUMMARY.html#n12">N12</a></td><td>Comment feature needs a design phase</td></tr>
+<tr><td><a href="../SUMMARY.html#n16">N16</a></td><td>Comments not anchored to anything</td></tr>
+<tr><td><a href="../SUMMARY.html#n17">N17</a></td><td>Threads track the changes made for them</td></tr>
+<tr><td><a href="../SUMMARY.html#n22">N22</a></td><td>Intent per thread entry</td></tr>
+</tbody>
+</table></div>
+
+<h2>Spikes worth reading</h2>
+<div class="card"><table>
+<tbody>
+<tr><td><a href="../06-annotations/README.md">06-annotations</a></td><td>Anchoring experiments, comment map schema, margin UI, composer, review drafts, event shape, reply/resolve CLI</td></tr>
+</tbody>
+</table></div>
+
+<p class="crumbs" style="margin-top:32px">← <a href="07-agent-change-review.html">Agent change review</a> · <a href="09-page-shell.html">Page shell &amp; sidebar panels</a> →</p>
+</main>
+</body>
+</html>

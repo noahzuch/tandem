@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>F07 · Agent change review</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<main>
+<nav class="crumbs"><a href="index.html">Features</a> / F07</nav>
+<h1>F07 · Agent change review <span class="status">specification pending</span></h1>
+<p class="tagline">See what Claude changed, mark it read, reject or undo it.</p>
+
+<h2>Overview</h2>
+<p>Makes agent edits visible and reviewable after they're applied: persistent marks on changed ranges that stay until the user
+checks them as read, a gutter showing unread changes and comments, an “N agent changes” stepper, per-change reject and an explicit
+“undo agent change” separate from ⌘Z. Also covers proposals (suggestion mode) for edits that shouldn't be applied directly.</p>
+
+<h2>What the spikes settled</h2>
+<ul>
+<li>A short version exists: changed blocks flash in the agent's colour and fade after 2.5 s, matched by block id (07).</li>
+<li>Proposal mode exists: <code>patch --propose</code> creates a thread with Accept/Reject — but accepted changes aren't on the user's ⌘Z (08).</li>
+</ul>
+
+<h2>Open / to decide</h2>
+<ul>
+<li>Persistent marks as a reading list; where stored (Y.Map like comments?), block vs. text-range granularity (N1).</li>
+<li>Gutter combining unread agent changes and comments; coexistence with drag handle and margin (N15).</li>
+<li>Second undo manager for agent edits; every revert sends the agent an event (N13).</li>
+<li>Default edit mode: direct with highlight vs. proposals (decisions). Needs precise ranges from the character diff (N10).</li>
+</ul>
+
+<h2>Summary sections &amp; notes</h2>
+<div class="card"><table>
+<tbody>
+<tr><td><a href="../SUMMARY.html#s07">Spike 07 · collaboration</a></td><td>Summary section</td></tr>
+<tr><td><a href="../SUMMARY.html#s08">Spike 08 · agent edit path</a></td><td>Summary section</td></tr>
+<tr><td><a href="../SUMMARY.html#decisions">Decisions for you</a></td><td>Summary section</td></tr>
+<tr><td><a href="../SUMMARY.html#n1">N1</a></td><td>Keep agent edits highlighted until accepted</td></tr>
+<tr><td><a href="../SUMMARY.html#n13">N13</a></td><td>Undo/redo and the agent&#x27;s changes</td></tr>
+<tr><td><a href="../SUMMARY.html#n15">N15</a></td><td>A gutter beside the text</td></tr>
+<tr><td><a href="../SUMMARY.html#n17">N17</a></td><td>Threads track the changes made for them</td></tr>
+</tbody>
+</table></div>
+
+<h2>Spikes worth reading</h2>
+<div class="card"><table>
+<tbody>
+<tr><td><a href="../07-collaboration/README.md">07-collaboration</a></td><td>Change flash by block id, agent caret</td></tr>
+<tr><td><a href="../08-agent-edit-path/README.md">08-agent-edit-path</a></td><td><code>--propose</code> threads, merge returning changed ranges (<code>mergeInto</code>)</td></tr>
+<tr><td><a href="../05-editor-ui/README.md">05-editor-ui</a></td><td>Unbuilt sketch: gutter bar / tint, “N agent changes” chip, outline badges</td></tr>
+</tbody>
+</table></div>
+
+<p class="crumbs" style="margin-top:32px">← <a href="06-agent-editing.html">Agent editing &amp; merge engine</a> · <a href="08-comments.html">Comments</a> →</p>
+</main>
+</body>
+</html>

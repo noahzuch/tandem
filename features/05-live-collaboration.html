@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>F05 · Live collaboration</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<main>
+<nav class="crumbs"><a href="index.html">Features</a> / F05</nav>
+<h1>F05 · Live collaboration <span class="status">specification pending</span></h1>
+<p class="tagline">User and agent edit the same document at the same time without losing characters.</p>
+
+<h2>Overview</h2>
+<p>Yjs with a self-hosted Hocuspocus server binds every browser tab and the agent to one Y.Doc. Covers presence and remote carets
+(including the agent's caret), per-user undo, server-side initialisation so tabs never race, persistence across restarts and the
+workarounds for upstream bugs in the collaboration packages. Multiple human users work technically but are low priority.</p>
+
+<h2>What the spikes settled</h2>
+<ul>
+<li>No characters lost in every measured case except two bounded ones: both sides editing the same word, and both editing one diagram (07).</li>
+<li>The browser never loads HTML itself; the server fills the Y.Doc, so two tabs can't race (07).</li>
+<li>⌘Z undoes only your own changes (07).</li>
+<li>Upstream bugs: scrambled typing in <code>@tiptap/y-tiptap</code> 3.0.10 (06) and broken redo (07) — workarounds built; pin versions.</li>
+</ul>
+
+<h2>Open / to decide</h2>
+<ul>
+<li>Concurrent edits inside one diagram: one side lost; soft lock built, per-label storage not (07, N20).</li>
+<li>Offline persistence in the browser (y-indexeddb) — not verified.</li>
+<li>Multiple humans: works locally via <code>?user=</code>, but no auth, identities or network binding <span class="status prio-low">low prio</span> (N14).</li>
+</ul>
+
+<h2>Summary sections &amp; notes</h2>
+<div class="card"><table>
+<tbody>
+<tr><td><a href="../SUMMARY.html#s07">Spike 07 · collaboration</a></td><td>Summary section</td></tr>
+<tr><td><a href="../SUMMARY.html#arch">How the parts work together</a></td><td>Summary section</td></tr>
+<tr><td><a href="../SUMMARY.html#n13">N13</a></td><td>Undo/redo and the agent&#x27;s changes</td></tr>
+<tr><td><a href="../SUMMARY.html#n14">N14</a></td><td>Multiple human users</td></tr>
+</tbody>
+</table></div>
+
+<h2>Spikes worth reading</h2>
+<div class="card"><table>
+<tbody>
+<tr><td><a href="../07-collaboration/README.md">07-collaboration</a></td><td>Hocuspocus server, Collaboration + caret, agent demo client (<code>npm run agent -- type …</code>), measured scenarios</td></tr>
+<tr><td><a href="../06-annotations/README.md">06-annotations</a></td><td>y-tiptap caret/scramble bug and its workaround</td></tr>
+</tbody>
+</table></div>
+
+<p class="crumbs" style="margin-top:32px">← <a href="04-editor-ui.html">Editor UI</a> · <a href="06-agent-editing.html">Agent editing &amp; merge engine</a> →</p>
+</main>
+</body>
+</html>

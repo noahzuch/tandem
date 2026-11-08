@@ -1,0 +1,269 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sequence diagram parts</title>
+<!--
+  SEQUENCE DIAGRAM TEMPLATE
+
+  Parts for sequence diagrams in a spec's Solution design. Each part is an SVG <g> with its origin at its top-left
+  corner: copy it, set transform="translate(x,y)", change the labels. The comment above each part says when to
+  use it. The classes come from the <style> of spec-template.html, so copies render the same in a spec.
+
+  How to write a sequence diagram
+  - Use one when the ORDER of interactions between several participants is the point: a request travelling
+    through components, a handshake, a race between two actors. If only one participant acts, use a flow diagram.
+  - One scenario per diagram, named in the caption ("a redirect for a known code"). Mention the variants in the
+    caption or in one alt fragment; more than one or two fragments means the diagram should be split.
+  - Participants left to right in the order they first take part; whoever starts the scenario is leftmost.
+    At most about six participants; spacing 140–180 px between lifelines.
+  - Time runs downward, about 30 px per message. Label each message with the real call, command or event name.
+  - Draw a return only when the returned value matters to the reader. Draw activation bars only when it matters
+    who is busy or blocked while something else happens (a long poll, a lock).
+  - Participants are solid if we build them, dashed if we don't (same rule as the context diagram).
+  - Size: viewBox 720 wide. Name the arrow markers uniquely per diagram; they are global to the page.
+  The parts and relations in this file are a starting set, not an exhaustive list. If a diagram needs a node
+  type, relation or notation that is missing here, add it: draw it with the existing d-* classes in the same
+  style, and explain it in the caption so the reader doesn't have to guess what it means.
+  An example that combines the parts is at the end of this file.
+-->
+<style>
+:root {
+  --bg: #f7f6f3; --surface: #ffffff; --text: #1d1d1b; --muted: #6b6a66; --line: #e3e1db; --line-strong: #b9b6ae;
+  --accent: #3b5bdb; --accent-soft: #e7ecff; --code: #f0eee9; --note: #fff8e6;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #161615; --surface: #1f1f1d; --text: #ecebe7; --muted: #a09e98; --line: #33322f; --line-strong: #5a5853;
+    --accent: #8ea6ff; --accent-soft: #232a45; --code: #2a2927; --note: #2b2618;
+  }
+}
+body { margin: 0; background: var(--bg); color: var(--text);
+  font: 15px/1.6 -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, sans-serif; }
+main { max-width: 860px; margin: 0 auto; padding: 32px 16px 64px; }
+a { color: var(--accent); }
+h1 { font-size: 28px; margin: 0 0 4px; letter-spacing: -0.01em; }
+h2 { font-size: 21px; margin: 48px 0 12px; padding-top: 8px; border-top: 1px solid var(--line); }
+.meta { color: var(--muted); margin: 0 0 24px; }
+code { font-family: ui-monospace, "SF Mono", Menlo, monospace; font-size: 13px; background: var(--code); padding: 1px 4px; border-radius: 4px; }
+figure { margin: 16px 0; }
+figcaption { color: var(--muted); font-size: 13px; margin-top: 4px; }
+.parts { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 16px; }
+.parts figure { margin: 0; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 10px; }
+svg.diagram { display: block; width: 100%; height: auto; }
+.parts svg.diagram { width: auto; max-width: 100%; height: auto; }
+svg.diagram text { fill: var(--text); font: 13px -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, sans-serif; }
+svg.diagram text.d-small { fill: var(--muted); font-size: 11px; }
+svg.diagram text.d-title { fill: var(--muted); font-size: 12px; font-weight: 600; }
+.d-box { fill: var(--surface); stroke: var(--text); stroke-width: 1.2; }
+.d-focus { fill: var(--accent-soft); stroke: var(--accent); stroke-width: 1.6; }
+.d-ext { fill: var(--bg); stroke: var(--muted); stroke-width: 1.2; stroke-dasharray: 5 4; }
+.d-frame { fill: none; stroke: var(--line-strong); stroke-width: 1.2; }
+.d-bound { fill: none; stroke: var(--muted); stroke-width: 1.2; stroke-dasharray: 2 4; }
+.d-line { fill: none; stroke: var(--muted); stroke-width: 1.3; }
+.d-ret { stroke-dasharray: 4 3; }
+.d-head { fill: var(--muted); }
+.d-life { stroke: var(--line-strong); stroke-width: 1; stroke-dasharray: 3 4; }
+.d-solid { fill: var(--text); }
+.d-act { fill: var(--surface); stroke: var(--muted); stroke-width: 1.2; }
+.d-note { fill: var(--note); stroke: var(--line-strong); stroke-width: 1; }
+.d-hollow { fill: var(--surface); stroke: var(--muted); stroke-width: 1.2; }
+.d-lane { fill: none; stroke: var(--line-strong); stroke-width: 1; }
+svg.diagram text.d-name { font-weight: 600; }
+svg.diagram text.d-field { font: 12px ui-monospace, "SF Mono", Menlo, monospace; }
+</style>
+</head>
+<body>
+<main>
+
+<h1>Sequence diagram parts</h1>
+<p class="meta">Building parts for sequence diagrams in a spec. How to use them is explained in the comments in the
+source. Back to the <a href="spec-template.html">spec template</a>. The parts are not exhaustive; add what a diagram needs.</p>
+
+<h2 id="participants">Participants</h2>
+<div class="parts">
+
+<!--
+  PARTICIPANT — a component, process or system that sends or receives messages. Box 120 × 34 with the lifeline
+  starting at its bottom centre (60,34); extend the lifeline to the bottom of the diagram. Use class d-ext on the
+  box for participants we don't build.
+-->
+<figure>
+<svg class="diagram" width="140" height="110" viewBox="0 0 140 110" role="img" aria-label="Participant">
+  <g transform="translate(10,5)">
+    <rect class="d-box" width="120" height="34" rx="6"/>
+    <text x="60" y="22" text-anchor="middle">‹Participant›</text>
+    <line class="d-life" x1="60" y1="34" x2="60" y2="100"/>
+  </g>
+</svg>
+<figcaption>Participant</figcaption>
+</figure>
+
+<!--
+  ACTOR — a person (or, with the Agent icon from context-diagram-template.html, an agent) who starts or receives
+  messages. Use it instead of a Participant box when the scenario starts with a human action, so the reader sees
+  where the human is in the loop. Lifeline from (60,56).
+-->
+<figure>
+<svg class="diagram" width="140" height="120" viewBox="0 0 140 120" role="img" aria-label="Actor">
+  <g transform="translate(10,5)">
+    <circle class="d-box" cx="60" cy="9" r="8"/>
+    <path class="d-box" d="M44,36 C44,24 50,19 60,19 C70,19 76,24 76,36 Z"/>
+    <text x="60" y="51" text-anchor="middle">‹Role›</text>
+    <line class="d-life" x1="60" y1="56" x2="60" y2="110"/>
+  </g>
+</svg>
+<figcaption>Actor</figcaption>
+</figure>
+
+<!--
+  ACTIVATION — a narrow bar on a lifeline while the participant is busy or blocked, e.g. a long poll that waits
+  for an event. Width 10, centred on the lifeline (x = lifeline − 5); draw it after the lifeline.
+-->
+<figure>
+<svg class="diagram" width="140" height="110" viewBox="0 0 140 110" role="img" aria-label="Activation">
+  <g transform="translate(10,5)">
+    <rect class="d-box" width="120" height="34" rx="6"/>
+    <text x="60" y="22" text-anchor="middle">‹Participant›</text>
+    <line class="d-life" x1="60" y1="34" x2="60" y2="100"/>
+    <rect class="d-act" x="55" y="45" width="10" height="45"/>
+  </g>
+</svg>
+<figcaption>Activation</figcaption>
+</figure>
+
+<!--
+  NOTE — a fact the reader needs at this point of the scenario that isn't a message: a timeout, a state that
+  changed, "30 s later". Place it over the lifeline it concerns. Keep it to one or two short lines.
+-->
+<figure>
+<svg class="diagram" width="200" height="70" viewBox="0 0 200 70" role="img" aria-label="Note">
+  <g transform="translate(10,10)">
+    <rect class="d-note" width="180" height="46" rx="4"/>
+    <text class="d-small" x="90" y="20" text-anchor="middle">‹note line one›</text>
+    <text class="d-small" x="90" y="36" text-anchor="middle">‹note line two›</text>
+  </g>
+</svg>
+<figcaption>Note</figcaption>
+</figure>
+
+</div>
+
+<h2 id="messages">Messages</h2>
+
+<!--
+  MESSAGES — a horizontal line between two lifelines, label (class d-small) 7 px above its middle.
+  - Call (solid, filled head): the sender waits for an answer. Function calls, HTTP requests, CLI commands.
+  - Return (dashed, add d-ret): the answer to a call, drawn only when the value matters.
+  - Async message (solid, open head, marker m-‹id›-open): sent without waiting — events, pushes, Yjs updates.
+  - Self call: a participant calls itself; draw a small loop on the right of its lifeline. Use it for a step that
+    matters in the scenario (queueing, caching), not for every internal function.
+-->
+<figure>
+<svg class="diagram" viewBox="0 0 720 120" role="img" aria-label="Message kinds">
+  <defs>
+    <marker id="m-sq" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="d-head" d="M0,0 L10,5 L0,10 z"/></marker>
+    <marker id="m-sq-open" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path class="d-line" d="M0,0 L10,5 L0,10"/></marker>
+  </defs>
+  <line class="d-line" x1="20" y1="40" x2="170" y2="40" marker-end="url(#m-sq)"/>
+  <text class="d-small" x="95" y="33" text-anchor="middle">‹call(args)›</text>
+  <text x="95" y="75" text-anchor="middle">Call</text>
+  <line class="d-line d-ret" x1="350" y1="40" x2="200" y2="40" marker-end="url(#m-sq)"/>
+  <text class="d-small" x="275" y="33" text-anchor="middle">‹result›</text>
+  <text x="275" y="75" text-anchor="middle">Return</text>
+  <line class="d-line" x1="380" y1="40" x2="530" y2="40" marker-end="url(#m-sq-open)"/>
+  <text class="d-small" x="455" y="33" text-anchor="middle">‹event›</text>
+  <text x="455" y="75" text-anchor="middle">Async message</text>
+  <line class="d-life" x1="600" y1="10" x2="600" y2="100"/>
+  <path class="d-line" d="M600,30 H640 V52 H602" marker-end="url(#m-sq)"/>
+  <text class="d-small" x="646" y="45">‹step›</text>
+  <text x="620" y="75" text-anchor="middle">Self call</text>
+</svg>
+<figcaption>Call, return, async message, self call.</figcaption>
+</figure>
+
+<h2 id="fragments">Fragments</h2>
+
+<!--
+  FRAGMENT — a frame around messages that only happen under a condition or repeat. The tag in the top-left corner
+  names the kind, the guard in brackets the condition:
+  - alt: alternatives. A dashed divider separates the branches; each branch gets its own guard.
+  - opt: happens only if the guard holds.
+  - loop: repeats while / for the guard ("[until NOT_FOUND stops]", "[every 30 s]").
+  - par: branches run at the same time (e.g. user typing while the agent patches).
+  The frame spans the lifelines involved plus 20 px on each side.
+-->
+<figure>
+<svg class="diagram" viewBox="0 0 720 130" role="img" aria-label="Fragment">
+  <g transform="translate(10,10)">
+    <rect class="d-frame" width="420" height="110"/>
+    <path class="d-act" d="M0,0 H46 V12 L38,20 H0 Z"/>
+    <text class="d-title" x="8" y="15">alt</text>
+    <text class="d-small" x="56" y="15">[‹condition of branch one›]</text>
+    <line class="d-life" x1="0" y1="58" x2="420" y2="58"/>
+    <text class="d-small" x="8" y="74">[‹condition of branch two›]</text>
+  </g>
+  <g transform="translate(470,10)">
+    <rect class="d-frame" width="240" height="70"/>
+    <path class="d-act" d="M0,0 H46 V12 L38,20 H0 Z"/>
+    <text class="d-title" x="8" y="15">loop</text>
+    <text class="d-small" x="56" y="15">[‹while / for›]</text>
+  </g>
+</svg>
+<figcaption>Fragments: alt with two branches, and loop (opt and par look the same with their own tag).</figcaption>
+</figure>
+
+<h2 id="example">Example</h2>
+
+<!--
+  EXAMPLE — the parts combined: a comment reaching the agent and the reply coming back. Illustration of the parts
+  only, not a spec of the session loop. Note: the long poll is shown as an activation, the Yjs updates as async
+  messages, and the "wait was killed" case as an alt branch instead of a second diagram.
+-->
+<figure>
+<svg class="diagram" viewBox="0 0 720 360" role="img" aria-label="Example sequence diagram">
+  <defs>
+    <marker id="m-sqx" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="d-head" d="M0,0 L10,5 L0,10 z"/></marker>
+    <marker id="m-sqx-open" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path class="d-line" d="M0,0 L10,5 L0,10"/></marker>
+  </defs>
+  <rect class="d-box" x="20" y="10" width="120" height="34" rx="6"/>
+  <text x="80" y="32" text-anchor="middle">Editor</text>
+  <rect class="d-box" x="190" y="10" width="120" height="34" rx="6"/>
+  <text x="250" y="32" text-anchor="middle">Collab server</text>
+  <rect class="d-box" x="360" y="10" width="120" height="34" rx="6"/>
+  <text x="420" y="32" text-anchor="middle">collab wait</text>
+  <rect class="d-ext" x="540" y="10" width="120" height="34" rx="6"/>
+  <text x="600" y="32" text-anchor="middle">Claude</text>
+  <line class="d-life" x1="80" y1="44" x2="80" y2="350"/>
+  <line class="d-life" x1="250" y1="44" x2="250" y2="350"/>
+  <line class="d-life" x1="420" y1="44" x2="420" y2="350"/>
+  <line class="d-life" x1="600" y1="44" x2="600" y2="350"/>
+  <rect class="d-act" x="415" y="70" width="10" height="195"/>
+  <line class="d-line" x1="415" y1="75" x2="252" y2="75" marker-end="url(#m-sqx)"/>
+  <text class="d-small" x="333" y="68" text-anchor="middle">wait (long poll)</text>
+  <line class="d-line" x1="80" y1="105" x2="248" y2="105" marker-end="url(#m-sqx-open)"/>
+  <text class="d-small" x="165" y="98" text-anchor="middle">thread added (Yjs update)</text>
+  <path class="d-line" d="M250,122 H290 V144 H252" marker-end="url(#m-sqx)"/>
+  <text class="d-small" x="296" y="137">queue event</text>
+  <rect class="d-frame" x="140" y="160" width="320" height="80"/>
+  <path class="d-act" d="M140,160 H186 V172 L178,180 H140 Z"/>
+  <text class="d-title" x="148" y="175">alt</text>
+  <text class="d-small" x="196" y="175">[wait still listening]</text>
+  <line class="d-line d-ret" x1="250" y1="192" x2="413" y2="192" marker-end="url(#m-sqx)"/>
+  <text class="d-small" x="331" y="186" text-anchor="middle">event JSON</text>
+  <line class="d-life" x1="140" y1="205" x2="460" y2="205"/>
+  <text class="d-small" x="148" y="222">[wait was killed] the event stays queued; the next wait returns it</text>
+  <line class="d-line" x1="425" y1="265" x2="598" y2="265" marker-end="url(#m-sqx-open)"/>
+  <text class="d-small" x="511" y="258" text-anchor="middle">exits → wakes the agent</text>
+  <line class="d-line" x1="600" y1="295" x2="252" y2="295" marker-end="url(#m-sqx)"/>
+  <text class="d-small" x="426" y="288" text-anchor="middle">collab reply</text>
+  <line class="d-line" x1="250" y1="325" x2="82" y2="325" marker-end="url(#m-sqx-open)"/>
+  <text class="d-small" x="165" y="318" text-anchor="middle">reply (Yjs update)</text>
+</svg>
+<figcaption>Example: a comment reaches the agent and the reply comes back. Illustration only.</figcaption>
+</figure>
+
+</main>
+</body>
+</html>

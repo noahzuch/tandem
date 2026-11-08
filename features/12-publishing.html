@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>F12 · Publishing</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<main>
+<nav class="crumbs"><a href="index.html">Features</a> / F12</nav>
+<h1>F12 · Publishing <span class="status">specification pending</span></h1>
+<p class="tagline">Making the project release-ready: releases, distribution, upkeep and the public face.</p>
+
+<h2>Overview</h2>
+<p>Everything that turns a working repo into something others install and trust, and that can be added once the core works:
+release automation and versioning, publishing to a Claude plugin marketplace, automated dependency updates, README and docs,
+changelog, contribution and security policies. Builds on the tooling chosen in <a href="00-project-setup.html">F00 · Project setup</a>.</p>
+
+<h2>Starting points</h2>
+<ul>
+<li>nessy's release model is a known pattern: a manually triggered, CI-gated Release workflow that bumps the version, builds and advances a <code>release</code> branch users install from (not a spike result).</li>
+<li>Collaboration packages must stay pinned and upgraded together, with the verify suites as contract tests (risks) — constrains dependency automation.</li>
+</ul>
+
+<h2>Scope</h2>
+<div class="card"><table>
+<thead><tr><th>Area</th><th>Spikes used</th><th>To decide</th></tr></thead>
+<tbody>
+<tr><td>Releases</td><td>—</td><td>Versioning scheme, release workflow and tags, where built output lives, plugin version as single source of truth</td></tr>
+<tr><td>Distribution</td><td>—</td><td>Which marketplace(s); npm package for the CLI or plugin-only; install/upgrade instructions</td></tr>
+<tr><td>Dependency updates</td><td>—</td><td>Renovate vs. Dependabot; grouping the Tiptap/Yjs/Hocuspocus stack into one update gated by the e2e suite</td></tr>
+<tr><td>README &amp; docs</td><td>Screenshots from spikes 05–10</td><td>README with demo GIF/screenshots, user guide, “writing HTML for tandem” (from F10)</td></tr>
+<tr><td>Changelog</td><td>—</td><td>Generated from commits (needs the F00 commit convention) or hand-written</td></tr>
+<tr><td>Community files</td><td>—</td><td>CONTRIBUTING, issue/PR templates, SECURITY.md (relates to F11), code of conduct</td></tr>
+<tr><td>Upstream</td><td>Two upstream bugs with workarounds (06, 07)</td><td>Report them upstream; track workarounds to remove</td></tr>
+</tbody>
+</table></div>
+
+<h2>Open</h2>
+<ul>
+<li>Product name and npm scope before the first public release (N24).</li>
+</ul>
+
+<h2>Summary sections &amp; notes</h2>
+<div class="card"><table>
+<tbody>
+<tr><td><a href="../SUMMARY.html#risks">Risks, ranked</a></td><td>Summary section</td></tr>
+<tr><td><a href="../SUMMARY.html#decisions">Decisions for you</a></td><td>Summary section</td></tr>
+<tr><td><a href="../SUMMARY.html#n24">N24</a></td><td>Prior art: bloknayrb/tandem</td></tr>
+</tbody>
+</table></div>
+
+<h2>Spikes worth reading</h2>
+<div class="card"><table>
+<tbody>
+<tr><td><a href="../05-editor-ui/README.md">05-editor-ui</a></td><td>Screenshots usable for docs</td></tr>
+<tr><td><a href="../06-annotations/README.md">06-annotations</a></td><td>Upstream y-tiptap bug and workaround</td></tr>
+<tr><td><a href="../07-collaboration/README.md">07-collaboration</a></td><td>Upstream redo bug and workaround</td></tr>
+</tbody>
+</table></div>
+
+<p class="crumbs" style="margin-top:32px">← <a href="11-security.html">Security &amp; sanitising</a></p>
+</main>
+</body>
+</html>

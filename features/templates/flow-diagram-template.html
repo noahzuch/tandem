@@ -1,0 +1,243 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Flow diagram parts</title>
+<!--
+  FLOW DIAGRAM TEMPLATE
+
+  Parts for flow diagrams (flowcharts) in a spec's Solution design or Functional design. Each part is an SVG <g>
+  with its origin at its top-left corner: copy it, set transform="translate(x,y)", change the labels. The comment
+  above each part says when to use it. The classes come from the <style> of spec-template.html.
+
+  How to write a flow diagram
+  - Use one for a process with steps and decisions: what happens to an input, a user workflow, a retry loop.
+    If the point is which participant talks to which in what order, use a sequence diagram; if the point is which
+    condition something is in, use a state diagram.
+  - One start, as few ends as possible. Every path from the start reaches an end.
+  - Steps start with a verb ("normalise URL", "merge into Y.Doc"). Decisions are yes/no questions; label every
+    outgoing arrow of a decision.
+  - Keep one direction: left to right for short flows, top to bottom for long ones. Loops go back on the outside
+    of the flow so they don't cross the main path.
+  - Use swimlanes when more than one actor takes part; each step sits in the lane of whoever does it, so the
+    reader sees every hand-over as an arrow crossing a lane border.
+  - At most about twelve steps and decisions; move a self-contained part into a subprocess and describe it in its
+    own subsection.
+  - Size: viewBox 720 wide. Name the arrow markers uniquely per diagram.
+  The parts and relations in this file are a starting set, not an exhaustive list. If a diagram needs a node
+  type, relation or notation that is missing here, add it: draw it with the existing d-* classes in the same
+  style, and explain it in the caption so the reader doesn't have to guess what it means.
+  An example that combines the parts is at the end of this file.
+-->
+<style>
+:root {
+  --bg: #f7f6f3; --surface: #ffffff; --text: #1d1d1b; --muted: #6b6a66; --line: #e3e1db; --line-strong: #b9b6ae;
+  --accent: #3b5bdb; --accent-soft: #e7ecff; --code: #f0eee9; --note: #fff8e6;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #161615; --surface: #1f1f1d; --text: #ecebe7; --muted: #a09e98; --line: #33322f; --line-strong: #5a5853;
+    --accent: #8ea6ff; --accent-soft: #232a45; --code: #2a2927; --note: #2b2618;
+  }
+}
+body { margin: 0; background: var(--bg); color: var(--text);
+  font: 15px/1.6 -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, sans-serif; }
+main { max-width: 860px; margin: 0 auto; padding: 32px 16px 64px; }
+a { color: var(--accent); }
+h1 { font-size: 28px; margin: 0 0 4px; letter-spacing: -0.01em; }
+h2 { font-size: 21px; margin: 48px 0 12px; padding-top: 8px; border-top: 1px solid var(--line); }
+.meta { color: var(--muted); margin: 0 0 24px; }
+code { font-family: ui-monospace, "SF Mono", Menlo, monospace; font-size: 13px; background: var(--code); padding: 1px 4px; border-radius: 4px; }
+figure { margin: 16px 0; }
+figcaption { color: var(--muted); font-size: 13px; margin-top: 4px; }
+.parts { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 16px; }
+.parts figure { margin: 0; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 10px; }
+svg.diagram { display: block; width: 100%; height: auto; }
+.parts svg.diagram { width: auto; max-width: 100%; height: auto; }
+svg.diagram text { fill: var(--text); font: 13px -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, sans-serif; }
+svg.diagram text.d-small { fill: var(--muted); font-size: 11px; }
+svg.diagram text.d-title { fill: var(--muted); font-size: 12px; font-weight: 600; }
+.d-box { fill: var(--surface); stroke: var(--text); stroke-width: 1.2; }
+.d-focus { fill: var(--accent-soft); stroke: var(--accent); stroke-width: 1.6; }
+.d-ext { fill: var(--bg); stroke: var(--muted); stroke-width: 1.2; stroke-dasharray: 5 4; }
+.d-frame { fill: none; stroke: var(--line-strong); stroke-width: 1.2; }
+.d-bound { fill: none; stroke: var(--muted); stroke-width: 1.2; stroke-dasharray: 2 4; }
+.d-line { fill: none; stroke: var(--muted); stroke-width: 1.3; }
+.d-ret { stroke-dasharray: 4 3; }
+.d-head { fill: var(--muted); }
+.d-life { stroke: var(--line-strong); stroke-width: 1; stroke-dasharray: 3 4; }
+.d-solid { fill: var(--text); }
+.d-act { fill: var(--surface); stroke: var(--muted); stroke-width: 1.2; }
+.d-note { fill: var(--note); stroke: var(--line-strong); stroke-width: 1; }
+.d-hollow { fill: var(--surface); stroke: var(--muted); stroke-width: 1.2; }
+.d-lane { fill: none; stroke: var(--line-strong); stroke-width: 1; }
+svg.diagram text.d-name { font-weight: 600; }
+svg.diagram text.d-field { font: 12px ui-monospace, "SF Mono", Menlo, monospace; }
+</style>
+</head>
+<body>
+<main>
+
+<h1>Flow diagram parts</h1>
+<p class="meta">Building parts for flow diagrams in a spec. How to use them is explained in the comments in the
+source. Back to the <a href="spec-template.html">spec template</a>. The parts are not exhaustive; add what a diagram needs.</p>
+
+<h2 id="nodes">Nodes</h2>
+<div class="parts">
+
+<!--
+  START / END — where the flow begins and where it ends. Label the start with what triggers the flow ("user
+  presses Shorten") and each end with its outcome ("applied", "rejected"). 110 × 34.
+-->
+<figure>
+<svg class="diagram" width="130" height="54" viewBox="0 0 130 54" role="img" aria-label="Start or end">
+  <g transform="translate(10,10)">
+    <rect class="d-box" width="110" height="34" rx="17"/>
+    <text x="55" y="22" text-anchor="middle">‹start / end›</text>
+  </g>
+</svg>
+<figcaption>Start / end</figcaption>
+</figure>
+
+<!--
+  STEP — one action. Starts with a verb; use the real command or function name when the reader will look for it.
+  150 × 40. Anchors: edge centres.
+-->
+<figure>
+<svg class="diagram" width="170" height="60" viewBox="0 0 170 60" role="img" aria-label="Step">
+  <g transform="translate(10,10)">
+    <rect class="d-box" width="150" height="40" rx="6"/>
+    <text x="75" y="25" text-anchor="middle">‹do something›</text>
+  </g>
+</svg>
+<figcaption>Step</figcaption>
+</figure>
+
+<!--
+  DECISION — a yes/no question. 130 × 64; anchors at the four corners of the diamond: left (0,32), right (130,32),
+  top (65,0), bottom (65,64). Label each outgoing arrow (yes / no, or the value).
+-->
+<figure>
+<svg class="diagram" width="150" height="84" viewBox="0 0 150 84" role="img" aria-label="Decision">
+  <g transform="translate(10,10)">
+    <path class="d-box" d="M65,0 L130,32 L65,64 L0,32 Z"/>
+    <text x="65" y="36" text-anchor="middle">‹question?›</text>
+  </g>
+</svg>
+<figcaption>Decision</figcaption>
+</figure>
+
+<!--
+  FORK / JOIN — a bar where the flow splits into branches that run at the same time (fork), or waits for all of
+  them (join). Use it only for real parallelism; a decision is not a fork. 120 × 6, horizontal or vertical.
+-->
+<figure>
+<svg class="diagram" width="140" height="26" viewBox="0 0 140 26" role="img" aria-label="Fork or join">
+  <g transform="translate(10,10)">
+    <rect class="d-solid" width="120" height="6" rx="2"/>
+  </g>
+</svg>
+<figcaption>Fork / join</figcaption>
+</figure>
+
+<!--
+  DATA — a document or file a step reads or writes (spec.html, decisions.md, a JSON payload). Connect it with a
+  dashed arrow; it is not part of the control flow. 110 × 50.
+-->
+<figure>
+<svg class="diagram" width="130" height="70" viewBox="0 0 130 70" role="img" aria-label="Data">
+  <g transform="translate(10,10)">
+    <path class="d-box" d="M0,0 H92 L110,18 V50 H0 Z"/>
+    <path class="d-line" d="M92,0 V18 H110"/>
+    <text x="52" y="31" text-anchor="middle">‹file›</text>
+  </g>
+</svg>
+<figcaption>Data</figcaption>
+</figure>
+
+<!--
+  SUBPROCESS — a step that is a flow of its own, described elsewhere. Link the subsection that describes it in the
+  caption or the prose. 150 × 40.
+-->
+<figure>
+<svg class="diagram" width="170" height="60" viewBox="0 0 170 60" role="img" aria-label="Subprocess">
+  <g transform="translate(10,10)">
+    <rect class="d-box" width="150" height="40" rx="6"/>
+    <line class="d-line" x1="10" y1="0" x2="10" y2="40"/>
+    <line class="d-line" x1="140" y1="0" x2="140" y2="40"/>
+    <text x="75" y="25" text-anchor="middle">‹subprocess›</text>
+  </g>
+</svg>
+<figcaption>Subprocess</figcaption>
+</figure>
+
+</div>
+
+<h2 id="lanes">Swimlanes and connectors</h2>
+
+<!--
+  SWIMLANES — one horizontal band per actor (person, agent, component), the actor's name top-left. Full diagram
+  width; height as the steps need. Draw the lanes first.
+  CONNECTORS — solid arrows for the control flow; label (class d-small) only the arrows leaving a decision.
+  A dashed arrow (add d-ret) connects data to the step that reads or writes it.
+-->
+<figure>
+<svg class="diagram" viewBox="0 0 720 200" role="img" aria-label="Swimlanes and connectors">
+  <defs><marker id="m-fl" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="d-head" d="M0,0 L10,5 L0,10 z"/></marker></defs>
+  <rect class="d-lane" x="10" y="10" width="700" height="90"/>
+  <text class="d-title" x="22" y="28">‹Actor A›</text>
+  <rect class="d-lane" x="10" y="100" width="700" height="90"/>
+  <text class="d-title" x="22" y="118">‹Actor B›</text>
+  <line class="d-line" x1="140" y1="60" x2="300" y2="60" marker-end="url(#m-fl)"/>
+  <text x="220" y="85" text-anchor="middle">Control flow</text>
+  <line class="d-line" x1="380" y1="60" x2="540" y2="60" marker-end="url(#m-fl)"/>
+  <text class="d-small" x="460" y="52" text-anchor="middle">‹yes›</text>
+  <text x="460" y="85" text-anchor="middle">From a decision</text>
+  <line class="d-line d-ret" x1="300" y1="150" x2="460" y2="150" marker-end="url(#m-fl)"/>
+  <text x="380" y="175" text-anchor="middle">Data</text>
+</svg>
+<figcaption>Two swimlanes and the three kinds of connector.</figcaption>
+</figure>
+
+<h2 id="example">Example</h2>
+
+<!--
+  EXAMPLE — the parts combined: the agent editing the live document. Illustration of the parts only, not the
+  design of the agent edit path. Note the hand-overs crossing the lane border, and the retry loop going back on
+  the outside of the main path.
+-->
+<figure>
+<svg class="diagram" viewBox="0 0 720 290" role="img" aria-label="Example flow diagram">
+  <defs><marker id="m-flx" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="d-head" d="M0,0 L10,5 L0,10 z"/></marker></defs>
+  <rect class="d-lane" x="10" y="10" width="700" height="120"/>
+  <text class="d-title" x="22" y="28">Claude</text>
+  <rect class="d-lane" x="10" y="130" width="700" height="150"/>
+  <text class="d-title" x="22" y="148">Collab server</text>
+  <rect class="d-box" x="40" y="58" width="80" height="34" rx="17"/>
+  <text x="80" y="80" text-anchor="middle">task</text>
+  <rect class="d-box" x="150" y="55" width="160" height="40" rx="6"/>
+  <text x="230" y="80" text-anchor="middle">collab read --section</text>
+  <rect class="d-box" x="360" y="55" width="130" height="40" rx="6"/>
+  <text x="425" y="80" text-anchor="middle">collab patch</text>
+  <path class="d-box" d="M300,178 L365,210 L300,242 L235,210 Z"/>
+  <text x="300" y="214" text-anchor="middle">SEARCH found?</text>
+  <rect class="d-box" x="400" y="190" width="150" height="40" rx="6"/>
+  <text x="475" y="215" text-anchor="middle">merge into Y.Doc</text>
+  <rect class="d-box" x="590" y="193" width="100" height="34" rx="17"/>
+  <text x="640" y="215" text-anchor="middle">applied</text>
+  <line class="d-line" x1="120" y1="75" x2="148" y2="75" marker-end="url(#m-flx)"/>
+  <line class="d-line" x1="310" y1="75" x2="358" y2="75" marker-end="url(#m-flx)"/>
+  <line class="d-line" x1="400" y1="95" x2="303" y2="177" marker-end="url(#m-flx)"/>
+  <line class="d-line" x1="365" y1="210" x2="398" y2="210" marker-end="url(#m-flx)"/>
+  <text class="d-small" x="381" y="202" text-anchor="middle">yes</text>
+  <path class="d-line" d="M235,210 H200 V97" marker-end="url(#m-flx)"/>
+  <text class="d-small" x="192" y="165" text-anchor="end">no: NOT_FOUND</text>
+  <line class="d-line" x1="550" y1="210" x2="588" y2="210" marker-end="url(#m-flx)"/>
+</svg>
+<figcaption>Example: the agent edits the live document and re-reads when its SEARCH text is stale. Illustration only.</figcaption>
+</figure>
+
+</main>
+</body>
+</html>

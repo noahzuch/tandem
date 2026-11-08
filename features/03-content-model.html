@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>F03 · Content model: islands &amp; generic nodes</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<main>
+<nav class="crumbs"><a href="index.html">Features</a> / F03</nav>
+<h1>F03 · Content model: islands &amp; generic nodes <span class="status">specification pending</span></h1>
+<p class="tagline">Show any HTML the agent writes, keep it editable where it's text, protect its structure.</p>
+
+<h2>Overview</h2>
+<p>Defines how arbitrary HTML maps onto editor nodes. A fixed list of elements become raw-HTML islands (SVG, MathML, canvas,
+embeds, forms/controls, scripts/styles, comments, captioned tables) shown as-is in a shadow root with editable text; everything else
+becomes a free generic node protected like a table cell (no collapse, no accidental merge/lift/split, explicit delete with a preview).
+Also covers attribute/class/style preservation on known nodes.</p>
+
+<h2>What the spikes settled</h2>
+<ul>
+<li>Islands only for the fixed list; everything else a generic node — no per-element policy, no <code>data-edit</code> attribute (10, N21).</li>
+<li>The table-style protection set fixes the four measured free-node problems (Delete pulls next block in, Enter duplicates incl. id, <code>/h2</code> lifts out, outside selection deletes wrapper) without rejecting transactions (10).</li>
+<li>Redesigned delete preview; fewer <code>&lt;p&gt;</code> wrappings than with islands (10).</li>
+<li>PreserveAttributes keeps every class/style/attribute; the document's own <code>&lt;style&gt;</code> is applied, scoped to the editor (04).</li>
+</ul>
+
+<h2>Open / to decide</h2>
+<ul>
+<li>Remove the island soft lock: per-label Yjs values or a server-side 3-way text merge of island source (N20).</li>
+<li>Which content is allowed where — e.g. <code>/table</code> inside a positioned node is allowed and odd (10).</li>
+<li>Fixed vs. free styles for standard blocks; no style picker today (N3).</li>
+</ul>
+
+<h2>Summary sections &amp; notes</h2>
+<div class="card"><table>
+<tbody>
+<tr><td><a href="../SUMMARY.html#s04">Spike 04 · html islands</a></td><td>Summary section</td></tr>
+<tr><td><a href="../SUMMARY.html#s10">Spike 10 · generic nodes</a></td><td>Summary section</td></tr>
+<tr><td><a href="../SUMMARY.html#n3">N3</a></td><td>Fixed styles for standard blocks</td></tr>
+<tr><td><a href="../SUMMARY.html#n20">N20</a></td><td>Remove the island lock</td></tr>
+<tr><td><a href="../SUMMARY.html#n21">N21</a></td><td>Islands for a fixed list, everything else a generic node</td></tr>
+<tr><td><a href="../SUMMARY.html#n23">N23</a></td><td>Fewer injected &lt;p&gt;</td></tr>
+</tbody>
+</table></div>
+
+<h2>Spikes worth reading</h2>
+<div class="card"><table>
+<tbody>
+<tr><td><a href="../04-html-islands/README.md">04-html-islands</a></td><td>Island node, shadow-root rendering, display sanitising, attribute preservation</td></tr>
+<tr><td><a href="../10-generic-nodes/README.md">10-generic-nodes</a></td><td>Generic nodes, protection set, interaction matrix, delete preview — the current default</td></tr>
+</tbody>
+</table></div>
+
+<p class="crumbs" style="margin-top:32px">← <a href="02-document-storage.html">Document storage &amp; round trip</a> · <a href="04-editor-ui.html">Editor UI</a> →</p>
+</main>
+</body>
+</html>

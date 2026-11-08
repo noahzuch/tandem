@@ -1,0 +1,377 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Context diagram parts</title>
+<!--
+  CONTEXT DIAGRAM TEMPLATE
+
+  The parts to build the context diagram of a spec (spec-template.html § Context) from. Each part below is an SVG
+  <g> group with its origin at its top-left corner: copy the <g>, set transform="translate(x,y)" to place it, and
+  change the label. The comment above each part says when to use it. The classes come from the <style> of
+  spec-template.html, which every spec copies, so the parts render the same there in light and dark mode.
+
+  How to write a context diagram
+  - Purpose: show what surrounds the feature and what crosses its boundary. The feature itself is a black box —
+    its inside belongs to Solution design and Building blocks.
+  - Exactly one "This feature" box. Around it, every neighbour that exchanges something with the feature: people,
+    agents, other features, external systems, data stores and files it shares with others. Leave out neighbours of
+    neighbours unless a flow can't be understood without them.
+  - Every neighbour in the diagram has a row in the spec's Boundaries table, and every row has a box here.
+  - Solid = something we build (this feature, other tandem features, stores we own). Dashed = something we don't
+    build (external systems, other teams' stores). People and agents keep their own shapes.
+  - Arrows point from who initiates to who is called: the agent runs a CLI command → arrow from agent to feature.
+    Use a dashed arrow when data or events flow without a call (the feature writes a file, emits an event).
+    Draw a two-way arrow only when both sides really initiate.
+  - Label every arrow with what is called or what flows, using the real interface name (CLI command, event,
+    file, endpoint). An unlabelled arrow says only "something happens here".
+  - Layout: where interaction starts (people, UIs, agents) on the left or top, the feature in the middle, stores
+    and files at the bottom, external systems on the right. Avoid crossing lines; move boxes before bending
+    lines. Leave at least 40 px between boxes so arrow labels fit.
+  - More than about ten neighbours means the diagram is too coarse or too fine: group neighbours with a
+    Boundary, or describe the feature at a higher level.
+  - Size: viewBox 720 wide, as tall as needed. Marker ids are global to the page, so name each diagram's arrow
+    marker uniquely (m-ctx, m-ctx-2 …).
+  - The <figcaption> says what the diagram shows. Render the page once in light and dark mode to check that no
+    label overlaps a line or box.
+
+  The parts and relations in this file are a starting set, not an exhaustive list. If a diagram needs a node
+  type, relation or notation that is missing here, add it: draw it with the existing d-* classes in the same
+  style, and explain it in the caption so the reader doesn't have to guess what it means.
+  An example that combines the parts is at the end of this file.
+-->
+<style>
+:root {
+  --bg: #f7f6f3; --surface: #ffffff; --text: #1d1d1b; --muted: #6b6a66; --line: #e3e1db; --line-strong: #b9b6ae;
+  --accent: #3b5bdb; --accent-soft: #e7ecff; --code: #f0eee9; --note: #fff8e6;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #161615; --surface: #1f1f1d; --text: #ecebe7; --muted: #a09e98; --line: #33322f; --line-strong: #5a5853;
+    --accent: #8ea6ff; --accent-soft: #232a45; --code: #2a2927; --note: #2b2618;
+  }
+}
+body { margin: 0; background: var(--bg); color: var(--text);
+  font: 15px/1.6 -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, sans-serif; }
+main { max-width: 860px; margin: 0 auto; padding: 32px 16px 64px; }
+a { color: var(--accent); }
+h1 { font-size: 28px; margin: 0 0 4px; letter-spacing: -0.01em; }
+h2 { font-size: 21px; margin: 48px 0 12px; padding-top: 8px; border-top: 1px solid var(--line); }
+.meta { color: var(--muted); margin: 0 0 24px; }
+code { font-family: ui-monospace, "SF Mono", Menlo, monospace; font-size: 13px; background: var(--code); padding: 1px 4px; border-radius: 4px; }
+figure { margin: 16px 0; }
+figcaption { color: var(--muted); font-size: 13px; margin-top: 4px; }
+.parts { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 16px; }
+.parts figure { margin: 0; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 10px; }
+svg.diagram { display: block; width: 100%; height: auto; }
+.parts svg.diagram { width: auto; max-width: 100%; height: auto; }
+svg.diagram text { fill: var(--text); font: 13px -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, sans-serif; }
+svg.diagram text.d-small { fill: var(--muted); font-size: 11px; }
+svg.diagram text.d-title { fill: var(--muted); font-size: 12px; font-weight: 600; }
+.d-box { fill: var(--surface); stroke: var(--text); stroke-width: 1.2; }
+.d-focus { fill: var(--accent-soft); stroke: var(--accent); stroke-width: 1.6; }
+.d-ext { fill: var(--bg); stroke: var(--muted); stroke-width: 1.2; stroke-dasharray: 5 4; }
+.d-frame { fill: none; stroke: var(--line-strong); stroke-width: 1.2; }
+.d-bound { fill: none; stroke: var(--muted); stroke-width: 1.2; stroke-dasharray: 2 4; }
+.d-line { fill: none; stroke: var(--muted); stroke-width: 1.3; }
+.d-ret { stroke-dasharray: 4 3; }
+.d-head { fill: var(--muted); }
+.d-life { stroke: var(--line-strong); stroke-width: 1; stroke-dasharray: 3 4; }
+.d-solid { fill: var(--text); }
+.d-act { fill: var(--surface); stroke: var(--muted); stroke-width: 1.2; }
+.d-note { fill: var(--note); stroke: var(--line-strong); stroke-width: 1; }
+.d-hollow { fill: var(--surface); stroke: var(--muted); stroke-width: 1.2; }
+.d-lane { fill: none; stroke: var(--line-strong); stroke-width: 1; }
+svg.diagram text.d-name { font-weight: 600; }
+svg.diagram text.d-field { font: 12px ui-monospace, "SF Mono", Menlo, monospace; }
+</style>
+</head>
+<body>
+<main>
+
+<h1>Context diagram parts</h1>
+<p class="meta">Building parts for the context diagram in a spec. How to use them is explained in the comments in
+the source. Back to the <a href="spec-template.html">spec template</a>. The parts are not exhaustive; add what a diagram needs.</p>
+
+<h2 id="nodes">Nodes</h2>
+<div class="parts">
+
+<!--
+  THIS FEATURE — the subject of the spec. Exactly one per diagram, roughly in the middle.
+  Size 180 × 46. Label: the feature name; add "(F‹NN›)" only if the diagram is shown outside its own spec.
+  Arrow anchors: centres of the edges — left (0,23), right (180,23), top (90,0), bottom (90,46).
+-->
+<figure>
+<svg class="diagram" width="200" height="66" viewBox="0 0 200 66" role="img" aria-label="This feature">
+  <g transform="translate(10,10)">
+    <rect class="d-focus" width="180" height="46" rx="6"/>
+    <text x="90" y="28" text-anchor="middle">‹This feature›</text>
+  </g>
+</svg>
+<figcaption>This feature</figcaption>
+</figure>
+
+<!--
+  OTHER FEATURE — another part of tandem that this feature talks to (e.g. F01 Session loop). Solid, because we
+  build it. The small second line names its feature number so the reader can find its spec; link that spec in the
+  Boundaries table.
+  Size 170 × 46. Anchors: left (0,23), right (170,23), top (85,0), bottom (85,46).
+-->
+<figure>
+<svg class="diagram" width="190" height="66" viewBox="0 0 190 66" role="img" aria-label="Other feature">
+  <g transform="translate(10,10)">
+    <rect class="d-box" width="170" height="46" rx="6"/>
+    <text x="85" y="21" text-anchor="middle">‹Feature name›</text>
+    <text class="d-small" x="85" y="37" text-anchor="middle">F‹NN›</text>
+  </g>
+</svg>
+<figcaption>Other feature</figcaption>
+</figure>
+
+<!--
+  EXTERNAL SYSTEM — software we don't build and don't control: Claude Code, a browser engine, an npm package's
+  service, GitHub, an IDE. Dashed, because its behaviour is a given; the spec can only rely on its interface.
+  Size 170 × 46. Anchors as Other feature.
+-->
+<figure>
+<svg class="diagram" width="190" height="66" viewBox="0 0 190 66" role="img" aria-label="External system">
+  <g transform="translate(10,10)">
+    <rect class="d-ext" width="170" height="46" rx="6"/>
+    <text x="85" y="28" text-anchor="middle">‹External system›</text>
+  </g>
+</svg>
+<figcaption>External system</figcaption>
+</figure>
+
+<!--
+  PERSON — a human role that acts on the feature or receives something from it (user, reviewer, second editor).
+  Name the role, not a person. Use one Person per role; several people in the same role are still one box.
+  Size 80 × 86 including the label. Anchors: right (68,47), left (12,47), top (40,0), bottom (40,86).
+-->
+<figure>
+<svg class="diagram" width="100" height="106" viewBox="0 0 100 106" role="img" aria-label="Person">
+  <g transform="translate(10,10)">
+    <circle class="d-box" cx="40" cy="14" r="12"/>
+    <path class="d-box" d="M14,62 C14,42 26,32 40,32 C54,32 66,42 66,62 Z"/>
+    <text x="40" y="82" text-anchor="middle">‹Role›</text>
+  </g>
+</svg>
+<figcaption>Person</figcaption>
+</figure>
+
+<!--
+  AGENT — an automated actor that makes its own decisions: the Claude session, a subagent, a bot. Use it instead
+  of External system when the diagram needs to show who decides (the agent chooses to call collab patch), and
+  instead of Person to make clear no human is involved.
+  Size 80 × 86 including the label. Anchors: right (64,48), left (16,48), top (40,6), bottom (40,86).
+-->
+<figure>
+<svg class="diagram" width="100" height="106" viewBox="0 0 100 106" role="img" aria-label="Agent">
+  <g transform="translate(10,10)">
+    <rect class="d-box" x="27" y="6" width="26" height="22" rx="6"/>
+    <circle class="d-head" cx="35" cy="17" r="2.2"/>
+    <circle class="d-head" cx="45" cy="17" r="2.2"/>
+    <rect class="d-box" x="16" y="34" width="48" height="28" rx="8"/>
+    <text x="40" y="82" text-anchor="middle">‹Agent›</text>
+  </g>
+</svg>
+<figcaption>Agent</figcaption>
+</figure>
+
+<!--
+  USER INTERFACE — a screen the person works in: the editor in the browser, a terminal, an IDE window. Draw it
+  when the interaction goes through a UI that isn't this feature; if this feature IS the UI, the Person points
+  straight at This feature. Solid if we build the UI, dashed (class d-ext on the outer rect) if not.
+  Size 170 × 70. Anchors: left (0,35), right (170,35), top (85,0), bottom (85,70).
+-->
+<figure>
+<svg class="diagram" width="190" height="90" viewBox="0 0 190 90" role="img" aria-label="User interface">
+  <g transform="translate(10,10)">
+    <rect class="d-box" width="170" height="70" rx="6"/>
+    <line class="d-line" x1="0" y1="18" x2="170" y2="18"/>
+    <circle class="d-head" cx="10" cy="9" r="2.5"/>
+    <circle class="d-head" cx="19" cy="9" r="2.5"/>
+    <circle class="d-head" cx="28" cy="9" r="2.5"/>
+    <text x="85" y="49" text-anchor="middle">‹UI name›</text>
+  </g>
+</svg>
+<figcaption>User interface</figcaption>
+</figure>
+
+<!--
+  DATA STORE — persistent structured state that is queried: a database, a key-value store, a persisted Yjs state
+  (.ystate). Use File instead when the thing is a document people or tools open directly. Solid if this feature
+  or another tandem feature owns it, dashed (d-ext on both shapes) if someone else does.
+  Size 120 × 64. Anchors: left (0,32), right (120,32), top (60,0), bottom (60,64).
+-->
+<figure>
+<svg class="diagram" width="140" height="84" viewBox="0 0 140 84" role="img" aria-label="Data store">
+  <g transform="translate(10,10)">
+    <path class="d-box" d="M0,10 L0,54 A60,10 0 0 0 120,54 L120,10 Z"/>
+    <ellipse class="d-box" cx="60" cy="10" rx="60" ry="10"/>
+    <text x="60" y="42" text-anchor="middle">‹Store›</text>
+  </g>
+</svg>
+<figcaption>Data store</figcaption>
+</figure>
+
+<!--
+  FILE — a file in the working tree or a state folder that someone opens, edits or watches: spec.html,
+  decisions.md, .collab/‹doc›.shell.json. Files are often the interface between features and tools (the agent
+  writes decisions.md, the server watches it), so name the file exactly. The small second line takes the path
+  when the name alone is ambiguous.
+  Size 120 × 56. Anchors: left (0,28), right (120,28), top (50,0), bottom (60,56).
+-->
+<figure>
+<svg class="diagram" width="140" height="76" viewBox="0 0 140 76" role="img" aria-label="File">
+  <g transform="translate(10,10)">
+    <path class="d-box" d="M0,0 H100 L120,20 V56 H0 Z"/>
+    <path class="d-line" d="M100,0 V20 H120"/>
+    <text x="56" y="32" text-anchor="middle">‹file name›</text>
+    <text class="d-small" x="56" y="47" text-anchor="middle">‹path›</text>
+  </g>
+</svg>
+<figcaption>File</figcaption>
+</figure>
+
+<!--
+  QUEUE / EVENT STREAM — events or messages that wait until someone picks them up: the event queue collab wait
+  reads, a WebSocket stream, a log of pushes. Draw it only when the buffering matters to the reader (delivery
+  guarantees, a reader that comes later); otherwise a dashed arrow labelled with the event is enough.
+  Size 150 × 40. Anchors: left (0,20), right (150,20), top (75,0), bottom (75,40).
+-->
+<figure>
+<svg class="diagram" width="170" height="60" viewBox="0 0 170 60" role="img" aria-label="Queue">
+  <g transform="translate(10,10)">
+    <rect class="d-box" width="150" height="40" rx="4"/>
+    <line class="d-line" x1="112" y1="0" x2="112" y2="40"/>
+    <line class="d-line" x1="124" y1="0" x2="124" y2="40"/>
+    <line class="d-line" x1="136" y1="0" x2="136" y2="40"/>
+    <text x="54" y="25" text-anchor="middle">‹Queue›</text>
+  </g>
+</svg>
+<figcaption>Queue / event stream</figcaption>
+</figure>
+
+<!--
+  BOUNDARY — groups nodes that share a place or a trust zone: the user's machine, the Claude Code session, the
+  browser tab, the local network. Use it when where something runs matters (security, latency, what survives a
+  restart). Draw it first so the nodes lie on top; resize width and height freely. The title sits top-left.
+-->
+<figure>
+<svg class="diagram" width="240" height="110" viewBox="0 0 240 110" role="img" aria-label="Boundary">
+  <g transform="translate(10,10)">
+    <rect class="d-bound" width="220" height="90" rx="10"/>
+    <text class="d-title" x="14" y="20">‹Boundary›</text>
+  </g>
+</svg>
+<figcaption>Boundary</figcaption>
+</figure>
+
+</div>
+
+<h2 id="connectors">Connectors and notes</h2>
+
+<!--
+  CONNECTORS — every arrow ends at an anchor of its target and carries a label (class d-small): 8 px above the
+  midpoint and text-anchor="middle" for horizontal lines, 8 px right of it and text-anchor="start" for vertical
+  ones. Each diagram defines one arrowhead marker in <defs> with a unique id.
+  - Call / use (solid): the source initiates, the target answers. CLI commands, HTTP requests, function calls.
+  - Data or event flow (dashed, add class d-ret): something is written, pushed or emitted without waiting for an
+    answer. File writes, events, pushes.
+  - Two-way (marker-start and marker-end): only when both sides initiate, e.g. a WebSocket sync where either side
+    sends updates. If one side only answers, use a call instead.
+  NOTE — a short d-small text without a box, next to the part it explains, for a fact the reader needs to read
+  the diagram correctly (e.g. "one per document"). Anything longer belongs in the prose.
+-->
+<figure>
+<svg class="diagram" viewBox="0 0 720 130" role="img" aria-label="Connectors">
+  <defs><marker id="m-parts" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="d-head" d="M0,0 L10,5 L0,10 z"/></marker></defs>
+  <line class="d-line" x1="20" y1="50" x2="200" y2="50" marker-end="url(#m-parts)"/>
+  <text class="d-small" x="110" y="42" text-anchor="middle">‹call›</text>
+  <text x="110" y="80" text-anchor="middle">Call / use</text>
+  <line class="d-line d-ret" x1="260" y1="50" x2="440" y2="50" marker-end="url(#m-parts)"/>
+  <text class="d-small" x="350" y="42" text-anchor="middle">‹data or event›</text>
+  <text x="350" y="80" text-anchor="middle">Data or event flow</text>
+  <line class="d-line" x1="500" y1="50" x2="680" y2="50" marker-start="url(#m-parts)" marker-end="url(#m-parts)"/>
+  <text class="d-small" x="590" y="42" text-anchor="middle">‹sync›</text>
+  <text x="590" y="80" text-anchor="middle">Two-way</text>
+  <text class="d-small" x="350" y="115" text-anchor="middle">‹note: a short fact without a box›</text>
+</svg>
+<figcaption>Connectors and a note.</figcaption>
+</figure>
+
+<h2 id="example">Example</h2>
+
+<!--
+  EXAMPLE — the parts combined, roughly as the Comments feature could look. Illustration of the parts only, not
+  the actual context of F08. Note the layout: actors on the left, the feature in the middle, the file at the
+  right, the boundary around everything that runs on the user's machine.
+-->
+<figure>
+<svg class="diagram" viewBox="0 0 720 340" role="img" aria-label="Example context diagram">
+  <defs><marker id="m-ex" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="d-head" d="M0,0 L10,5 L0,10 z"/></marker></defs>
+  <rect class="d-bound" x="10" y="10" width="700" height="320" rx="10"/>
+  <text class="d-title" x="24" y="30">User's machine</text>
+  <g transform="translate(30,40)">
+    <circle class="d-box" cx="40" cy="14" r="12"/>
+    <path class="d-box" d="M14,62 C14,42 26,32 40,32 C54,32 66,42 66,62 Z"/>
+    <text x="40" y="82" text-anchor="middle">User</text>
+  </g>
+  <g transform="translate(150,40)">
+    <rect class="d-box" width="170" height="70" rx="6"/>
+    <line class="d-line" x1="0" y1="18" x2="170" y2="18"/>
+    <circle class="d-head" cx="10" cy="9" r="2.5"/>
+    <circle class="d-head" cx="19" cy="9" r="2.5"/>
+    <circle class="d-head" cx="28" cy="9" r="2.5"/>
+    <text x="85" y="49" text-anchor="middle">Editor (browser)</text>
+  </g>
+  <g transform="translate(420,52)">
+    <rect class="d-focus" width="180" height="46" rx="6"/>
+    <text x="90" y="28" text-anchor="middle">Comments</text>
+  </g>
+  <g transform="translate(30,200)">
+    <rect class="d-box" x="27" y="6" width="26" height="22" rx="6"/>
+    <circle class="d-head" cx="35" cy="17" r="2.2"/>
+    <circle class="d-head" cx="45" cy="17" r="2.2"/>
+    <rect class="d-box" x="16" y="34" width="48" height="28" rx="8"/>
+    <text x="40" y="82" text-anchor="middle">Claude</text>
+  </g>
+  <g transform="translate(150,225)">
+    <rect class="d-box" width="170" height="46" rx="6"/>
+    <text x="85" y="21" text-anchor="middle">Session loop</text>
+    <text class="d-small" x="85" y="37" text-anchor="middle">F01</text>
+  </g>
+  <g transform="translate(420,225)">
+    <rect class="d-box" width="150" height="46" rx="6"/>
+    <text x="75" y="21" text-anchor="middle">Live collaboration</text>
+    <text class="d-small" x="75" y="37" text-anchor="middle">F05</text>
+  </g>
+  <g transform="translate(595,215)">
+    <path class="d-box" d="M0,0 H80 L100,20 V56 H0 Z"/>
+    <path class="d-line" d="M80,0 V20 H100"/>
+    <text x="46" y="32" text-anchor="middle">comments</text>
+    <text class="d-small" x="46" y="47" text-anchor="middle">.collab/*.json</text>
+  </g>
+  <line class="d-line" x1="98" y1="87" x2="148" y2="87" marker-end="url(#m-ex)"/>
+  <text class="d-small" x="123" y="79" text-anchor="middle">uses</text>
+  <line class="d-line" x1="320" y1="75" x2="418" y2="75" marker-end="url(#m-ex)"/>
+  <text class="d-small" x="369" y="67" text-anchor="middle">add, reply</text>
+  <line class="d-line" x1="94" y1="248" x2="148" y2="248" marker-end="url(#m-ex)"/>
+  <text class="d-small" x="121" y="240" text-anchor="middle">wait</text>
+  <line class="d-line" x1="110" y1="225" x2="440" y2="100" marker-end="url(#m-ex)"/>
+  <text class="d-small" x="200" y="178">collab reply, resolve</text>
+  <line class="d-line d-ret" x1="470" y1="98" x2="322" y2="230" marker-end="url(#m-ex)"/>
+  <text class="d-small" x="402" y="190" text-anchor="end">comment events</text>
+  <line class="d-line" x1="495" y1="98" x2="495" y2="223" marker-end="url(#m-ex)"/>
+  <text class="d-small" x="503" y="160">threads in the Y.Doc</text>
+  <line class="d-line d-ret" x1="580" y1="98" x2="640" y2="213" marker-end="url(#m-ex)"/>
+  <text class="d-small" x="622" y="140">mirror</text>
+</svg>
+<figcaption>Example: the parts combined around a Comments feature. Illustration only, not the actual context of F08.</figcaption>
+</figure>
+
+</main>
+</body>
+</html>

@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>F00 · Project setup</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<main>
+<nav class="crumbs"><a href="index.html">Features</a> / F00</nav>
+<h1>F00 · Project setup <span class="status">specification pending</span></h1>
+<p class="tagline">The decisions that are expensive to change later: stack, tooling, repo layout, CI and the Claude plugin skeleton.</p>
+
+<h2>Overview</h2>
+<p>Sets up the repository every other feature is built in. Only covers choices that shape code from the first commit or are
+costly to migrate: languages and runtime, frameworks and core libraries, repo/package layout, linting, formatting, type checking,
+test layers, CI on GitHub and the Claude Code plugin skeleton. Everything that only matters for a public release (dependency
+automation, README, changelog, publishing) is in <a href="12-publishing.html">F12 · Publishing</a>.</p>
+
+<h2>Already fixed by you or the spikes</h2>
+<ul>
+<li>Vue 3 + <code>@tiptap/vue-3</code>, Vite, TypeScript (CONTEXT.md).</li>
+<li>Open source only: MIT Tiptap packages, Yjs, self-hosted Hocuspocus — no Tiptap Cloud/Pro (CONTEXT.md, 05 · Free vs. paid).</li>
+<li>Playwright (headless Chromium) for verification (CONTEXT.md).</li>
+<li>Separate repo and plugin, not part of nessy (decisions · Packaging) — this repo.</li>
+<li>Claude Code only for now (N2); the CLI ships as a plain binary in the plugin's <code>bin/</code> (08).</li>
+</ul>
+
+<h2>Decide early</h2>
+<div class="card"><table>
+<thead><tr><th>Area</th><th>Spikes used</th><th>To decide</th></tr></thead>
+<tbody>
+<tr><td>Runtime &amp; package manager</td><td>Node 24, npm 11; each spike its own <code>package.json</code></td><td>Node version floor for plugin users; npm vs. pnpm; one workspace (monorepo) vs. single package</td></tr>
+<tr><td>Repo layout</td><td>Copied code between spike folders; server, editor, CLI and agent demo side by side</td><td>Packages/folders for server, editor app, CLI, shared schema (comments, events, shell config); where specs and ADRs live for the SDLC flow</td></tr>
+<tr><td>Language settings</td><td>TypeScript 5.9, server via <code>tsx</code>, <code>vue-tsc</code> typecheck</td><td>Strictness flags, ESM only, how server/CLI are built for shipping (bundle vs. <code>tsx</code> at runtime)</td></tr>
+<tr><td>Core libraries &amp; pinning</td><td>Tiptap 3.32, <code>@tiptap/y-tiptap</code> 3.0.10, Yjs 13.6, Hocuspocus 4.7; jsdom/parse5 for headless parsing; <code>ws</code>/crossws</td><td>Exact pins for the collaboration stack — server and browser must use the same y-tiptap (risks); one HTML parser; HTTP/WebSocket server framework</td></tr>
+<tr><td>UI framework &amp; styling</td><td>No component library; own CSS, <code>lucide-vue-next</code> icons, <code>@floating-ui/dom</code> for popovers (05)</td><td>Own components vs. a (headless) component library; CSS approach (plain CSS + variables vs. utility CSS); theming incl. dark mode</td></tr>
+<tr><td>Linting</td><td>None — spikes only typechecked</td><td>ESLint (typescript-eslint, eslint-plugin-vue) vs. Biome; rule set; lint in CI from day one</td></tr>
+<tr><td>Formatting</td><td>Prettier 3 already a runtime dependency (formats the saved HTML, 02)</td><td>Prettier for the code too (one tool) vs. another formatter; editor/IDE config, format check in CI</td></tr>
+<tr><td>Testing layers</td><td>One <code>npm run verify</code> per spike (Playwright, minutes long); fidelity scripts</td><td>Unit runner (e.g. Vitest, fits Vite); which spike verify suites become contract tests for the merge engine (risks); split fast vs. slow suites</td></tr>
+<tr><td>CI &amp; GitHub</td><td>None</td><td>GitHub Actions: lint + typecheck + unit on every push, Playwright e2e with cached Chromium; branch protection on <code>main</code>; commit convention (affects the F12 changelog)</td></tr>
+<tr><td>Claude plugin skeleton</td><td>Draft <code>SKILL.md</code> sections (01, 08, 09); hooks proposed, not built</td><td>Plugin/marketplace manifests, skill/hook/bin layout, local dev loop (install from the working tree), how bundled JS reaches users (built output in the repo vs. a release branch)</td></tr>
+<tr><td>Licence</td><td>—</td><td>Licence for the project (deps are MIT)</td></tr>
+</tbody>
+</table></div>
+
+<h2>Not decided here</h2>
+<ul>
+<li>Product name — “tandem” is a working name (N24); manifests and package names depend on it.</li>
+<li>Shared samples and fidelity checks: move <code>samples/</code> into the test fixtures or keep them as the spike record.</li>
+</ul>
+
+<h2>Summary sections &amp; notes</h2>
+<div class="card"><table>
+<tbody>
+<tr><td><a href="../SUMMARY.html#decisions">Decisions for you</a></td><td>Summary section</td></tr>
+<tr><td><a href="../SUMMARY.html#risks">Risks, ranked</a></td><td>Summary section</td></tr>
+<tr><td><a href="../SUMMARY.html#s02">Spike 02 · tiptap wysiwyg</a></td><td>Summary section</td></tr>
+<tr><td><a href="../SUMMARY.html#s05">Spike 05 · editor ui</a></td><td>Summary section</td></tr>
+<tr><td><a href="../SUMMARY.html#n2">N2</a></td><td>Scope: Claude Code only</td></tr>
+<tr><td><a href="../SUMMARY.html#n8">N8</a></td><td>Audit extensions for attributes they write</td></tr>
+<tr><td><a href="../SUMMARY.html#n24">N24</a></td><td>Prior art: bloknayrb/tandem</td></tr>
+<tr><td><a href="../CONTEXT.md">CONTEXT.md</a></td><td>Your stack decisions and spike conventions</td></tr>
+</tbody>
+</table></div>
+
+<h2>Spikes worth reading</h2>
+<div class="card"><table>
+<tbody>
+<tr><td><a href="../09-shell-sidebar/README.md">09-shell-sidebar</a></td><td>Most complete <code>package.json</code>, server + CLI + editor in one folder</td></tr>
+<tr><td><a href="../05-editor-ui/README.md">05-editor-ui</a></td><td>UI dependencies: icons, floating-ui, command registry</td></tr>
+<tr><td><a href="../08-agent-edit-path/README.md">08-agent-edit-path</a></td><td>Why the CLI must be a plain binary; <code>SKILL.md</code> draft</td></tr>
+<tr><td><a href="../01-outer-loop/README.md">01-outer-loop</a></td><td>Server-per-document process model, <code>SKILL.md</code> draft</td></tr>
+</tbody>
+</table></div>
+
+<p class="crumbs" style="margin-top:32px"><a href="01-session-loop.html">Session loop</a> →</p>
+</main>
+</body>
+</html>

@@ -1,0 +1,41 @@
+:root {
+  --bg: #f7f6f3; --surface: #ffffff; --text: #1d1d1b; --muted: #6b6a66; --line: #e3e1db;
+  --accent: #3b5bdb; --ok: #2b8a3e; --warn: #b86e00; --code: #f0eee9; --note: #fff8e6;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #161615; --surface: #1f1f1d; --text: #ecebe7; --muted: #a09e98; --line: #33322f;
+    --accent: #8ea6ff; --ok: #69db7c; --warn: #ffc078; --code: #2a2927; --note: #2b2618;
+  }
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--text);
+  font: 15px/1.6 -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, sans-serif; }
+main { max-width: 860px; margin: 0 auto; padding: 32px 16px 64px; }
+a { color: var(--accent); }
+nav.crumbs { font-size: 13px; color: var(--muted); margin-bottom: 18px; }
+h1 { font-size: 28px; margin: 0 0 4px; letter-spacing: -0.01em; }
+.tagline { color: var(--muted); margin: 0 0 24px; font-size: 16px; }
+h2 { font-size: 15px; margin: 30px 0 8px; text-transform: uppercase; letter-spacing: .04em; color: var(--muted); }
+code { font-family: ui-monospace, "SF Mono", Menlo, monospace; font-size: 12.5px;
+  background: var(--code); padding: 1px 4px; border-radius: 4px; }
+ul { padding-left: 20px; }
+li { margin: 3px 0; }
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 4px 18px; }
+table { width: 100%; border-collapse: collapse; font-size: 14px; }
+th, td { text-align: left; vertical-align: top; padding: 7px 10px; border-bottom: 1px solid var(--line); }
+th { color: var(--muted); font-weight: 600; font-size: 12.5px; text-transform: uppercase; letter-spacing: .03em; }
+tr:last-child td { border-bottom: 0; }
+td:first-child { white-space: nowrap; }
+.status { display: inline-block; font-size: 12px; padding: 1px 8px; border-radius: 99px;
+  border: 1px solid var(--line); color: var(--muted); margin-left: 6px; vertical-align: middle; }
+.prio-low { color: var(--warn); border-color: var(--warn); }
+.callout { background: var(--note); border-radius: 8px; padding: 10px 14px; margin: 16px 0; font-size: 14px; }
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 12px; padding: 0; list-style: none; }
+.grid li { margin: 0; }
+.grid a { display: block; height: 100%; background: var(--surface); border: 1px solid var(--line);
+  border-radius: 10px; padding: 12px 14px; text-decoration: none; color: var(--text); }
+.grid a:hover { border-color: var(--accent); }
+.grid b { display: block; color: var(--accent); }
+.grid span { font-size: 13.5px; color: var(--muted); }
+@media (max-width: 600px) { td:first-child { white-space: normal; } }

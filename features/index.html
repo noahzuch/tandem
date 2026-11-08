@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>tandem features</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<main>
+<h1>tandem — features</h1>
+<p class="tagline">The spike results split into features. Each page will grow into a full business + technical specification.</p>
+<ul class="grid">
+<li><a href="00-project-setup.html"><b>F00 · Project setup</b><span>The decisions that are expensive to change later: stack, tooling, repo layout, CI and the Claude plugin skeleton.</span></a></li>
+<li><a href="01-session-loop.html"><b>F01 · Session loop</b><span>Skill ↔ server ↔ browser ↔ agent: opening a document and getting browser events back to Claude.</span></a></li>
+<li><a href="02-document-storage.html"><b>F02 · Document storage &amp; round trip</b><span>HTML stays the file on disk; the live Y.Doc is written back without losing anything.</span></a></li>
+<li><a href="03-content-model.html"><b>F03 · Content model: islands &amp; generic nodes</b><span>Show any HTML the agent writes, keep it editable where it's text, protect its structure.</span></a></li>
+<li><a href="04-editor-ui.html"><b>F04 · Editor UI</b><span>A WYSIWYG spec editor on Vue 3 + Tiptap (MIT only).</span></a></li>
+<li><a href="05-live-collaboration.html"><b>F05 · Live collaboration</b><span>User and agent edit the same document at the same time without losing characters.</span></a></li>
+<li><a href="06-agent-editing.html"><b>F06 · Agent editing &amp; merge engine</b><span>How Claude reads and edits the live document without disturbing the user.</span></a></li>
+<li><a href="07-agent-change-review.html"><b>F07 · Agent change review</b><span>See what Claude changed, mark it read, reject or undo it.</span></a></li>
+<li><a href="08-comments.html"><b>F08 · Comments</b><span>Threads on text, blocks, diagrams or the whole document — sent to Claude, answered in place.</span></a></li>
+<li><a href="09-page-shell.html"><b>F09 · Page shell &amp; sidebar panels</b><span>The configurable page around the editor — e.g. the brainstorming journal next to the spec.</span></a></li>
+<li><a href="10-agent-skill.html"><b>F10 · Agent skill &amp; guard rails</b><span>What Claude is told, and what stops it from going around the tool.</span></a></li>
+<li><a href="11-security.html"><b>F11 · Security &amp; sanitising</b><span>Untrusted HTML and a local server that feeds prompts to the agent.</span></a></li>
+<li><a href="12-publishing.html"><b>F12 · Publishing</b><span>Making the project release-ready: releases, distribution, upkeep and the public face.</span></a></li>
+</ul>
+<div class="callout">Not a feature of its own: the product name (“tandem” is a working name, see <a href="../SUMMARY.html#n24">N24</a>) —
+F00 and F12 depend on it. Spike results: <a href="../SUMMARY.html">SUMMARY.html</a>.</div>
+</main>
+</body>
+</html>

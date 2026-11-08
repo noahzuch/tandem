@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>F01 · Session loop</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<main>
+<nav class="crumbs"><a href="index.html">Features</a> / F01</nav>
+<h1>F01 · Session loop <span class="status">specification pending</span></h1>
+<p class="tagline">Skill ↔ server ↔ browser ↔ agent: opening a document and getting browser events back to Claude.</p>
+
+<h2>Overview</h2>
+<p>The skill starts a local server per document, prints the URL and keeps a connection between the browser and the running
+Claude session. Browser actions (comments, “send to agent”, tab closed) are queued durably and delivered to the agent through a
+background <code>collab wait</code> whose exit wakes the agent. Covers the CLI lifecycle (<code>open</code>, <code>wait</code>,
+<code>status</code>, <code>stop</code>, peek for hooks), consumers and acking, port reuse, crash recovery and idle shutdown.</p>
+
+<h2>What the spikes settled</h2>
+<ul>
+<li>One detached server per document, state in <code>.collab/&lt;doc&gt;/</code>; <code>open</code> is safe to call any time and reuses a running server (01).</li>
+<li>Background <code>collab wait</code> is the recommended wake-up; measured under 0.5 s from inside a subagent (01).</li>
+<li>Durable event queue with per-consumer cursors, acked after printing → at-least-once delivery; a killed wait loses nothing (01).</li>
+<li>CLI should be a plain binary in the plugin's <code>bin/</code> — Claude Code's guard refused heredocs piped into <code>npm run</code> (08).</li>
+</ul>
+
+<h2>Open / to decide</h2>
+<ul>
+<li>Waking an <em>idle</em> main session with a background wait was never tried (open items).</li>
+<li>Fate of <code>watch</code>, <code>push</code> and the 400 ms settle window (01 verdicts: remove / rethink / untested).</li>
+<li>Plugin monitors and asyncRewake hooks — known from docs only.</li>
+</ul>
+
+<h2>Summary sections &amp; notes</h2>
+<div class="card"><table>
+<tbody>
+<tr><td><a href="../SUMMARY.html#s01">Spike 01 · outer loop</a></td><td>Summary section</td></tr>
+<tr><td><a href="../SUMMARY.html#arch">How the parts work together</a></td><td>Summary section</td></tr>
+<tr><td><a href="../SUMMARY.html#open">Not verified — needs a further spike</a></td><td>Summary section</td></tr>
+<tr><td><a href="../SUMMARY.html#n2">N2</a></td><td>Scope: Claude Code only</td></tr>
+</tbody>
+</table></div>
+
+<h2>Spikes worth reading</h2>
+<div class="card"><table>
+<tbody>
+<tr><td><a href="../01-outer-loop/README.md">01-outer-loop</a></td><td>CLI, server, event queue, state diagrams, lavish comparison, <code>SKILL.md</code> draft of the loop</td></tr>
+<tr><td><a href="../09-shell-sidebar/README.md">09-shell-sidebar</a></td><td>Latest combined server (04–08) and the most complete CLI</td></tr>
+</tbody>
+</table></div>
+
+<p class="crumbs" style="margin-top:32px">← <a href="00-project-setup.html">Project setup</a> · <a href="02-document-storage.html">Document storage &amp; round trip</a> →</p>
+</main>
+</body>
+</html>

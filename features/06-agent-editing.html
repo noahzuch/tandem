@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>F06 · Agent editing &amp; merge engine</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<main>
+<nav class="crumbs"><a href="index.html">Features</a> / F06</nav>
+<h1>F06 · Agent editing &amp; merge engine <span class="status">specification pending</span></h1>
+<p class="tagline">How Claude reads and edits the live document without disturbing the user.</p>
+
+<h2>Overview</h2>
+<p>While the document is open the agent edits only through the CLI: <code>collab read</code> (outline, section, current HTML with
+the user's caret marked) and <code>collab patch</code> (SEARCH/REPLACE on HTML), plus a few ops (move, single SVG labels). The server
+turns the new HTML into Yjs operations with a 3-way merge around <code>updateYFragment</code>, re-parsing only changed blocks. Includes
+caret awareness (probe, hints, proposals instead of refusals) and the merge-engine hardening from spikes 08 and 11.</p>
+
+<h2>What the spikes settled</h2>
+<ul>
+<li><code>collab patch</code> by default; no Edit/Write on the open file — it caused refusals, change notices and a store race (08).</li>
+<li>Four loss causes found and fixed in the merge; afterwards 0 lost on all paths with a browser user typing (08).</li>
+<li>Word-level diff + caret records: 28/30 runs clean, the rest identical to two humans (11, N10).</li>
+<li>Caret handling: always probe, apply + hint; turn rewrites of the words being typed into a proposal; refusal only as fallback (11, N19).</li>
+<li>Risk #1: own the merge module, pin one y-tiptap version for server and browser, use verify suites as contract tests (risks).</li>
+</ul>
+
+<h2>Open / to decide</h2>
+<ul>
+<li>Which merge additions are workarounds for <code>updateYFragment</code>'s pairing; own diff pairing blocks by id? (N4)</li>
+<li>Keystroke in flight into a re-created block; caret records only cover plain text and grow unbounded (11).</li>
+<li><code>set-block</code> changing type while the user types; drop <code>set-island-text</code> once islands merge (open items, N20).</li>
+</ul>
+
+<h2>Summary sections &amp; notes</h2>
+<div class="card"><table>
+<tbody>
+<tr><td><a href="../SUMMARY.html#s08">Spike 08 · agent edit path</a></td><td>Summary section</td></tr>
+<tr><td><a href="../SUMMARY.html#s11">Spike 11 · concurrency edges</a></td><td>Summary section</td></tr>
+<tr><td><a href="../SUMMARY.html#s03">Spike 03 · storage format</a></td><td>Summary section</td></tr>
+<tr><td><a href="../SUMMARY.html#risks">Risks, ranked</a></td><td>Summary section</td></tr>
+<tr><td><a href="../SUMMARY.html#n4">N4</a></td><td>Look deeper into the merge logic</td></tr>
+<tr><td><a href="../SUMMARY.html#n10">N10</a></td><td>Character-level diff for agent edits</td></tr>
+<tr><td><a href="../SUMMARY.html#n18">N18</a></td><td>Caret avoidance: precise instead of per block</td></tr>
+<tr><td><a href="../SUMMARY.html#n19">N19</a></td><td>Avoid caret only as a hint</td></tr>
+</tbody>
+</table></div>
+
+<h2>Spikes worth reading</h2>
+<div class="card"><table>
+<tbody>
+<tr><td><a href="../08-agent-edit-path/README.md">08-agent-edit-path</a></td><td>Read/patch/ops CLI, four edit paths compared in a real run, merge fixes, <code>--propose</code>, skill section “Editing the document”</td></tr>
+<tr><td><a href="../11-concurrency-edges/README.md">11-concurrency-edges</a></td><td>Agent vs. second human on edge cases, word-level diff and caret-record prototypes, caret probe</td></tr>
+<tr><td><a href="../03-storage-format/README.md">03-storage-format</a></td><td>Original 3-way merge</td></tr>
+</tbody>
+</table></div>
+
+<p class="crumbs" style="margin-top:32px">← <a href="05-live-collaboration.html">Live collaboration</a> · <a href="07-agent-change-review.html">Agent change review</a> →</p>
+</main>
+</body>
+</html>

@@ -1,0 +1,751 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>X01 · Link shortener</title>
+<!--
+  Example spec for a small mock system, written with spec-template.html. It exists to show what each template
+  section looks like when filled in; it is not part of tandem. Comments starting with "Example note" explain
+  choices made for the template's rules — a real spec has no such comments.
+-->
+<style>
+:root {
+  --bg: #f7f6f3; --surface: #ffffff; --text: #1d1d1b; --muted: #6b6a66; --line: #e3e1db; --line-strong: #b9b6ae;
+  --accent: #3b5bdb; --accent-soft: #e7ecff; --code: #f0eee9; --note: #fff8e6;
+  --sx-fn: #3b5bdb; --sx-ty: #0f7b6c; --sx-kw: #9c36b5;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #161615; --surface: #1f1f1d; --text: #ecebe7; --muted: #a09e98; --line: #33322f; --line-strong: #5a5853;
+    --accent: #8ea6ff; --accent-soft: #232a45; --code: #2a2927; --note: #2b2618;
+    --sx-fn: #8ea6ff; --sx-ty: #4fd1b8; --sx-kw: #da77f2;
+  }
+}
+body { margin: 0; background: var(--bg); color: var(--text);
+  font: 15px/1.6 -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, sans-serif; }
+main { max-width: 860px; margin: 0 auto; padding: 32px 16px 64px; }
+a { color: var(--accent); }
+h1 { font-size: 28px; margin: 0 0 4px; letter-spacing: -0.01em; }
+h2 { font-size: 21px; margin: 48px 0 12px; padding-top: 8px; border-top: 1px solid var(--line); }
+h3 { font-size: 17px; margin: 28px 0 8px; }
+h4 { font-size: 15px; margin: 22px 0 6px; }
+.meta { color: var(--muted); margin: 0 0 24px; }
+.ph { color: var(--muted); font-style: italic; }
+.note { background: var(--note); border-radius: 8px; padding: 10px 14px; margin: 16px 0; }
+code { font-family: ui-monospace, "SF Mono", Menlo, monospace; font-size: 13px; background: var(--code); padding: 1px 4px; border-radius: 4px; }
+table { width: 100%; border-collapse: collapse; font-size: 14px; margin: 8px 0 16px; }
+th, td { text-align: left; vertical-align: top; padding: 7px 10px; border-bottom: 1px solid var(--line); }
+th { color: var(--muted); font-weight: 600; }
+figure { margin: 16px 0; }
+figcaption { color: var(--muted); font-size: 13px; margin-top: 4px; }
+svg.diagram { display: block; width: 100%; height: auto; }
+svg.diagram text { fill: var(--text); font: 13px -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, sans-serif; }
+svg.diagram text.d-small { fill: var(--muted); font-size: 11px; }
+svg.diagram text.d-title { fill: var(--muted); font-size: 12px; font-weight: 600; }
+.d-box { fill: var(--surface); stroke: var(--text); stroke-width: 1.2; }
+.d-focus { fill: var(--accent-soft); stroke: var(--accent); stroke-width: 1.6; }
+.d-ext { fill: var(--bg); stroke: var(--muted); stroke-width: 1.2; stroke-dasharray: 5 4; }
+.d-frame { fill: none; stroke: var(--line-strong); stroke-width: 1.2; }
+.d-bound { fill: none; stroke: var(--muted); stroke-width: 1.2; stroke-dasharray: 2 4; }
+.d-line { fill: none; stroke: var(--muted); stroke-width: 1.3; }
+.d-ret { stroke-dasharray: 4 3; }
+.d-life { stroke: var(--line-strong); stroke-width: 1; stroke-dasharray: 3 4; }
+.d-head { fill: var(--muted); }
+.d-solid { fill: var(--text); }
+.d-act { fill: var(--surface); stroke: var(--muted); stroke-width: 1.2; }
+.d-note { fill: var(--note); stroke: var(--line-strong); stroke-width: 1; }
+.d-hollow { fill: var(--surface); stroke: var(--muted); stroke-width: 1.2; }
+.d-lane { fill: none; stroke: var(--line-strong); stroke-width: 1; }
+svg.diagram text.d-name { font-weight: 600; }
+svg.diagram text.d-field { font: 12px ui-monospace, "SF Mono", Menlo, monospace; }
+.mockup { border: 1px solid var(--line-strong); border-radius: 10px; background: var(--surface); overflow: hidden; font-size: 14px; }
+.mock-bar { background: var(--code); color: var(--muted); font-size: 12px; padding: 6px 12px; border-bottom: 1px solid var(--line); }
+.mock-body { padding: 14px 16px; }
+.mock-btn { display: inline-block; background: var(--accent); color: var(--surface); border-radius: 6px; padding: 3px 12px; font-size: 13px; }
+.mock-btn.secondary { background: none; color: var(--accent); border: 1px solid var(--accent); }
+.mock-input { display: inline-block; min-width: 55%; border: 1px solid var(--line-strong); border-radius: 6px; padding: 3px 10px; background: var(--bg); }
+.mock-hint { color: var(--muted); font-size: 13px; }
+svg.diagram text.d-member { font: 10px ui-monospace, "SF Mono", Menlo, monospace; }
+svg.diagram .sx-fn { fill: var(--sx-fn); }
+svg.diagram .sx-ty { fill: var(--sx-ty); }
+svg.diagram .sx-kw { fill: var(--sx-kw); }
+svg.diagram .sx-p { fill: var(--muted); }
+.member { margin: 6px 0 6px 20px; }
+</style>
+</head>
+<body>
+<main>
+
+<h1>X01 · Link shortener</h1>
+<p class="meta">Status: <b>Final</b></p>
+
+<h2 id="goal">Goal</h2>
+<p>Employees share long internal URLs — dashboards, tickets, search results — in chat, slides and printed notices.
+These URLs wrap across lines, break when copied, and can't be read out in a meeting. Nobody can tell whether a
+shared link is actually used.</p>
+<p>With the link shortener, anyone in the company turns a long URL into a short one like <code>go.example/k7Qa2B</code>
+from the intranet portal, the short link opens the original page, and the creator sees how often each of their
+links was opened.</p>
+
+<h3 id="non-goals">Non-goals</h3>
+<ul>
+<li>Custom short codes (<code>go.example/sales-q3</code>): they need naming rules and conflict handling between teams; the portal team may request it later.</li>
+<li>Editing or deleting links: a short link that was printed or pasted must keep pointing where it pointed. This also lets the service cache links forever (see <a href="#solution-redirect">Redirect</a>).</li>
+<li>Private links: codes are sequential and therefore guessable (see <a href="#solution-codes">Short codes</a>). Secret URLs must not be shortened.</li>
+<li>Per-visitor analytics: no IP addresses, user agents or visitor identities are stored, so the service holds no personal data about visitors.</li>
+<li>Use from the public internet: the service is reachable only inside the company network.</li>
+</ul>
+
+<h2 id="functional">Functional design</h2>
+<p>People manage their links on a “Short links” page in the intranet portal: they paste a long address, get a short
+link to copy, and see all their links with how often each was opened. Whoever receives a short link simply opens
+it — there is nothing to log in to or install, and visitors never see the shortener itself.</p>
+
+<figure>
+<div class="mockup">
+<div class="mock-bar">Intranet portal · Short links</div>
+<div class="mock-body">
+<p><span class="mock-input">https://dashboards.example/d/ops-latency?from=now-7d&amp;team=payments</span> <span class="mock-btn">Shorten</span></p>
+<p><b>go.example/100a3F</b> <span class="mock-btn secondary">Copy</span> <span class="mock-hint">You already had a short link for this address.</span></p>
+<p><b>My links</b></p>
+<table>
+<thead><tr><th>Short link</th><th>Goes to</th><th>Created</th><th>Opened</th></tr></thead>
+<tbody>
+<tr><td>go.example/100a3G</td><td>https://tickets.example/browse/PAY-1432</td><td>29 Oct 2026</td><td>3</td></tr>
+<tr><td>go.example/100a3F</td><td>https://dashboards.example/d/ops-latency?from=now-7d…</td><td>14 Oct 2026</td><td>127</td></tr>
+<tr><td>go.example/1009xQ</td><td>https://wiki.example/teams/payments/onboarding</td><td>2 Sep 2026</td><td>58</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+<figcaption>Mockup: the Short links page after shortening an address the user had shortened before. The portal team owns the final layout and wording.</figcaption>
+</figure>
+
+<h3 id="functional-create">Creating a short link</h3>
+<p>The user pastes an address and presses Shorten; the short link appears right below the field with a Copy button.
+If they have shortened the same address before, they get their existing link back with the note “You already had a
+short link for this address”. Repeating the action therefore never clutters their list, and a link they shared
+earlier stays the one to use. Addresses that differ only in the capitalisation of the domain or in a default port
+count as the same address.</p>
+<p>Only web addresses (<code>http</code>, <code>https</code>) of up to 2,048 characters are accepted. Anything else
+shows “This doesn't look like a web address” and creates nothing. Short links always have six characters, mixing
+digits and upper- and lowercase letters, so they must be copied, not retyped from memory.</p>
+
+<h3 id="functional-list">My links</h3>
+<p>Below the form, the user sees every link they created, newest first, with its target, creation date and how
+often it was opened. The counts can be up to a minute behind, because visits are collected and saved in batches
+(<a href="#solution-clicks">Click counting</a>). Each person sees only their own links. Links can't be edited or
+deleted (see <a href="#non-goals">Non-goals</a>).</p>
+
+<h3 id="functional-open">Opening a short link</h3>
+<p>Opening a short link leads straight to the target page. Every visit is counted for the creator, but nothing about
+the visitor is recorded. A short link that doesn't exist — usually a typo — never leads anywhere; it shows a “Link
+not found” page instead.</p>
+
+<figure>
+<div class="mockup">
+<div class="mock-bar">go.example/100a3f</div>
+<div class="mock-body">
+<p><b>Link not found</b></p>
+<p>There is no short link <code>go.example/100a3f</code>. Short links are case-sensitive — check the link you were given.</p>
+<p class="mock-hint">Want to create short links? Go to Intranet portal → Short links.</p>
+</div>
+</div>
+<figcaption>Mockup: the page for an unknown short link (here a wrongly lowercased last letter).</figcaption>
+</figure>
+
+<h2 id="context">Context</h2>
+<p>The link shortener is a small backend service. People don't use it directly: they create links in the intranet
+portal, which owns the user interface, and they open short links in their browser. The company reverse proxy
+terminates TLS for <code>go.example</code> and forwards all traffic. The service relies on the company SSO for user
+identity and on a PostgreSQL database run by the platform team.</p>
+
+<figure>
+<svg class="diagram" viewBox="0 0 720 260" role="img" aria-label="Context of the link shortener">
+  <defs><marker id="m-ctx" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="d-head" d="M0,0 L10,5 L0,10 z"/></marker></defs>
+  <rect class="d-ext" x="20" y="30" width="150" height="46" rx="6"/>
+  <text x="95" y="58" text-anchor="middle">Browser</text>
+  <rect class="d-ext" x="20" y="190" width="150" height="46" rx="6"/>
+  <text x="95" y="218" text-anchor="middle">Intranet portal</text>
+  <rect class="d-ext" x="260" y="30" width="150" height="46" rx="6"/>
+  <text x="335" y="58" text-anchor="middle">Reverse proxy</text>
+  <rect class="d-focus" x="500" y="30" width="200" height="46" rx="6"/>
+  <text x="600" y="58" text-anchor="middle">Link shortener</text>
+  <rect class="d-ext" x="260" y="190" width="150" height="46" rx="6"/>
+  <text x="335" y="218" text-anchor="middle">Company SSO</text>
+  <rect class="d-ext" x="500" y="190" width="200" height="46" rx="6"/>
+  <text x="600" y="218" text-anchor="middle">PostgreSQL</text>
+  <line class="d-line" x1="95" y1="76" x2="95" y2="188" marker-end="url(#m-ctx)"/>
+  <text class="d-small" x="103" y="136">creates links</text>
+  <line class="d-line" x1="170" y1="53" x2="258" y2="53" marker-end="url(#m-ctx)"/>
+  <text class="d-small" x="214" y="45" text-anchor="middle">GET /‹code›</text>
+  <line class="d-line" x1="150" y1="190" x2="298" y2="78" marker-end="url(#m-ctx)"/>
+  <text class="d-small" x="236" y="160">/api/* + user token</text>
+  <line class="d-line" x1="410" y1="53" x2="498" y2="53" marker-end="url(#m-ctx)"/>
+  <text class="d-small" x="454" y="45" text-anchor="middle">HTTP</text>
+  <line class="d-line" x1="560" y1="76" x2="412" y2="200" marker-end="url(#m-ctx)"/>
+  <text class="d-small" x="500" y="140">signing keys</text>
+  <line class="d-line" x1="620" y1="76" x2="620" y2="188" marker-end="url(#m-ctx)"/>
+  <text class="d-small" x="628" y="136">SQL</text>
+</svg>
+<figcaption>The link shortener and its neighbours. Dashed boxes are owned by other teams.</figcaption>
+</figure>
+
+<h3 id="boundaries">Boundaries</h3>
+<table>
+<thead><tr><th>Neighbour</th><th>Provides to the shortener</th><th>Expects from the shortener</th><th>Owned by</th></tr></thead>
+<tbody>
+<tr><td>Intranet portal</td><td>The UI for creating links and viewing click counts; the user's SSO token on every API call</td><td>The JSON API <code>POST /api/links</code> and <code>GET /api/links</code></td><td>API: shortener team. UI: portal team</td></tr>
+<tr><td>Browser</td><td>Requests to <code>go.example/‹code›</code></td><td>A redirect or a “not found” page</td><td>Shortener team</td></tr>
+<tr><td>Reverse proxy</td><td>TLS, the domain <code>go.example</code>, forwarding to the service</td><td>One HTTP port; a health endpoint <code>/healthz</code></td><td>Platform team</td></tr>
+<tr><td>Company SSO</td><td>User identity in signed tokens, and the public keys to verify them</td><td>Nothing; the shortener only reads the keys</td><td>Identity team</td></tr>
+<tr><td>PostgreSQL</td><td>One database and its credentials</td><td>The shortener owns its schema and runs its own migrations</td><td>Server: platform team. Schema: shortener team</td></tr>
+</tbody>
+</table>
+
+<h3 id="assumptions">Assumptions and constraints</h3>
+<ul>
+<li>At most 10,000 new links and 500,000 redirects per day; redirects outnumber new links by far. If load grows tenfold, the single instance below must be revisited.</li>
+<li>The service runs as exactly one instance. Click counts are held in memory before they are written (see <a href="#solution-clicks">Click counting</a>), which would need a shared counter with several instances.</li>
+<li>Only the reverse proxy can reach the service, so the redirect endpoint needs no authentication.</li>
+</ul>
+
+<h2 id="solution">Solution design</h2>
+<p>Every new link gets the next number from a database sequence, and its short code is that number written in
+base 62 — unique by construction, so no collision checks are needed. A redirect looks the code up in an in-memory
+cache first and in the database only on a miss; because links never change, cached entries never go stale. Clicks
+are counted in memory and written to the database in one batch every 30 seconds, so a redirect never waits for a
+database write.</p>
+
+<h3 id="solution-data">Data model</h3>
+<p>All state is one table. The sequence behind <code>id</code> starts at 62<sup>5</sup> = 916,132,832 for the reason given in <a href="#solution-codes">Short codes</a>.</p>
+<table>
+<thead><tr><th>Column of <code>links</code></th><th>Type</th><th>Meaning</th></tr></thead>
+<tbody>
+<tr><td><code>id</code></td><td><code>bigint</code>, primary key, from <code>links_id_seq</code></td><td>The number the code is derived from</td></tr>
+<tr><td><code>code</code></td><td><code>text</code>, unique</td><td>Base 62 of <code>id</code>; what redirects look up</td></tr>
+<tr><td><code>url</code></td><td><code>text</code></td><td>The normalised target URL</td></tr>
+<tr><td><code>owner</code></td><td><code>text</code></td><td>SSO subject of the creator; unique together with <code>url</code> (<a href="#functional-create">Creating a short link</a>)</td></tr>
+<tr><td><code>created_at</code></td><td><code>timestamptz</code></td><td>Creation time, shown in the portal</td></tr>
+<tr><td><code>clicks</code></td><td><code>bigint</code>, default 0</td><td>Redirects counted so far</td></tr>
+</tbody>
+</table>
+
+<h3 id="solution-codes">Short codes</h3>
+<p>Shortening first normalises the URL — lowercase scheme and host, default ports removed, path, query and
+fragment kept as they are — so that trivially different spellings of one address count as the same URL. If the
+user already owns a link for the normalised URL, that link is returned (<a href="#functional-create">Creating a short link</a>). Otherwise the service takes the next
+sequence number and encodes it in base 62 with the alphabet <code>0–9 a–z A–Z</code>.</p>
+<p>The sequence starts at 62<sup>5</sup> because that is the smallest number with six base-62 digits: every code is
+exactly six characters (<code>100000</code> for the first link) until 62<sup>6</sup> ≈ 56.8 billion links,
+instead of growing from one character. Consecutive numbers make codes guessable; that is accepted because links
+are not secret (see <a href="#non-goals">Non-goals</a>).</p>
+<figure>
+<svg class="diagram" viewBox="0 0 720 160" role="img" aria-label="How a short code is created">
+  <defs><marker id="m-codes" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="d-head" d="M0,0 L10,5 L0,10 z"/></marker></defs>
+  <rect class="d-box" x="10" y="20" width="120" height="44" rx="6"/>
+  <text x="70" y="47" text-anchor="middle">normalise URL</text>
+  <rect class="d-box" x="180" y="20" width="120" height="44" rx="6"/>
+  <text x="240" y="47" text-anchor="middle">find own link</text>
+  <rect class="d-box" x="370" y="20" width="150" height="44" rx="6"/>
+  <text x="445" y="47" text-anchor="middle">next sequence id</text>
+  <rect class="d-box" x="570" y="20" width="140" height="44" rx="6"/>
+  <text x="640" y="47" text-anchor="middle">base 62 → code</text>
+  <rect class="d-box" x="180" y="108" width="120" height="40" rx="6"/>
+  <text x="240" y="133" text-anchor="middle">return its code</text>
+  <line class="d-line" x1="130" y1="42" x2="178" y2="42" marker-end="url(#m-codes)"/>
+  <line class="d-line" x1="300" y1="42" x2="368" y2="42" marker-end="url(#m-codes)"/>
+  <text class="d-small" x="334" y="34" text-anchor="middle">not found</text>
+  <line class="d-line" x1="240" y1="64" x2="240" y2="106" marker-end="url(#m-codes)"/>
+  <text class="d-small" x="248" y="90">found</text>
+  <line class="d-line" x1="520" y1="42" x2="568" y2="42" marker-end="url(#m-codes)"/>
+  <text class="d-small" x="445" y="84" text-anchor="middle">starts at 62⁵</text>
+  <text class="d-small" x="640" y="84" text-anchor="middle">916132832 → 100000</text>
+</svg>
+<figcaption>Creating a short code. The new row is inserted with id and code together.</figcaption>
+</figure>
+
+<h3 id="solution-redirect">Redirect</h3>
+<p>A redirect resolves the code through an in-memory cache of the 10,000 most recently used links, falling back to
+the database on a miss. Because links are never edited or deleted, a cached entry is valid forever and the cache
+needs no invalidation. Unknown codes are not cached, so each one costs a database lookup; at the assumed load that
+is cheap, and it avoids filling the cache with typos.</p>
+<p>The response is <code>302 Found</code>, not <code>301 Moved Permanently</code>: browsers cache a 301 for good and
+would open later clicks without asking the service, so those clicks would never be counted (<a href="#functional-list">My links</a>).</p>
+<figure>
+<svg class="diagram" viewBox="0 0 720 290" role="img" aria-label="Redirect sequence">
+  <defs><marker id="m-redir" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="d-head" d="M0,0 L10,5 L0,10 z"/></marker></defs>
+  <rect class="d-ext" x="10" y="10" width="120" height="34" rx="6"/>
+  <text x="70" y="32" text-anchor="middle">Browser</text>
+  <rect class="d-box" x="150" y="10" width="120" height="34" rx="6"/>
+  <text x="210" y="32" text-anchor="middle">LinkController</text>
+  <rect class="d-box" x="300" y="10" width="120" height="34" rx="6"/>
+  <text x="360" y="32" text-anchor="middle">LinkResolver</text>
+  <rect class="d-box" x="440" y="10" width="140" height="34" rx="6"/>
+  <text x="510" y="32" text-anchor="middle">LinkRepository</text>
+  <rect class="d-box" x="595" y="10" width="115" height="34" rx="6"/>
+  <text x="652" y="32" text-anchor="middle">ClickCounter</text>
+  <line class="d-life" x1="70" y1="44" x2="70" y2="280"/>
+  <line class="d-life" x1="210" y1="44" x2="210" y2="280"/>
+  <line class="d-life" x1="360" y1="44" x2="360" y2="280"/>
+  <line class="d-life" x1="510" y1="44" x2="510" y2="280"/>
+  <line class="d-life" x1="652" y1="44" x2="652" y2="280"/>
+  <line class="d-line" x1="70" y1="75" x2="208" y2="75" marker-end="url(#m-redir)"/>
+  <text class="d-small" x="139" y="68" text-anchor="middle">GET /k7Qa2B</text>
+  <line class="d-line" x1="210" y1="105" x2="358" y2="105" marker-end="url(#m-redir)"/>
+  <text class="d-small" x="284" y="98" text-anchor="middle">resolve(code)</text>
+  <line class="d-line" x1="360" y1="135" x2="508" y2="135" marker-end="url(#m-redir)"/>
+  <text class="d-small" x="434" y="128" text-anchor="middle">findByCode — cache miss only</text>
+  <line class="d-line d-ret" x1="510" y1="160" x2="362" y2="160" marker-end="url(#m-redir)"/>
+  <text class="d-small" x="434" y="153" text-anchor="middle">link | null</text>
+  <line class="d-line d-ret" x1="360" y1="190" x2="212" y2="190" marker-end="url(#m-redir)"/>
+  <text class="d-small" x="284" y="183" text-anchor="middle">url | null</text>
+  <line class="d-line" x1="210" y1="220" x2="650" y2="220" marker-end="url(#m-redir)"/>
+  <text class="d-small" x="580" y="213" text-anchor="middle">increment(code)</text>
+  <line class="d-line d-ret" x1="210" y1="255" x2="72" y2="255" marker-end="url(#m-redir)"/>
+  <text class="d-small" x="139" y="248" text-anchor="middle">302 Location: url</text>
+</svg>
+<figcaption>A redirect for a known code. For an unknown code, LinkController answers 404 and nothing is counted.</figcaption>
+</figure>
+
+<h3 id="solution-clicks">Click counting</h3>
+<p>Writing a counter row on every redirect would put a database write into every redirect and make concurrent
+redirects of a popular link wait on the same row. Instead, each redirect only increments a number in an in-memory
+map. Every 30 seconds — and once more when the service shuts down — the map is swapped for an empty one and its
+contents are written in a single batch. If the write fails, the counts are merged back into the live map and retried
+with the next batch. A crash loses at most the last 30 seconds of clicks; the counts in <a href="#functional-list">My links</a> are at most a minute behind.</p>
+<figure>
+<svg class="diagram" viewBox="0 0 720 110" role="img" aria-label="Click counting">
+  <defs><marker id="m-clicks" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="d-head" d="M0,0 L10,5 L0,10 z"/></marker></defs>
+  <rect class="d-box" x="10" y="30" width="140" height="50" rx="6"/>
+  <text x="80" y="60" text-anchor="middle">LinkController</text>
+  <rect class="d-box" x="250" y="30" width="170" height="50" rx="6"/>
+  <text x="335" y="52" text-anchor="middle">ClickCounter</text>
+  <text class="d-small" x="335" y="70" text-anchor="middle">Map code → count</text>
+  <rect class="d-box" x="540" y="30" width="170" height="50" rx="6"/>
+  <text x="625" y="52" text-anchor="middle">LinkRepository</text>
+  <text class="d-small" x="625" y="70" text-anchor="middle">one UPDATE per batch</text>
+  <line class="d-line" x1="150" y1="55" x2="248" y2="55" marker-end="url(#m-clicks)"/>
+  <text class="d-small" x="199" y="47" text-anchor="middle">increment(code)</text>
+  <line class="d-line" x1="420" y1="55" x2="538" y2="55" marker-end="url(#m-clicks)"/>
+  <text class="d-small" x="479" y="34" text-anchor="middle">every 30 s</text>
+  <text class="d-small" x="479" y="47" text-anchor="middle">addClicks(batch)</text>
+</svg>
+<figcaption>Redirects count in memory; the counter writes in batches.</figcaption>
+</figure>
+
+<h2 id="building-blocks">Building blocks</h2>
+<p>The link shortener is one Node.js (TypeScript) process; its code lives in <code>src/</code>. To its users it is
+four HTTP endpoints, called by the intranet portal, by browsers and by the reverse proxy.</p>
+
+<!-- Example note: the endpoints are not listed in the frame of the parts diagram. To show them, this extra diagram
+     draws the service as a part with its callers around it. -->
+<figure>
+<svg class="diagram" viewBox="0 0 720 190" role="img" aria-label="Endpoints of the link shortener">
+  <defs><marker id="m-ep" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="d-head" d="M0,0 L10,5 L0,10 z"/></marker></defs>
+  <rect class="d-ext" x="10" y="20" width="180" height="40" rx="6"/>
+  <text x="100" y="45" text-anchor="middle">Intranet portal</text>
+  <rect class="d-ext" x="10" y="80" width="180" height="40" rx="6"/>
+  <text x="100" y="105" text-anchor="middle">Browser</text>
+  <rect class="d-ext" x="10" y="140" width="180" height="40" rx="6"/>
+  <text x="100" y="165" text-anchor="middle">Reverse proxy</text>
+  <rect class="d-focus" x="320" y="20" width="390" height="118" rx="6"/>
+  <text class="d-name" x="332" y="39">link shortener service</text>
+  <line class="d-line" x1="320" y1="48" x2="710" y2="48"/>
+  <text class="d-member" x="332" y="64"><tspan class="sx-kw">POST</tspan> <tspan class="sx-fn">/api/links</tspan><tspan class="sx-p">(</tspan>body<tspan class="sx-p">:</tspan> <tspan class="sx-p">{</tspan> url<tspan class="sx-p">:</tspan> <tspan class="sx-ty">string</tspan> <tspan class="sx-p">}):</tspan></text>
+  <text class="d-member" x="346" y="80">201 <tspan class="sx-p">|</tspan> 200 <tspan class="sx-p">{</tspan> code<tspan class="sx-p">:</tspan> <tspan class="sx-ty">string</tspan><tspan class="sx-p">,</tspan> shortUrl<tspan class="sx-p">:</tspan> <tspan class="sx-ty">string</tspan> <tspan class="sx-p">}</tspan></text>
+  <text class="d-member" x="332" y="96"><tspan class="sx-kw">GET</tspan> <tspan class="sx-fn">/api/links</tspan><tspan class="sx-p">():</tspan> 200 <tspan class="sx-ty">LinkSummary</tspan><tspan class="sx-p">[]</tspan></text>
+  <text class="d-member" x="332" y="112"><tspan class="sx-kw">GET</tspan> <tspan class="sx-fn">/:code</tspan><tspan class="sx-p">():</tspan> 302 <tspan class="sx-p">|</tspan> 404</text>
+  <text class="d-member" x="332" y="128"><tspan class="sx-kw">GET</tspan> <tspan class="sx-fn">/healthz</tspan><tspan class="sx-p">():</tspan> 200 <tspan class="sx-p">|</tspan> 503</text>
+  <line class="d-line" x1="190" y1="34" x2="318" y2="60" marker-end="url(#m-ep)"/>
+  <line class="d-line" x1="190" y1="46" x2="318" y2="92" marker-end="url(#m-ep)"/>
+  <line class="d-line" x1="190" y1="100" x2="318" y2="108" marker-end="url(#m-ep)"/>
+  <line class="d-line" x1="190" y1="160" x2="318" y2="124" marker-end="url(#m-ep)"/>
+</svg>
+<figcaption>The service's endpoints and who calls them. All requests pass through the reverse proxy (<a href="#context">Context</a>); it is drawn here only as the caller of <code>/healthz</code>.</figcaption>
+</figure>
+
+
+<p class="member"><code>POST /api/links(body: { url: string }): 201 | 200 { code: string, shortUrl: string }</code> —
+creates a short link for the calling user. <code>api/</code> checks the SSO token (401 without one) and the URL
+(400 if it isn't a web address), then <code>core/</code> returns the caller's existing link (200) or creates a new
+one in <code>storage/</code> (201).</p>
+<p class="member"><code>GET /api/links(): 200 LinkSummary[]</code> — the caller's links, newest first, as
+<code>{ code: string, url: string, createdAt: string, clicks: number }</code>. Requires the SSO token. Click counts
+come from the database and are therefore up to 30 seconds behind.</p>
+<p class="member"><code>GET /:code(): 302 | 404</code> — the redirect. <code>core/</code> resolves the code from its
+cache or <code>storage/</code> and counts the click in memory; <code>api/</code> answers 302 with the target URL,
+or the “not found” page with 404.</p>
+<p class="member"><code>GET /healthz(): 200 | 503</code> — for the reverse proxy. <code>main.ts</code> answers 200
+if the database answers a trivial query, 503 otherwise.</p>
+
+<!-- Example note: the frame shows only name and location. The packages have no interface of their own; their
+     classes appear with their interfaces one level down. -->
+<figure>
+<svg class="diagram" viewBox="0 0 720 300" role="img" aria-label="Parts of the link shortener">
+  <defs>
+    <marker id="m-bb" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="d-head" d="M0,0 L10,5 L0,10 z"/></marker>
+    <marker id="m-bb-tri" viewBox="0 0 12 12" refX="11" refY="6" markerWidth="12" markerHeight="12" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="d-hollow" d="M1,1 L11,6 L1,11 z"/></marker>
+    <marker id="m-bb-dia" viewBox="0 0 14 8" refX="0" refY="4" markerWidth="14" markerHeight="8" markerUnits="userSpaceOnUse" orient="auto"><path class="d-head" d="M0,4 L7,0 L14,4 L7,8 z"/></marker>
+  </defs>
+  <rect class="d-frame" x="10" y="10" width="700" height="280" rx="8"/>
+  <text class="d-title" x="24" y="30">src/ · link shortener service</text>
+  <g transform="translate(0,-20)">
+  <rect class="d-box" x="30" y="70" width="270" height="40" rx="6"/>
+  <rect class="d-frame" x="33" y="73" width="264" height="34" rx="4"/>
+  <text class="d-name" x="42" y="95">api/</text>
+  <rect class="d-box" x="340" y="70" width="150" height="50" rx="6"/>
+  <text class="d-name" x="352" y="92">main.ts</text>
+  <text class="d-small" x="352" y="108">entry point</text>
+  <rect class="d-box" x="30" y="230" width="230" height="40" rx="6"/>
+  <rect class="d-frame" x="33" y="233" width="224" height="34" rx="4"/>
+  <text class="d-name" x="42" y="255">core/</text>
+  <rect class="d-box" x="390" y="230" width="300" height="40" rx="6"/>
+  <rect class="d-frame" x="393" y="233" width="294" height="34" rx="4"/>
+  <text class="d-name" x="402" y="255">storage/</text>
+  <line class="d-line" x1="340" y1="95" x2="302" y2="95" marker-start="url(#m-bb-dia)"/>
+  <line class="d-line" x1="380" y1="120" x2="262" y2="238" marker-start="url(#m-bb-dia)"/>
+  <line class="d-line" x1="450" y1="120" x2="520" y2="228" marker-start="url(#m-bb-dia)"/>
+  <text class="d-small" x="492" y="170">creates</text>
+  <line class="d-line" x1="165" y1="110" x2="145" y2="228" marker-end="url(#m-bb)"/>
+  <text class="d-small" x="160" y="180">uses</text>
+  <line class="d-line d-ret" x1="390" y1="250" x2="262" y2="250" marker-end="url(#m-bb-tri)"/>
+  <text class="d-small" x="326" y="242" text-anchor="middle">implements</text>
+  </g>
+</svg>
+<figcaption>Top level. Diamonds mark the owner that creates a part; double borders mark parts with their own subsection.</figcaption>
+</figure>
+
+<p><code>main.ts</code> creates and connects the other three parts. <code>api/</code> calls <code>core/</code>.
+<code>storage/</code> depends on <code>core/</code>, not the other way round: <code>core/</code> declares the
+repository interface it needs, and <code>storage/</code> implements it for PostgreSQL. This keeps the rules of the
+service — shortening, resolving, counting — free of database code, so they can be tested against an in-memory
+repository.</p>
+
+<!-- Example note: main.ts is a module without exports, so its box shows no interface and its paragraph has no
+     member paragraphs. -->
+<p><b>main.ts</b> — the entry point. It reads the configuration from environment variables, opens the database,
+runs the migrations, creates the repository, the core services, the API classes and the HTTP server, registers the
+routes and <code>/healthz</code>, and starts the click counter. On <code>SIGTERM</code> it stops accepting
+requests, then stops the click counter (which writes its last batch) and closes the database.</p>
+
+<h3 id="bb-api">api/</h3>
+<p>The HTTP layer (<code>src/api/</code>, built on Fastify). It translates requests into calls to <code>core/</code>
+and results into responses; it contains no business rules.</p>
+
+<!-- Example note: the core/ neighbours are grouped in a dashed package and list only the methods api/ uses. -->
+<figure>
+<svg class="diagram" viewBox="0 0 720 384" role="img" aria-label="Parts of api/">
+  <defs><marker id="m-api" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="d-head" d="M0,0 L10,5 L0,10 z"/></marker></defs>
+  <rect class="d-frame" x="10" y="10" width="415" height="364" rx="8"/>
+  <text class="d-title" x="24" y="30">api/ · src/api</text>
+  <rect class="d-box" x="24" y="44" width="290" height="198" rx="6"/>
+  <text class="d-name" x="36" y="63">LinkController</text>
+  <line class="d-line" x1="24" y1="72" x2="314" y2="72"/>
+  <text class="d-member" x="36" y="88"><tspan class="sx-fn">constructor</tspan><tspan class="sx-p">(</tspan>links<tspan class="sx-p">:</tspan> <tspan class="sx-ty">LinkService</tspan><tspan class="sx-p">,</tspan></text>
+  <text class="d-member" x="50" y="104">resolver<tspan class="sx-p">:</tspan> <tspan class="sx-ty">LinkResolver</tspan><tspan class="sx-p">,</tspan></text>
+  <text class="d-member" x="50" y="120">clicks<tspan class="sx-p">:</tspan> <tspan class="sx-ty">ClickCounter</tspan><tspan class="sx-p">,</tspan> auth<tspan class="sx-p">:</tspan> <tspan class="sx-ty">Auth</tspan><tspan class="sx-p">)</tspan></text>
+  <text class="d-member" x="36" y="136"><tspan class="sx-fn">register</tspan><tspan class="sx-p">(</tspan>app<tspan class="sx-p">:</tspan> <tspan class="sx-ty">FastifyInstance</tspan><tspan class="sx-p">):</tspan> <tspan class="sx-ty">void</tspan></text>
+  <text class="d-member" x="36" y="152"><tspan class="sx-fn">shorten</tspan><tspan class="sx-p">(</tspan>req<tspan class="sx-p">:</tspan> <tspan class="sx-ty">FastifyRequest</tspan><tspan class="sx-p">,</tspan></text>
+  <text class="d-member" x="50" y="168">reply<tspan class="sx-p">:</tspan> <tspan class="sx-ty">FastifyReply</tspan><tspan class="sx-p">):</tspan> <tspan class="sx-ty">Promise</tspan><tspan class="sx-p">&lt;</tspan><tspan class="sx-ty">void</tspan><tspan class="sx-p">&gt;</tspan></text>
+  <text class="d-member" x="36" y="184"><tspan class="sx-fn">list</tspan><tspan class="sx-p">(</tspan>req<tspan class="sx-p">:</tspan> <tspan class="sx-ty">FastifyRequest</tspan><tspan class="sx-p">,</tspan></text>
+  <text class="d-member" x="50" y="200">reply<tspan class="sx-p">:</tspan> <tspan class="sx-ty">FastifyReply</tspan><tspan class="sx-p">):</tspan> <tspan class="sx-ty">Promise</tspan><tspan class="sx-p">&lt;</tspan><tspan class="sx-ty">void</tspan><tspan class="sx-p">&gt;</tspan></text>
+  <text class="d-member" x="36" y="216"><tspan class="sx-fn">redirect</tspan><tspan class="sx-p">(</tspan>req<tspan class="sx-p">:</tspan> <tspan class="sx-ty">FastifyRequest</tspan><tspan class="sx-p">,</tspan></text>
+  <text class="d-member" x="50" y="232">reply<tspan class="sx-p">:</tspan> <tspan class="sx-ty">FastifyReply</tspan><tspan class="sx-p">):</tspan> <tspan class="sx-ty">Promise</tspan><tspan class="sx-p">&lt;</tspan><tspan class="sx-ty">void</tspan><tspan class="sx-p">&gt;</tspan></text>
+  <rect class="d-box" x="24" y="272" width="290" height="86" rx="6"/>
+  <text class="d-name" x="36" y="291">Auth</text>
+  <line class="d-line" x1="24" y1="300" x2="314" y2="300"/>
+  <text class="d-member" x="36" y="316"><tspan class="sx-fn">constructor</tspan><tspan class="sx-p">(</tspan>jwksUrl<tspan class="sx-p">:</tspan> <tspan class="sx-ty">string</tspan><tspan class="sx-p">)</tspan></text>
+  <text class="d-member" x="36" y="332"><tspan class="sx-fn">authenticate</tspan><tspan class="sx-p">(</tspan>req<tspan class="sx-p">:</tspan> <tspan class="sx-ty">FastifyRequest</tspan><tspan class="sx-p">):</tspan></text>
+  <text class="d-member" x="50" y="348"><tspan class="sx-ty">Promise</tspan><tspan class="sx-p">&lt;</tspan><tspan class="sx-ty">void</tspan><tspan class="sx-p">&gt;</tspan></text>
+  <rect class="d-ext" x="430" y="10" width="285" height="306" rx="8"/>
+  <text class="d-title" x="444" y="30">core/</text>
+  <rect class="d-ext" x="442" y="40" width="262" height="102" rx="6"/>
+  <text class="d-name" x="454" y="59">LinkService</text>
+  <line class="d-line" x1="442" y1="68" x2="704" y2="68"/>
+  <text class="d-member" x="454" y="84"><tspan class="sx-fn">shorten</tspan><tspan class="sx-p">(</tspan>url<tspan class="sx-p">:</tspan> <tspan class="sx-ty">string</tspan><tspan class="sx-p">,</tspan> owner<tspan class="sx-p">:</tspan> <tspan class="sx-ty">string</tspan><tspan class="sx-p">):</tspan></text>
+  <text class="d-member" x="468" y="100"><tspan class="sx-ty">Promise</tspan><tspan class="sx-p">&lt;</tspan><tspan class="sx-ty">ShortenResult</tspan><tspan class="sx-p">&gt;</tspan></text>
+  <text class="d-member" x="454" y="116"><tspan class="sx-fn">listOwned</tspan><tspan class="sx-p">(</tspan>owner<tspan class="sx-p">:</tspan> <tspan class="sx-ty">string</tspan><tspan class="sx-p">):</tspan></text>
+  <text class="d-member" x="468" y="132"><tspan class="sx-ty">Promise</tspan><tspan class="sx-p">&lt;</tspan><tspan class="sx-ty">Link</tspan><tspan class="sx-p">[]&gt;</tspan></text>
+  <rect class="d-ext" x="442" y="160" width="262" height="70" rx="6"/>
+  <text class="d-name" x="454" y="179">LinkResolver</text>
+  <line class="d-line" x1="442" y1="188" x2="704" y2="188"/>
+  <text class="d-member" x="454" y="204"><tspan class="sx-fn">resolve</tspan><tspan class="sx-p">(</tspan>code<tspan class="sx-p">:</tspan> <tspan class="sx-ty">string</tspan><tspan class="sx-p">):</tspan></text>
+  <text class="d-member" x="468" y="220"><tspan class="sx-ty">Promise</tspan><tspan class="sx-p">&lt;</tspan><tspan class="sx-ty">string</tspan> <tspan class="sx-p">|</tspan> <tspan class="sx-ty">null</tspan><tspan class="sx-p">&gt;</tspan></text>
+  <rect class="d-ext" x="442" y="248" width="262" height="54" rx="6"/>
+  <text class="d-name" x="454" y="267">ClickCounter</text>
+  <line class="d-line" x1="442" y1="276" x2="704" y2="276"/>
+  <text class="d-member" x="454" y="292"><tspan class="sx-fn">increment</tspan><tspan class="sx-p">(</tspan>code<tspan class="sx-p">:</tspan> <tspan class="sx-ty">string</tspan><tspan class="sx-p">):</tspan> <tspan class="sx-ty">void</tspan></text>
+  <line class="d-line" x1="314" y1="100" x2="440" y2="95" marker-end="url(#m-api)"/>
+  <line class="d-line" x1="314" y1="190" x2="440" y2="200" marker-end="url(#m-api)"/>
+  <line class="d-line" x1="314" y1="225" x2="440" y2="280" marker-end="url(#m-api)"/>
+  <line class="d-line" x1="170" y1="242" x2="170" y2="270" marker-end="url(#m-api)"/>
+</svg>
+<figcaption>Parts of <code>api/</code>. The dashed package holds the parts of <code>core/</code> it uses, with only the methods <code>api/</code> calls.</figcaption>
+</figure>
+
+<p><code>LinkController</code> handles all three routes and asks <code>Auth</code> who is calling for the two that
+need a user; the redirect is public (see <a href="#assumptions">Assumptions</a>). <code>main.ts</code> creates both
+and passes <code>Auth</code> into the controller.</p>
+
+<p><b>LinkController</b> — maps the three routes to the core services.</p>
+<p class="member"><code>constructor(links: LinkService, resolver: LinkResolver, clicks: ClickCounter, auth: Auth)</code> —
+keeps its collaborators; it holds no other state.</p>
+<p class="member"><code>register(app: FastifyInstance): void</code> — registers <code>shorten</code> for
+<code>POST /api/links</code>, <code>list</code> for <code>GET /api/links</code> and <code>redirect</code> for
+<code>GET /:code</code>, with <code>auth.authenticate</code> as a pre-handler on the two <code>/api/*</code>
+routes.</p>
+<p class="member"><code>shorten(req: FastifyRequest, reply: FastifyReply): Promise&lt;void&gt;</code> — rejects
+anything but an <code>http</code>/<code>https</code> URL of up to 2,048 characters with 400, then calls
+<code>links.shorten(url, req.owner)</code>. Answers 201 if the result is new and 200 if the link already existed
+(<a href="#functional-create">Creating a short link</a>), with <code>{ code, shortUrl }</code>, where
+<code>shortUrl</code> is <code>https://go.example/</code> plus the code.</p>
+<p class="member"><code>list(req: FastifyRequest, reply: FastifyReply): Promise&lt;void&gt;</code> — calls
+<code>links.listOwned(req.owner)</code> and answers 200 with each link mapped to
+<code>{ code, url, createdAt, clicks }</code>, <code>createdAt</code> as an ISO date.</p>
+<p class="member"><code>redirect(req: FastifyRequest, reply: FastifyReply): Promise&lt;void&gt;</code> — asks
+<code>resolver.resolve(code)</code> for the URL; if there is none it renders the “not found” page with 404,
+otherwise it calls <code>clicks.increment(code)</code> and answers 302 (the reason for 302 is in
+<a href="#solution-redirect">Redirect</a>).</p>
+
+<!-- Example note: Auth is used by one class only, but it is not a helper: it has its own state (the cached keys)
+     and its own configuration, so it is a part of its own. -->
+<p><b>Auth</b> — checks who is calling.</p>
+<p class="member"><code>constructor(jwksUrl: string)</code> — keeps the URL of the SSO's public signing keys; the
+keys are fetched on first use and refreshed hourly.</p>
+<p class="member"><code>authenticate(req: FastifyRequest): Promise&lt;void&gt;</code> — verifies the SSO token in the
+<code>Authorization</code> header against the signing keys and sets <code>req.owner</code> to the token's subject.
+A missing or invalid token ends the request with 401.</p>
+
+<h3 id="bb-core">core/</h3>
+<p>The rules of the service (<code>src/core/</code>): creating links, resolving codes and counting clicks. It does
+no I/O of its own; everything persistent goes through the <code>LinkRepository</code> interface.</p>
+
+<figure>
+<svg class="diagram" viewBox="0 0 720 580" role="img" aria-label="Parts of core/">
+  <defs>
+    <marker id="m-core" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="d-head" d="M0,0 L10,5 L0,10 z"/></marker>
+    <marker id="m-core-tri" viewBox="0 0 12 12" refX="11" refY="6" markerWidth="12" markerHeight="12" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="d-hollow" d="M1,1 L11,6 L1,11 z"/></marker>
+  </defs>
+  <rect class="d-ext" x="50" y="10" width="290" height="36" rx="6"/>
+  <text x="195" y="33" text-anchor="middle">api/LinkController</text>
+  <rect class="d-frame" x="10" y="60" width="700" height="440" rx="8"/>
+  <text class="d-title" x="44" y="80">core/ · src/core</text>
+  <rect class="d-box" x="50" y="110" width="290" height="118" rx="6"/>
+  <text class="d-name" x="62" y="129">LinkService</text>
+  <line class="d-line" x1="50" y1="138" x2="340" y2="138"/>
+  <text class="d-member" x="62" y="154"><tspan class="sx-fn">constructor</tspan><tspan class="sx-p">(</tspan>repo<tspan class="sx-p">:</tspan> <tspan class="sx-ty">LinkRepository</tspan><tspan class="sx-p">)</tspan></text>
+  <text class="d-member" x="62" y="170"><tspan class="sx-fn">shorten</tspan><tspan class="sx-p">(</tspan>url<tspan class="sx-p">:</tspan> <tspan class="sx-ty">string</tspan><tspan class="sx-p">,</tspan> owner<tspan class="sx-p">:</tspan> <tspan class="sx-ty">string</tspan><tspan class="sx-p">):</tspan></text>
+  <text class="d-member" x="76" y="186"><tspan class="sx-ty">Promise</tspan><tspan class="sx-p">&lt;</tspan><tspan class="sx-ty">ShortenResult</tspan><tspan class="sx-p">&gt;</tspan></text>
+  <text class="d-member" x="62" y="202"><tspan class="sx-fn">listOwned</tspan><tspan class="sx-p">(</tspan>owner<tspan class="sx-p">:</tspan> <tspan class="sx-ty">string</tspan><tspan class="sx-p">):</tspan></text>
+  <text class="d-member" x="76" y="218"><tspan class="sx-ty">Promise</tspan><tspan class="sx-p">&lt;</tspan><tspan class="sx-ty">Link</tspan><tspan class="sx-p">[]&gt;</tspan></text>
+  <rect class="d-box" x="50" y="245" width="290" height="102" rx="6"/>
+  <text class="d-name" x="62" y="264">LinkResolver</text>
+  <line class="d-line" x1="50" y1="273" x2="340" y2="273"/>
+  <text class="d-member" x="62" y="289"><tspan class="sx-fn">constructor</tspan><tspan class="sx-p">(</tspan>repo<tspan class="sx-p">:</tspan> <tspan class="sx-ty">LinkRepository</tspan><tspan class="sx-p">,</tspan></text>
+  <text class="d-member" x="76" y="305">cacheSize<tspan class="sx-p">:</tspan> <tspan class="sx-ty">number</tspan><tspan class="sx-p">)</tspan></text>
+  <text class="d-member" x="62" y="321"><tspan class="sx-fn">resolve</tspan><tspan class="sx-p">(</tspan>code<tspan class="sx-p">:</tspan> <tspan class="sx-ty">string</tspan><tspan class="sx-p">):</tspan></text>
+  <text class="d-member" x="76" y="337"><tspan class="sx-ty">Promise</tspan><tspan class="sx-p">&lt;</tspan><tspan class="sx-ty">string</tspan> <tspan class="sx-p">|</tspan> <tspan class="sx-ty">null</tspan><tspan class="sx-p">&gt;</tspan></text>
+  <rect class="d-box" x="50" y="364" width="290" height="118" rx="6"/>
+  <text class="d-name" x="62" y="383">ClickCounter</text>
+  <line class="d-line" x1="50" y1="392" x2="340" y2="392"/>
+  <text class="d-member" x="62" y="408"><tspan class="sx-fn">constructor</tspan><tspan class="sx-p">(</tspan>repo<tspan class="sx-p">:</tspan> <tspan class="sx-ty">LinkRepository</tspan><tspan class="sx-p">,</tspan></text>
+  <text class="d-member" x="76" y="424">flushMs<tspan class="sx-p">:</tspan> <tspan class="sx-ty">number</tspan><tspan class="sx-p">)</tspan></text>
+  <text class="d-member" x="62" y="440"><tspan class="sx-fn">increment</tspan><tspan class="sx-p">(</tspan>code<tspan class="sx-p">:</tspan> <tspan class="sx-ty">string</tspan><tspan class="sx-p">):</tspan> <tspan class="sx-ty">void</tspan></text>
+  <text class="d-member" x="62" y="456"><tspan class="sx-fn">start</tspan><tspan class="sx-p">():</tspan> <tspan class="sx-ty">void</tspan></text>
+  <text class="d-member" x="62" y="472"><tspan class="sx-fn">stop</tspan><tspan class="sx-p">():</tspan> <tspan class="sx-ty">Promise</tspan><tspan class="sx-p">&lt;</tspan><tspan class="sx-ty">void</tspan><tspan class="sx-p">&gt;</tspan></text>
+  <rect class="d-box" x="390" y="110" width="300" height="210" rx="6"/>
+  <text class="d-small" x="540" y="125" text-anchor="middle">«interface»</text>
+  <text class="d-name" x="540" y="142" text-anchor="middle">LinkRepository</text>
+  <line class="d-line" x1="390" y1="150" x2="690" y2="150"/>
+  <text class="d-member" x="402" y="166"><tspan class="sx-fn">nextId</tspan><tspan class="sx-p">():</tspan> <tspan class="sx-ty">Promise</tspan><tspan class="sx-p">&lt;</tspan><tspan class="sx-ty">number</tspan><tspan class="sx-p">&gt;</tspan></text>
+  <text class="d-member" x="402" y="182"><tspan class="sx-fn">insert</tspan><tspan class="sx-p">(</tspan>link<tspan class="sx-p">:</tspan> <tspan class="sx-ty">NewLink</tspan><tspan class="sx-p">):</tspan> <tspan class="sx-ty">Promise</tspan><tspan class="sx-p">&lt;</tspan><tspan class="sx-ty">Link</tspan><tspan class="sx-p">&gt;</tspan></text>
+  <text class="d-member" x="402" y="198"><tspan class="sx-fn">findByCode</tspan><tspan class="sx-p">(</tspan>code<tspan class="sx-p">:</tspan> <tspan class="sx-ty">string</tspan><tspan class="sx-p">):</tspan></text>
+  <text class="d-member" x="416" y="214"><tspan class="sx-ty">Promise</tspan><tspan class="sx-p">&lt;</tspan><tspan class="sx-ty">Link</tspan> <tspan class="sx-p">|</tspan> <tspan class="sx-ty">null</tspan><tspan class="sx-p">&gt;</tspan></text>
+  <text class="d-member" x="402" y="230"><tspan class="sx-fn">findByOwnerAndUrl</tspan><tspan class="sx-p">(</tspan>owner<tspan class="sx-p">:</tspan> <tspan class="sx-ty">string</tspan><tspan class="sx-p">,</tspan></text>
+  <text class="d-member" x="416" y="246">url<tspan class="sx-p">:</tspan> <tspan class="sx-ty">string</tspan><tspan class="sx-p">):</tspan> <tspan class="sx-ty">Promise</tspan><tspan class="sx-p">&lt;</tspan><tspan class="sx-ty">Link</tspan> <tspan class="sx-p">|</tspan> <tspan class="sx-ty">null</tspan><tspan class="sx-p">&gt;</tspan></text>
+  <text class="d-member" x="402" y="262"><tspan class="sx-fn">listByOwner</tspan><tspan class="sx-p">(</tspan>owner<tspan class="sx-p">:</tspan> <tspan class="sx-ty">string</tspan><tspan class="sx-p">):</tspan></text>
+  <text class="d-member" x="416" y="278"><tspan class="sx-ty">Promise</tspan><tspan class="sx-p">&lt;</tspan><tspan class="sx-ty">Link</tspan><tspan class="sx-p">[]&gt;</tspan></text>
+  <text class="d-member" x="402" y="294"><tspan class="sx-fn">addClicks</tspan><tspan class="sx-p">(</tspan>batch<tspan class="sx-p">:</tspan> <tspan class="sx-ty">Map</tspan><tspan class="sx-p">&lt;</tspan><tspan class="sx-ty">string</tspan><tspan class="sx-p">,</tspan> <tspan class="sx-ty">number</tspan><tspan class="sx-p">&gt;):</tspan></text>
+  <text class="d-member" x="416" y="310"><tspan class="sx-ty">Promise</tspan><tspan class="sx-p">&lt;</tspan><tspan class="sx-ty">void</tspan><tspan class="sx-p">&gt;</tspan></text>
+  <rect class="d-box" x="390" y="345" width="245" height="98" rx="6"/>
+  <text class="d-small" x="512" y="360" text-anchor="middle">«type»</text>
+  <text class="d-name" x="512" y="377" text-anchor="middle">Link</text>
+  <line class="d-line" x1="390" y1="385" x2="635" y2="385"/>
+  <text class="d-member" x="402" y="401">id<tspan class="sx-p">:</tspan> <tspan class="sx-ty">number</tspan><tspan class="sx-p">,</tspan> code<tspan class="sx-p">:</tspan> <tspan class="sx-ty">string</tspan></text>
+  <text class="d-member" x="402" y="417">url<tspan class="sx-p">:</tspan> <tspan class="sx-ty">string</tspan><tspan class="sx-p">,</tspan> owner<tspan class="sx-p">:</tspan> <tspan class="sx-ty">string</tspan></text>
+  <text class="d-member" x="402" y="433">createdAt<tspan class="sx-p">:</tspan> <tspan class="sx-ty">Date</tspan><tspan class="sx-p">,</tspan> clicks<tspan class="sx-p">:</tspan> <tspan class="sx-ty">number</tspan></text>
+  <rect class="d-ext" x="390" y="530" width="300" height="40" rx="6"/>
+  <text x="540" y="555" text-anchor="middle">storage/PgLinkRepository</text>
+  <path class="d-line" d="M50,28 H30 V170 H48" marker-end="url(#m-core)"/>
+  <path class="d-line" d="M50,28 H30 V296 H48" marker-end="url(#m-core)"/>
+  <path class="d-line" d="M50,28 H30 V423 H48" marker-end="url(#m-core)"/>
+  <line class="d-line" x1="340" y1="170" x2="388" y2="190" marker-end="url(#m-core)"/>
+  <line class="d-line" x1="340" y1="296" x2="388" y2="280" marker-end="url(#m-core)"/>
+  <line class="d-line" x1="340" y1="423" x2="388" y2="312" marker-end="url(#m-core)"/>
+  <line class="d-line d-ret" x1="665" y1="530" x2="665" y2="322" marker-end="url(#m-core-tri)"/>
+  <text class="d-small" x="657" y="520" text-anchor="end">implements</text>
+</svg>
+<figcaption>Parts of <code>core/</code>. Dashed boxes are outside <code>core/</code>, shown for orientation; they use nothing of each other's interface here. <code>Link</code> is passed between all parts; its arrows are left out.</figcaption>
+</figure>
+
+<p>The three services each serve one kind of request and don't call each other; all of them read and write through
+<code>LinkRepository</code>. Defining that interface here, where it is used, is what lets the dependency point from
+<code>storage/</code> to <code>core/</code>.</p>
+
+<!-- Example note: base62.ts is used only by LinkService and is pure logic, so it is a helper: no part, no box,
+     its logic is explained in LinkService's paragraphs. -->
+<p><b>LinkService</b> — creates links and lists a user's links.</p>
+<p class="member"><code>constructor(repo: LinkRepository)</code> — keeps the repository; the service holds no other state.</p>
+<p class="member"><code>shorten(url: string, owner: string): Promise&lt;ShortenResult&gt;</code> — normalises the URL
+(<a href="#solution-codes">Short codes</a>) and returns <code>{ link, created: false }</code> if
+<code>repo.findByOwnerAndUrl</code> finds the owner's link for it. Otherwise it takes <code>repo.nextId()</code>,
+encodes the id in base 62 — dividing by 62 repeatedly and mapping each remainder to a character of
+<code>0–9 a–z A–Z</code>, most significant digit first — and stores the link with <code>repo.insert</code>, returning
+<code>{ link, created: true }</code>. <code>ShortenResult</code> is <code>{ link: Link, created: boolean }</code>.</p>
+<p class="member"><code>listOwned(owner: string): Promise&lt;Link[]&gt;</code> — returns
+<code>repo.listByOwner(owner)</code> unchanged; the ordering (newest first) is part of the repository's contract.</p>
+
+<p><b>LinkResolver</b> — turns codes into target URLs, with a cache in front of the repository.</p>
+<p class="member"><code>constructor(repo: LinkRepository, cacheSize: number)</code> — creates an empty LRU map
+holding at most <code>cacheSize</code> links (10,000 in production).</p>
+<p class="member"><code>resolve(code: string): Promise&lt;string | null&gt;</code> — on a cache hit returns the URL and
+marks the entry as most recently used. On a miss it asks <code>repo.findByCode</code>; a found link is cached
+(evicting the least recently used entry when full) and its URL returned, an unknown code returns
+<code>null</code> and is not cached (<a href="#solution-redirect">Redirect</a>).</p>
+
+<p><b>ClickCounter</b> — counts clicks in memory and writes them in batches
+(<a href="#solution-clicks">Click counting</a>).</p>
+<p class="member"><code>constructor(repo: LinkRepository, flushMs: number)</code> — creates the empty count map;
+<code>flushMs</code> is the batch interval (30,000 in production).</p>
+<p class="member"><code>increment(code: string): void</code> — adds one to the code's count in the map. Synchronous and
+without I/O, so a redirect never waits for it.</p>
+<p class="member"><code>start(): void</code> — starts a timer that flushes every <code>flushMs</code>. A flush swaps
+the map for an empty one and passes the old one to <code>repo.addClicks</code>; if that fails, it adds the counts
+back into the live map so the next flush retries them.</p>
+<p class="member"><code>stop(): Promise&lt;void&gt;</code> — clears the timer and runs one last flush; resolves when it
+has been written.</p>
+
+<!-- Example note: LinkRepository and Link are simple classes (an interface and a data type): one paragraph each
+     that explains every member drawn in the diagram, instead of one member paragraph per member. -->
+<p><b>LinkRepository</b> — the persistence contract the services need; tests use an in-memory implementation,
+production uses <a href="#bb-storage">storage/</a>. <code>nextId</code> never returns the same id twice;
+<code>insert</code> takes a <code>NewLink</code> (<code>{ id, code, url, owner }</code>) and returns it as a
+<code>Link</code> with <code>createdAt</code> set and <code>clicks</code> 0; the two <code>find…</code> methods return
+<code>null</code> when nothing matches; <code>listByOwner</code> returns newest first; <code>addClicks</code> adds
+each count to its link, all or nothing.</p>
+
+<p><b>Link</b> — one row of the <code>links</code> table (<a href="#solution-data">Data model</a>) as an object;
+every part passes links in this shape. <code>id</code> is the sequence number the code was derived from,
+<code>code</code> the short code, <code>url</code> the normalised target URL and <code>owner</code> the SSO subject
+of the creator; <code>createdAt</code> is set by the database on insert, and <code>clicks</code> is the click count
+as of the last batch write (<a href="#solution-clicks">Click counting</a>).</p>
+
+<h3 id="bb-storage">storage/</h3>
+<p>Everything PostgreSQL-specific (<code>src/storage/</code>): the repository implementation, the connection pool
+and the schema migrations.</p>
+
+<!-- Example note: PgLinkRepository shows "implements LinkRepository" instead of repeating the six methods drawn
+     one level up; its member paragraphs below still redefine each of them with what it does in SQL. -->
+<figure>
+<svg class="diagram" viewBox="0 0 720 400" role="img" aria-label="Parts of storage/">
+  <defs>
+    <marker id="m-st" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="d-head" d="M0,0 L10,5 L0,10 z"/></marker>
+    <marker id="m-st-tri" viewBox="0 0 12 12" refX="11" refY="6" markerWidth="12" markerHeight="12" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="d-hollow" d="M1,1 L11,6 L1,11 z"/></marker>
+  </defs>
+  <rect class="d-ext" x="10" y="40" width="125" height="46" rx="6"/>
+  <text x="72" y="60" text-anchor="middle">core/</text>
+  <text class="d-small" x="72" y="76" text-anchor="middle">LinkRepository</text>
+  <rect class="d-ext" x="10" y="200" width="125" height="46" rx="6"/>
+  <text x="72" y="228" text-anchor="middle">main.ts</text>
+  <rect class="d-frame" x="160" y="10" width="550" height="300" rx="8"/>
+  <text class="d-title" x="174" y="30">storage/ · src/storage</text>
+  <rect class="d-box" x="180" y="60" width="230" height="70" rx="6"/>
+  <text class="d-name" x="192" y="79">PgLinkRepository</text>
+  <line class="d-line" x1="180" y1="88" x2="410" y2="88"/>
+  <text class="d-member" x="192" y="104"><tspan class="sx-fn">constructor</tspan><tspan class="sx-p">(</tspan>db<tspan class="sx-p">:</tspan> <tspan class="sx-ty">Database</tspan><tspan class="sx-p">)</tspan></text>
+  <text class="d-member" x="192" y="120"><tspan class="sx-kw">implements</tspan> <tspan class="sx-ty">LinkRepository</tspan></text>
+  <rect class="d-box" x="180" y="200" width="230" height="70" rx="6"/>
+  <text class="d-name" x="192" y="219">migrate.ts</text>
+  <line class="d-line" x1="180" y1="228" x2="410" y2="228"/>
+  <text class="d-member" x="192" y="244"><tspan class="sx-fn">runMigrations</tspan><tspan class="sx-p">(</tspan>db<tspan class="sx-p">:</tspan> <tspan class="sx-ty">Database</tspan><tspan class="sx-p">):</tspan></text>
+  <text class="d-member" x="206" y="260"><tspan class="sx-ty">Promise</tspan><tspan class="sx-p">&lt;</tspan><tspan class="sx-ty">void</tspan><tspan class="sx-p">&gt;</tspan></text>
+  <rect class="d-box" x="440" y="90" width="260" height="134" rx="6"/>
+  <text class="d-name" x="452" y="109">Database</text>
+  <line class="d-line" x1="440" y1="118" x2="700" y2="118"/>
+  <text class="d-member" x="452" y="134"><tspan class="sx-fn">constructor</tspan><tspan class="sx-p">(</tspan>url<tspan class="sx-p">:</tspan> <tspan class="sx-ty">string</tspan><tspan class="sx-p">)</tspan></text>
+  <text class="d-member" x="452" y="150"><tspan class="sx-fn">query</tspan><tspan class="sx-p">&lt;</tspan><tspan class="sx-ty">T</tspan><tspan class="sx-p">&gt;(</tspan>sql<tspan class="sx-p">:</tspan> <tspan class="sx-ty">string</tspan><tspan class="sx-p">,</tspan></text>
+  <text class="d-member" x="466" y="166">params<tspan class="sx-p">:</tspan> <tspan class="sx-ty">unknown</tspan><tspan class="sx-p">[]):</tspan> <tspan class="sx-ty">Promise</tspan><tspan class="sx-p">&lt;</tspan><tspan class="sx-ty">T</tspan><tspan class="sx-p">[]&gt;</tspan></text>
+  <text class="d-member" x="452" y="182"><tspan class="sx-fn">transaction</tspan><tspan class="sx-p">&lt;</tspan><tspan class="sx-ty">T</tspan><tspan class="sx-p">&gt;(</tspan>fn<tspan class="sx-p">:</tspan> <tspan class="sx-p">(</tspan>tx<tspan class="sx-p">:</tspan> <tspan class="sx-ty">Database</tspan><tspan class="sx-p">)</tspan> <tspan class="sx-p">=&gt;</tspan></text>
+  <text class="d-member" x="466" y="198"><tspan class="sx-ty">Promise</tspan><tspan class="sx-p">&lt;</tspan><tspan class="sx-ty">T</tspan><tspan class="sx-p">&gt;):</tspan> <tspan class="sx-ty">Promise</tspan><tspan class="sx-p">&lt;</tspan><tspan class="sx-ty">T</tspan><tspan class="sx-p">&gt;</tspan></text>
+  <text class="d-member" x="452" y="214"><tspan class="sx-fn">close</tspan><tspan class="sx-p">():</tspan> <tspan class="sx-ty">Promise</tspan><tspan class="sx-p">&lt;</tspan><tspan class="sx-ty">void</tspan><tspan class="sx-p">&gt;</tspan></text>
+  <rect class="d-ext" x="500" y="340" width="140" height="50" rx="6"/>
+  <text class="d-name" x="512" y="359">PostgreSQL</text>
+  <line class="d-line" x1="500" y1="368" x2="640" y2="368"/>
+  <text class="d-member" x="512" y="383"><tspan class="sx-fn">SQL</tspan> <tspan class="sx-p">(</tspan>pg protocol<tspan class="sx-p">)</tspan></text>
+  <line class="d-line d-ret" x1="180" y1="90" x2="137" y2="66" marker-end="url(#m-st-tri)"/>
+  <line class="d-line" x1="135" y1="223" x2="178" y2="235" marker-end="url(#m-st)"/>
+  <text class="d-small" x="150" y="212">runs</text>
+  <line class="d-line" x1="410" y1="100" x2="438" y2="130" marker-end="url(#m-st)"/>
+  <line class="d-line" x1="410" y1="235" x2="438" y2="190" marker-end="url(#m-st)"/>
+  <line class="d-line" x1="570" y1="224" x2="570" y2="338" marker-end="url(#m-st)"/>
+</svg>
+<figcaption>Parts of <code>storage/</code>. Dashed boxes are outside <code>storage/</code>, shown for orientation.</figcaption>
+</figure>
+
+<p>Both the repository and the migrations reach the database only through <code>Database</code>.
+<code>main.ts</code> runs the migrations before the HTTP server starts, so the repository always finds the schema it
+expects.</p>
+
+<p><b>PgLinkRepository</b> — implements <code>LinkRepository</code> with one SQL statement per method.</p>
+<p class="member"><code>constructor(db: Database)</code> — keeps the database; all statements go through it.</p>
+<p class="member"><code>nextId(): Promise&lt;number&gt;</code> — <code>SELECT nextval('links_id_seq')</code>.</p>
+<p class="member"><code>insert(link: NewLink): Promise&lt;Link&gt;</code> — <code>INSERT … RETURNING *</code>, so
+<code>createdAt</code> and <code>clicks</code> come from the column defaults.</p>
+<p class="member"><code>findByCode(code: string): Promise&lt;Link | null&gt;</code> — a lookup on the unique index of
+<code>code</code>.</p>
+<p class="member"><code>findByOwnerAndUrl(owner: string, url: string): Promise&lt;Link | null&gt;</code> — a lookup on
+the unique index of <code>(owner, url)</code>.</p>
+<p class="member"><code>listByOwner(owner: string): Promise&lt;Link[]&gt;</code> — <code>WHERE owner = $1 ORDER BY
+created_at DESC</code>.</p>
+<p class="member"><code>addClicks(batch: Map&lt;string, number&gt;): Promise&lt;void&gt;</code> — one
+<code>UPDATE links SET clicks = clicks + v.n FROM (VALUES …) AS v(code, n) WHERE links.code = v.code</code>, so a
+flush is one round trip however many links it covers, and a single statement is all or nothing.</p>
+
+<!-- Example note: Database is small, but two parts use it, so it gets a paragraph. -->
+<p><b>Database</b> — the only owner of database connections.</p>
+<p class="member"><code>constructor(url: string)</code> — creates a <code>pg</code> connection pool of 10 connections for
+<code>url</code>.</p>
+<p class="member"><code>query&lt;T&gt;(sql: string, params: unknown[]): Promise&lt;T[]&gt;</code> — runs one statement on
+any free connection and returns its rows.</p>
+<p class="member"><code>transaction&lt;T&gt;(fn: (tx: Database) =&gt; Promise&lt;T&gt;): Promise&lt;T&gt;</code> — takes one
+connection, runs <code>BEGIN</code>, calls <code>fn</code> with a <code>Database</code> bound to that connection, and
+commits when <code>fn</code> resolves or rolls back when it throws.</p>
+<p class="member"><code>close(): Promise&lt;void&gt;</code> — waits for running queries and closes the pool.</p>
+
+<!-- Example note: migrate.ts exports a plain function instead of a class; it counts as a class with that function
+     as its interface. -->
+<p><b>migrate.ts</b> — applies the numbered SQL files in <code>src/storage/migrations/</code>. The first one creates
+the <code>links</code> table and its sequence (<a href="#solution-data">Data model</a>).</p>
+<p class="member"><code>runMigrations(db: Database): Promise&lt;void&gt;</code> — reads the SQL files, skips those
+recorded in the <code>schema_migrations</code> table, and applies the rest in order, each in its own transaction
+together with its record, so a failed migration leaves no trace.</p>
+
+<h2 id="decisions">Decisions</h2>
+<table>
+<thead><tr><th>Decision</th><th>Rejected alternatives and why</th><th>Details</th></tr></thead>
+<tbody>
+<tr><td>Codes are base 62 of a sequence number</td><td>Random codes — need a uniqueness check and retries that grow as the code space fills. Hash of the URL — short hashes collide, long ones defeat the purpose.</td><td><a href="#solution-codes">Short codes</a></td></tr>
+<tr><td>Redirect with 302</td><td>301 — browsers cache it permanently, so later clicks never reach the service and aren't counted.</td><td><a href="#solution-redirect">Redirect</a></td></tr>
+<tr><td>Count clicks in memory, write in batches</td><td>One <code>UPDATE</code> per redirect — adds a write to every redirect and makes redirects of popular links contend on one row.</td><td><a href="#solution-clicks">Click counting</a></td></tr>
+<tr><td><code>LinkRepository</code> interface owned by <code>core/</code></td><td><code>core/</code> importing <code>storage/</code> directly — the rules could no longer be tested without PostgreSQL.</td><td><a href="#building-blocks">Building blocks</a></td></tr>
+</tbody>
+</table>
+
+<h2 id="open-questions">Open questions</h2>
+<p>None — the spec is final.</p>
+
+</main>
+</body>
+</html>

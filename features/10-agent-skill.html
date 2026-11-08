@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>F10 · Agent skill &amp; guard rails</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<main>
+<nav class="crumbs"><a href="index.html">Features</a> / F10</nav>
+<h1>F10 · Agent skill &amp; guard rails <span class="status">specification pending</span></h1>
+<p class="tagline">What Claude is told, and what stops it from going around the tool.</p>
+
+<h2>Overview</h2>
+<p>The skill text and plugin hooks that make the agent use the tool correctly: the wait/re-arm loop, editing through
+<code>collab read</code>/<code>patch</code>, how to write HTML that edits well, how to handle comment events and caret hints, and hooks
+that enforce it (block Edit/Write on an open document, run <code>collab check</code>, surface missed events). Claude Code only for now.</p>
+
+<h2>What the spikes settled</h2>
+<ul>
+<li>Draft skill sections exist: the loop (01), “Editing the document” (08), “The page around the document” (09).</li>
+<li><code>collab check</code> rules (03) and the islands-vs-known-tags rule of thumb (04) are the material for a “Writing the HTML” section (N6).</li>
+<li>Caret guidance from spike 11: read the outline first; don't retype/move/rewrite the block with the user's caret — propose instead (11).</li>
+<li>Scope: Claude Code only; server, editor and collaboration don't depend on the harness (N2).</li>
+</ul>
+
+<h2>Open / to decide</h2>
+<ul>
+<li>“Writing the HTML” section doesn't exist yet (N6).</li>
+<li>Treat comment events as pointers; read related sections before editing (N11).</li>
+<li>PreToolUse hook blocking Edit/Write on an open doc, UserPromptSubmit safety net, plugin monitors — none tested in a real plugin install (risks, open items).</li>
+<li>Why lavish restricts background polling — TODO from open items.</li>
+</ul>
+
+<h2>Summary sections &amp; notes</h2>
+<div class="card"><table>
+<tbody>
+<tr><td><a href="../SUMMARY.html#s01">Spike 01 · outer loop</a></td><td>Summary section</td></tr>
+<tr><td><a href="../SUMMARY.html#s08">Spike 08 · agent edit path</a></td><td>Summary section</td></tr>
+<tr><td><a href="../SUMMARY.html#s11">Spike 11 · concurrency edges</a></td><td>Summary section</td></tr>
+<tr><td><a href="../SUMMARY.html#risks">Risks, ranked</a></td><td>Summary section</td></tr>
+<tr><td><a href="../SUMMARY.html#open">Not verified — needs a further spike</a></td><td>Summary section</td></tr>
+<tr><td><a href="../SUMMARY.html#n2">N2</a></td><td>Scope: Claude Code only</td></tr>
+<tr><td><a href="../SUMMARY.html#n6">N6</a></td><td>Agent instructions for writing HTML</td></tr>
+<tr><td><a href="../SUMMARY.html#n11">N11</a></td><td>Comment events must not narrow the agent&#x27;s view</td></tr>
+</tbody>
+</table></div>
+
+<h2>Spikes worth reading</h2>
+<div class="card"><table>
+<tbody>
+<tr><td><a href="../01-outer-loop/README.md">01-outer-loop</a></td><td><code>SKILL.md</code> — the loop</td></tr>
+<tr><td><a href="../08-agent-edit-path/README.md">08-agent-edit-path</a></td><td><code>SKILL.md</code> — editing the document</td></tr>
+<tr><td><a href="../09-shell-sidebar/README.md">09-shell-sidebar</a></td><td><code>SKILL.md</code> — the page around the document</td></tr>
+<tr><td><a href="../03-storage-format/README.md">03-storage-format</a></td><td><code>collab check</code> rules</td></tr>
+</tbody>
+</table></div>
+
+<p class="crumbs" style="margin-top:32px">← <a href="09-page-shell.html">Page shell &amp; sidebar panels</a> · <a href="11-security.html">Security &amp; sanitising</a> →</p>
+</main>
+</body>
+</html>

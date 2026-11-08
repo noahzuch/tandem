@@ -1,0 +1,364 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>F‹NN› · ‹Feature name›</title>
+<!--
+  SPEC TEMPLATE
+
+  Copy this file to features/‹NN›-‹feature-slug›.html; the spec replaces the feature page of the same name.
+  All files named in these comments (the example and the diagram parts files) live next to this template in
+  features/templates/; from a spec in features/, link them as templates/‹file›.
+  spec-example.html is the same template filled in for a small mock system (a link shortener). When a guidance
+  comment below is unclear, look at the matching section there.
+
+  Who reads a spec: a developer or an agent who knows the project but not this feature. Goal, Functional design and
+  Context must also be readable by someone who doesn't read code. Write so that this reader can build the feature
+  from the spec alone.
+
+  Rules for the whole document
+  - Reading order: every section may only rely on what came before it. If two parts truly depend on each other,
+    link instead of repeating.
+  - State each fact once. Link to other specs, SUMMARY.html, spike READMEs or the brainstorming journal instead
+    of restating them; a copy goes stale.
+  - Explain the reason behind every decision that isn't obvious.
+  - No numbers in headings. Point to a section by linking its id (<a href="#solution">).
+  - Diagrams are inline SVG using the d-* classes from the <style> below, so they work in light and dark mode
+    and stay editable in tandem. Build them from the parts files — context-, sequence-, state-, flow-,
+    data-model- and building-block-diagram-template.html. Each explains when to use that kind of diagram, how to
+    write it, and when to use each part.
+    Notation: solid arrow A → B = A uses / calls / depends on B. Dashed arrow = return value or data flow.
+    Dashed box = something outside the component being described (context only). Accent box = the subject.
+  - Keep the HTML easy to edit in tandem (rules from collab check, 03-storage-format/README.md): no HTML comments
+    inside lists or tables, no <caption> in tables, no markup inside <pre>.
+  - Delete every guidance comment and placeholder once its section is written.
+-->
+<style>
+:root {
+  --bg: #f7f6f3; --surface: #ffffff; --text: #1d1d1b; --muted: #6b6a66; --line: #e3e1db; --line-strong: #b9b6ae;
+  --accent: #3b5bdb; --accent-soft: #e7ecff; --code: #f0eee9; --note: #fff8e6;
+  --sx-fn: #3b5bdb; --sx-ty: #0f7b6c; --sx-kw: #9c36b5;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #161615; --surface: #1f1f1d; --text: #ecebe7; --muted: #a09e98; --line: #33322f; --line-strong: #5a5853;
+    --accent: #8ea6ff; --accent-soft: #232a45; --code: #2a2927; --note: #2b2618;
+    --sx-fn: #8ea6ff; --sx-ty: #4fd1b8; --sx-kw: #da77f2;
+  }
+}
+body { margin: 0; background: var(--bg); color: var(--text);
+  font: 15px/1.6 -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, sans-serif; }
+main { max-width: 860px; margin: 0 auto; padding: 32px 16px 64px; }
+a { color: var(--accent); }
+h1 { font-size: 28px; margin: 0 0 4px; letter-spacing: -0.01em; }
+h2 { font-size: 21px; margin: 48px 0 12px; padding-top: 8px; border-top: 1px solid var(--line); }
+h3 { font-size: 17px; margin: 28px 0 8px; }
+h4 { font-size: 15px; margin: 22px 0 6px; }
+.meta { color: var(--muted); margin: 0 0 24px; }
+.ph { color: var(--muted); font-style: italic; }
+.note { background: var(--note); border-radius: 8px; padding: 10px 14px; margin: 16px 0; }
+code { font-family: ui-monospace, "SF Mono", Menlo, monospace; font-size: 13px; background: var(--code); padding: 1px 4px; border-radius: 4px; }
+table { width: 100%; border-collapse: collapse; font-size: 14px; margin: 8px 0 16px; }
+th, td { text-align: left; vertical-align: top; padding: 7px 10px; border-bottom: 1px solid var(--line); }
+th { color: var(--muted); font-weight: 600; }
+figure { margin: 16px 0; }
+figcaption { color: var(--muted); font-size: 13px; margin-top: 4px; }
+svg.diagram { display: block; width: 100%; height: auto; }
+svg.diagram text { fill: var(--text); font: 13px -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, sans-serif; }
+svg.diagram text.d-small { fill: var(--muted); font-size: 11px; }
+svg.diagram text.d-title { fill: var(--muted); font-size: 12px; font-weight: 600; }
+.d-box { fill: var(--surface); stroke: var(--text); stroke-width: 1.2; }
+.d-focus { fill: var(--accent-soft); stroke: var(--accent); stroke-width: 1.6; }
+.d-ext { fill: var(--bg); stroke: var(--muted); stroke-width: 1.2; stroke-dasharray: 5 4; }
+.d-frame { fill: none; stroke: var(--line-strong); stroke-width: 1.2; }
+.d-bound { fill: none; stroke: var(--muted); stroke-width: 1.2; stroke-dasharray: 2 4; }
+.d-line { fill: none; stroke: var(--muted); stroke-width: 1.3; }
+.d-ret { stroke-dasharray: 4 3; }
+.d-life { stroke: var(--line-strong); stroke-width: 1; stroke-dasharray: 3 4; }
+.d-head { fill: var(--muted); }
+.d-solid { fill: var(--text); }
+.d-act { fill: var(--surface); stroke: var(--muted); stroke-width: 1.2; }
+.d-note { fill: var(--note); stroke: var(--line-strong); stroke-width: 1; }
+.d-hollow { fill: var(--surface); stroke: var(--muted); stroke-width: 1.2; }
+.d-lane { fill: none; stroke: var(--line-strong); stroke-width: 1; }
+svg.diagram text.d-name { font-weight: 600; }
+svg.diagram text.d-field { font: 12px ui-monospace, "SF Mono", Menlo, monospace; }
+.mockup { border: 1px solid var(--line-strong); border-radius: 10px; background: var(--surface); overflow: hidden; font-size: 14px; }
+.mock-bar { background: var(--code); color: var(--muted); font-size: 12px; padding: 6px 12px; border-bottom: 1px solid var(--line); }
+.mock-body { padding: 14px 16px; }
+.mock-btn { display: inline-block; background: var(--accent); color: var(--surface); border-radius: 6px; padding: 3px 12px; font-size: 13px; }
+.mock-btn.secondary { background: none; color: var(--accent); border: 1px solid var(--accent); }
+.mock-input { display: inline-block; min-width: 55%; border: 1px solid var(--line-strong); border-radius: 6px; padding: 3px 10px; background: var(--bg); }
+.mock-hint { color: var(--muted); font-size: 13px; }
+svg.diagram text.d-member { font: 10px ui-monospace, "SF Mono", Menlo, monospace; }
+svg.diagram .sx-fn { fill: var(--sx-fn); }
+svg.diagram .sx-ty { fill: var(--sx-ty); }
+svg.diagram .sx-kw { fill: var(--sx-kw); }
+svg.diagram .sx-p { fill: var(--muted); }
+.member { margin: 6px 0 6px 20px; }
+</style>
+</head>
+<body>
+<main>
+
+<div class="note">This is the spec template. A filled-in example: <a href="spec-example.html">Link shortener</a>.
+The guidance for each section is in HTML comments in the source. Delete this note in a real spec.</div>
+
+<!--
+  HEADER
+  Status: Draft (being written) → In review → Final (Open questions is empty).
+-->
+<h1>F‹NN› · ‹Feature name›</h1>
+<p class="meta">Status: <b>Draft</b></p>
+
+<!--
+  GOAL — the business overview of the spec.
+  - Problem: who has which problem today, and what it costs them.
+  - Outcome: what is true for them once the feature exists.
+  - Non-goals: what a reader could reasonably expect but this feature deliberately doesn't do, each with the reason.
+    This is what stops scope creep during implementation.
+-->
+<h2 id="goal">Goal</h2>
+<p class="ph">‹Problem: who struggles with what today.›</p>
+<p class="ph">‹Outcome: what is true once this feature exists.›</p>
+
+<h3 id="non-goals">Non-goals</h3>
+<ul>
+<li class="ph">‹Something a reader might expect, and why it's excluded.›</li>
+</ul>
+
+<!--
+  FUNCTIONAL DESIGN — how the goal is reached, in business words: what users see, do and get.
+  - Start with ONE paragraph describing the feature from the user's side, end to end.
+  - Then one subsection per concept or workflow (e.g. for comments: threads, replying, resolving). Each explains
+    what the user can do, how the feature reacts, the rules it follows (limits, permissions, what happens to
+    existing data) and the edge cases a user will meet (empty, invalid, conflicting, failed). Give the reason
+    for every rule that isn't obvious.
+  - No implementation: no components, protocols or storage. If a rule exists for a technical reason, state the
+    rule here and link to the Solution design subsection that explains it.
+  - Show what the user will see. Either a screenshot (e.g. from a spike: <img src="../‹NN-spike›/screenshot.png">)
+    or an HTML mockup built from the mock-* classes in <style>, inside a <figure> whose caption starts with
+    "Mockup:". Mockups are static HTML and CSS only, never scripts (tandem shows scripts as inert chips). Use
+    realistic content, and show the states that matter, not only the happy path. Say in the caption what is
+    not decided yet (e.g. exact layout or wording), so nobody mistakes a sketch for the final design.
+-->
+<h2 id="functional">Functional design</h2>
+<p class="ph">‹One paragraph: the feature from the user's side, end to end.›</p>
+
+<h3 id="functional-‹concept›">‹Concept or workflow›</h3>
+<p class="ph">‹What the user does, how the feature reacts, its rules with reasons, the edge cases.›</p>
+<figure>
+<div class="mockup">
+<div class="mock-bar">‹Page or panel›</div>
+<div class="mock-body">
+<p><span class="mock-input">‹input›</span> <span class="mock-btn">‹Action›</span> <span class="mock-btn secondary">‹Other action›</span></p>
+<p class="mock-hint">‹Feedback the user gets›</p>
+</div>
+</div>
+<figcaption>Mockup: ‹what it shows; what isn't decided yet›</figcaption>
+</figure>
+
+<!--
+  CONTEXT — what surrounds the feature and where its boundaries are.
+  - One paragraph placing the feature in the overall system.
+  - A context diagram: the feature as one accent box, every neighbour (other features, external systems, people)
+    as a box around it, arrows labelled with what flows or is called. Build it from the parts in
+    context-diagram-template.html, which also explains how to write a context diagram and when to use each part.
+  - Boundaries: per neighbour, what it provides to this feature, what it expects from it, and who owns what.
+    Name the shared interfaces (file, CLI command, event, API). If a neighbour has a spec, link it.
+  - Assumptions and constraints: facts the design relies on (load, environment, existing decisions) and limits it
+    must respect. A design that silently depends on an assumption breaks when the assumption changes.
+-->
+<h2 id="context">Context</h2>
+<p class="ph">‹Where this feature sits in the overall system.› Diagram parts and how to use them: <a href="context-diagram-template.html">context diagram template</a>.</p>
+
+<figure>
+<svg class="diagram" viewBox="0 0 720 220" role="img" aria-label="Context diagram">
+  <defs><marker id="m-t-ctx" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="d-head" d="M0,0 L10,5 L0,10 z"/></marker></defs>
+  <rect class="d-ext" x="20" y="40" width="160" height="46" rx="6"/>
+  <text x="100" y="68" text-anchor="middle">‹Neighbour A›</text>
+  <rect class="d-focus" x="280" y="40" width="180" height="46" rx="6"/>
+  <text x="370" y="68" text-anchor="middle">‹This feature›</text>
+  <rect class="d-ext" x="540" y="40" width="160" height="46" rx="6"/>
+  <text x="620" y="68" text-anchor="middle">‹External system›</text>
+  <rect class="d-ext" x="280" y="150" width="180" height="46" rx="6"/>
+  <text x="370" y="178" text-anchor="middle">‹Neighbour B›</text>
+  <line class="d-line" x1="180" y1="63" x2="278" y2="63" marker-end="url(#m-t-ctx)"/>
+  <text class="d-small" x="229" y="55" text-anchor="middle">‹calls›</text>
+  <line class="d-line" x1="460" y1="63" x2="538" y2="63" marker-end="url(#m-t-ctx)"/>
+  <text class="d-small" x="499" y="55" text-anchor="middle">‹reads›</text>
+  <line class="d-line d-ret" x1="370" y1="148" x2="370" y2="88" marker-end="url(#m-t-ctx)"/>
+  <text class="d-small" x="378" y="122">‹events›</text>
+</svg>
+<figcaption>‹What the diagram shows.›</figcaption>
+</figure>
+
+<h3 id="boundaries">Boundaries</h3>
+<table>
+<thead><tr><th>Neighbour</th><th>Provides to this feature</th><th>Expects from this feature</th><th>Owned by</th></tr></thead>
+<tbody>
+<tr><td class="ph">‹Neighbour A›</td><td class="ph">‹…›</td><td class="ph">‹…›</td><td class="ph">‹which side owns the interface›</td></tr>
+</tbody>
+</table>
+
+<h3 id="assumptions">Assumptions and constraints</h3>
+<ul>
+<li class="ph">‹Assumption or constraint, and what breaks if it stops holding.›</li>
+</ul>
+
+<!--
+  SOLUTION DESIGN — how the functional design is realised technically.
+  - Start with ONE paragraph that explains the overall technical approach end to end. A reader who stops after it
+    should know how the feature works in principle.
+  - Then one subsection per aspect (a mechanism, a flow, a data model, a protocol …). Each
+    subsection explains its aspect in full detail: how it works, why it works this way, edge cases and failure
+    behaviour. Add a diagram wherever structure or sequence is easier to see than to read
+    (sequence-, state-, flow- or data-model-diagram-template.html); a table for a single entity's fields and for
+    mappings.
+  - Talk about mechanisms here, not user-visible behaviour (Functional design) or code structure. Component names may appear when they help;
+    their structure is the job of Building blocks.
+  - Rejected alternatives are listed under Decisions; here, give the reason for the chosen way.
+-->
+<h2 id="solution">Solution design</h2>
+<p class="ph">‹One paragraph: the overall way to the goal.› Diagram parts: <a href="sequence-diagram-template.html">sequence</a>, <a href="state-diagram-template.html">state</a>, <a href="flow-diagram-template.html">flow</a>, <a href="data-model-diagram-template.html">data model</a>.</p>
+
+<h3 id="solution-‹aspect›">‹Aspect›</h3>
+<p class="ph">‹How this aspect works, why, edge cases and failures.›</p>
+<figure>
+<svg class="diagram" viewBox="0 0 720 110" role="img" aria-label="‹Aspect› flow">
+  <defs><marker id="m-t-flow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="d-head" d="M0,0 L10,5 L0,10 z"/></marker></defs>
+  <rect class="d-box" x="20" y="30" width="180" height="46" rx="6"/>
+  <text x="110" y="58" text-anchor="middle">‹Step 1›</text>
+  <rect class="d-box" x="270" y="30" width="180" height="46" rx="6"/>
+  <text x="360" y="58" text-anchor="middle">‹Step 2›</text>
+  <rect class="d-box" x="520" y="30" width="180" height="46" rx="6"/>
+  <text x="610" y="58" text-anchor="middle">‹Step 3›</text>
+  <line class="d-line" x1="200" y1="53" x2="268" y2="53" marker-end="url(#m-t-flow)"/>
+  <line class="d-line" x1="450" y1="53" x2="518" y2="53" marker-end="url(#m-t-flow)"/>
+</svg>
+<figcaption>‹What the diagram shows.›</figcaption>
+</figure>
+
+<!--
+  BUILDING BLOCKS — the architecture: components (folders, packages, classes), parent/child relations, who uses
+  whom, in which direction dependencies point, and what each class offers to the others. A top-down drill-down
+  that ends at classes: a class is the lowest building block.
+
+  Fixed structure. Every section here describes ONE component at ONE abstraction level. This top-level section
+  is the feature as a whole; each subsection drills one level down into one of its parts. Each section contains,
+  in this order:
+    - A paragraph introducing the component: its responsibility and where it lives in the code.
+    - If the component has an interface of its own (a system's endpoints, a library's API), one member paragraph
+      (class="member") per item: first the item's full signature in <code>, then what it does internally at this
+      level — which parts handle it and how. A package has no interface of its own; skip this. To show the
+      interface in a diagram, put a separate diagram before these paragraphs in which the component is a part
+      (an accent box listing its interface) and its callers are dashed neighbours; the frame of the parts
+      diagram never lists it.
+    - A diagram of its direct parts: a frame for the component, its parts inside, arrows for dependencies and
+      calls, and the interface of every class (see Interfaces below). Neighbours the parts talk to may sit
+      outside the frame as dashed boxes, for orientation only. Draw it with the parts in
+      building-block-diagram-template.html. A diagram can be omitted, if the component is not split down further, e.g. the component is already a class.
+    - A paragraph (or list) explaining the relations between the parts: who calls whom, who owns whom, and why a
+      dependency points the way it does. Can also be omitted, if not split down further.
+    - For every part in the diagram (again omitted, if not split down further), one of:
+      - a subsection that repeats this structure one level down for focusing on the part and its abstraction layer. Used for e.g. sub packages, systems, other containers, or important classes that should get their own section.
+      - a paragraph that explains the part in more detail. Used for e.g.
+        - simple classes: interfaces, DTOs, types, enums. Explains its contracts, fields and members (should match what is the interface in the diagram).
+        - a regular class not complex enough to require a complete subsection to explain. Contains at least: Its responsibility, public interface explanation.
+
+  Interfaces
+    - A class's interface is its constructor, public methods and public attributes. A module that exports plain
+      functions instead of a class (common in TypeScript, Python) counts as a class with those functions. A
+      system's interface is its endpoints (HTTP, CLI commands, events); a library's is the functions and classes
+      it exposes, described like a class's.
+    - Packages and folders have no interface in the diagram: their box shows only the name, and their
+      parts appear with their interfaces one level down.
+    - Signatures are typed: name(param: Type, …): ReturnType for methods and functions, name: Type for
+      attributes, METHOD path(body: Type): status ResponseType for endpoints.
+    - Every part box in the diagram lists its interface; a dashed neighbour lists only the items used in this
+      diagram. A part that implements an interface drawn in the same diagram (or as a neighbour) may show
+      "implements ‹Interface›" instead of repeating its methods — its member paragraphs still redefine each one.
+    - The member paragraphs repeat the signature on purpose: a reader looking up one method finds its full
+      contract and its behaviour in one place.
+
+  Constraints
+    - Stay at the section's abstraction level. Mention a lower level only when it matters here, and then link to
+      the subsection that covers it instead of explaining it.
+    - The parts inside the diagram's frame and the set "part paragraphs + subsections" are exactly the same set:
+      nothing drawn without being described, nothing described without being drawn.
+    - Every relevant component appears at some level. A component is relevant if it takes part in the
+      interworking described in Solution design and tells the reader something. It is NOT relevant if and only if
+      it is a pure helper used by a single component, an extraction of that component's logic and an
+      implementation detail. Then the using component's paragraph explains that logic and the helper isn't
+      named. Only do this for real helpers: if a part of its own makes the explanation clearer, give it one.
+      A helper used by two or more components is relevant (it is shared structure).
+    - Heading levels follow the drill-down: h2 for the feature, h3 for its parts, h4 for their parts, …
+  See spec-example.html § Building blocks for three levels done this way, including a helper that gets no part.
+-->
+<h2 id="building-blocks">Building blocks</h2>
+<p class="ph">‹The feature as a whole: its responsibility and code location (e.g. a package or folder).› Diagram parts: <a href="building-block-diagram-template.html">building block diagram</a>.</p>
+
+<p class="member"><code>‹endpoint or API item›</code> <span class="ph">— ‹only for a system or library: what it does internally at this level, which parts handle it and how.›</span></p>
+
+<figure>
+<svg class="diagram" viewBox="0 0 720 200" role="img" aria-label="Parts of ‹feature›">
+  <defs><marker id="m-t-bb" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="d-head" d="M0,0 L10,5 L0,10 z"/></marker></defs>
+  <rect class="d-frame" x="10" y="10" width="520" height="180" rx="8"/>
+  <text class="d-title" x="24" y="30">‹component› · ‹path›</text>
+  <rect class="d-box" x="40" y="70" width="200" height="72" rx="6"/>
+  <text class="d-name" x="52" y="89">‹ClassA›</text>
+  <line class="d-line" x1="40" y1="98" x2="240" y2="98"/>
+  <text class="d-member" x="52" y="114">‹method(p: Type): Return›</text>
+  <text class="d-member" x="52" y="130">‹attribute: Type›</text>
+  <rect class="d-box" x="300" y="80" width="200" height="40" rx="6"/>
+  <rect class="d-frame" x="303" y="83" width="194" height="34" rx="4"/>
+  <text class="d-name" x="312" y="105">‹package-b/›</text>
+  <rect class="d-ext" x="570" y="70" width="140" height="56" rx="6"/>
+  <text class="d-name" x="582" y="89">‹Neighbour›</text>
+  <line class="d-line" x1="570" y1="98" x2="710" y2="98"/>
+  <text class="d-member" x="582" y="114">‹used item›</text>
+  <line class="d-line" x1="240" y1="100" x2="298" y2="100" marker-end="url(#m-t-bb)"/>
+  <text class="d-small" x="269" y="92" text-anchor="middle">‹uses›</text>
+  <line class="d-line" x1="500" y1="100" x2="568" y2="100" marker-end="url(#m-t-bb)"/>
+  <text class="d-small" x="534" y="92" text-anchor="middle">‹calls›</text>
+</svg>
+<figcaption>‹What the diagram shows.›</figcaption>
+</figure>
+
+<p class="ph">‹How the parts relate: who calls whom, who owns whom, and why dependencies point the way they do.›</p>
+
+<p><b>‹ClassA›</b> <span class="ph">‹— responsibility and what the reader needs at this level.›</span></p>
+<p class="member"><code>‹method(param: Type): ReturnType›</code> <span class="ph">— ‹what it does internally.›</span></p>
+<p class="member"><code>‹attribute: Type›</code> <span class="ph">— ‹what it holds and who changes it.›</span></p>
+
+<h3 id="bb-‹package-b›">‹package-b/›</h3>
+<p class="ph">‹Same structure one level down: intro, diagram of its parts, relations, a paragraph or subsection per part.›</p>
+
+<!--
+  DECISIONS — the choices that shaped this spec, with the alternatives that were rejected.
+  One row per decision. The reason for the chosen option lives in the Solution design section it belongs to;
+  link there. Here, say why each alternative lost. If the decision was made in the brainstorming journal, link
+  the journal entry (D-n) instead of repeating its discussion.
+-->
+<h2 id="decisions">Decisions</h2>
+<table>
+<thead><tr><th>Decision</th><th>Rejected alternatives and why</th><th>Details</th></tr></thead>
+<tbody>
+<tr><td class="ph">‹What was decided›</td><td class="ph">‹Alternative — why it lost›</td><td class="ph">‹link to solution section / journal entry›</td></tr>
+</tbody>
+</table>
+
+<!--
+  OPEN QUESTIONS — anything not yet decided that affects this spec, each with what it blocks and, if known, who
+  decides. Must be empty before Status becomes Final; resolved questions move into the relevant section and, if
+  they were a choice, into Decisions.
+-->
+<h2 id="open-questions">Open questions</h2>
+<ul>
+<li class="ph">‹Question — what it blocks.›</li>
+</ul>
+
+</main>
+</body>
+</html>

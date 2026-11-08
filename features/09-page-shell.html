@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>F09 · Page shell &amp; sidebar panels</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<main>
+<nav class="crumbs"><a href="index.html">Features</a> / F09</nav>
+<h1>F09 · Page shell &amp; sidebar panels <span class="status">specification pending</span></h1>
+<p class="tagline">The configurable page around the editor — e.g. the brainstorming journal next to the spec.</p>
+
+<h2>Overview</h2>
+<p>A server-owned config (<code>.collab/&lt;doc&gt;.shell.json</code>) lists panels per side: outline, comments, activity, file
+(markdown / journal / html / text), iframe, links. Panels update live from folder watches; layout (size, collapsed, active tab) is per viewer.
+The journal panel parses the brainstorm skill's <code>decisions.md</code>, and journal ids in the spec become clickable references.</p>
+
+<h2>What the spikes settled</h2>
+<ul>
+<li>Config is shared and live, layout is personal; CLI <code>collab panel add|set|remove|open</code>, <code>collab layout</code> (09).</li>
+<li>Watch folders, not files — survives tools that replace files (09).</li>
+<li>Journal entry visible in 63–78 ms; real journals (≤202 entries) parse in ≤2.1 ms (09).</li>
+<li>HTML panels sandboxed without scripts; Markdown with raw HTML escaped (09).</li>
+</ul>
+
+<h2>Open / to decide</h2>
+<ul>
+<li>Where the shell config lives: local in <code>.collab/</code> or checked in with the doc (decisions).</li>
+<li>Brainstorm skill changes: ids for rejected approaches, machine-readable status token (decisions).</li>
+<li>References inside diagrams; file panel paths unrestricted; narrow layout (09).</li>
+</ul>
+
+<h2>Summary sections &amp; notes</h2>
+<div class="card"><table>
+<tbody>
+<tr><td><a href="../SUMMARY.html#s09">Spike 09 · shell sidebar</a></td><td>Summary section</td></tr>
+<tr><td><a href="../SUMMARY.html#decisions">Decisions for you</a></td><td>Summary section</td></tr>
+</tbody>
+</table></div>
+
+<h2>Spikes worth reading</h2>
+<div class="card"><table>
+<tbody>
+<tr><td><a href="../09-shell-sidebar/README.md">09-shell-sidebar</a></td><td>Shell, panels, journal parser, references, live updates; combined server of 04–08; skill section “The page around the document”</td></tr>
+</tbody>
+</table></div>
+
+<p class="crumbs" style="margin-top:32px">← <a href="08-comments.html">Comments</a> · <a href="10-agent-skill.html">Agent skill &amp; guard rails</a> →</p>
+</main>
+</body>
+</html>

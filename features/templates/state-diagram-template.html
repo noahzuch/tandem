@@ -1,0 +1,244 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>State diagram parts</title>
+<!--
+  STATE DIAGRAM TEMPLATE
+
+  Parts for state diagrams in a spec's Solution design (or Functional design, for states a user sees). Each part is
+  an SVG <g> with its origin at its top-left corner: copy it, set transform="translate(x,y)", change the labels.
+  The comment above each part says when to use it. The classes come from the <style> of spec-template.html.
+
+  How to write a state diagram
+  - Use one for a thing with a lifecycle whose behaviour depends on where it is in that lifecycle: a server, a
+    listener, a comment thread, a proposal. One thing per diagram; two objects' states in one diagram read as
+    one object.
+  - States are conditions, named with an adjective or participle ("running", "detached"), never with an action.
+  - Every transition is labelled "trigger [guard] / effect": the trigger is the event or command that causes it
+    (prefer the real CLI command or event name), the guard an optional condition, the effect an optional action.
+  - Every state must be reachable from the initial state, and every state must have a way out unless it is final.
+    A state without a way out is either final or a bug in the design.
+  - Show the unhappy transitions too (crash, timeout, deleted underneath): they are usually why the diagram exists.
+  - At most about eight states; group the rest into a composite state.
+  - Layout: initial state on the left, the main path left to right, exceptional states below it.
+  - Size: viewBox 720 wide. Name the arrow markers uniquely per diagram.
+  The parts and relations in this file are a starting set, not an exhaustive list. If a diagram needs a node
+  type, relation or notation that is missing here, add it: draw it with the existing d-* classes in the same
+  style, and explain it in the caption so the reader doesn't have to guess what it means.
+  An example that combines the parts is at the end of this file.
+-->
+<style>
+:root {
+  --bg: #f7f6f3; --surface: #ffffff; --text: #1d1d1b; --muted: #6b6a66; --line: #e3e1db; --line-strong: #b9b6ae;
+  --accent: #3b5bdb; --accent-soft: #e7ecff; --code: #f0eee9; --note: #fff8e6;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #161615; --surface: #1f1f1d; --text: #ecebe7; --muted: #a09e98; --line: #33322f; --line-strong: #5a5853;
+    --accent: #8ea6ff; --accent-soft: #232a45; --code: #2a2927; --note: #2b2618;
+  }
+}
+body { margin: 0; background: var(--bg); color: var(--text);
+  font: 15px/1.6 -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, sans-serif; }
+main { max-width: 860px; margin: 0 auto; padding: 32px 16px 64px; }
+a { color: var(--accent); }
+h1 { font-size: 28px; margin: 0 0 4px; letter-spacing: -0.01em; }
+h2 { font-size: 21px; margin: 48px 0 12px; padding-top: 8px; border-top: 1px solid var(--line); }
+.meta { color: var(--muted); margin: 0 0 24px; }
+code { font-family: ui-monospace, "SF Mono", Menlo, monospace; font-size: 13px; background: var(--code); padding: 1px 4px; border-radius: 4px; }
+figure { margin: 16px 0; }
+figcaption { color: var(--muted); font-size: 13px; margin-top: 4px; }
+.parts { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 16px; }
+.parts figure { margin: 0; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 10px; }
+svg.diagram { display: block; width: 100%; height: auto; }
+.parts svg.diagram { width: auto; max-width: 100%; height: auto; }
+svg.diagram text { fill: var(--text); font: 13px -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, sans-serif; }
+svg.diagram text.d-small { fill: var(--muted); font-size: 11px; }
+svg.diagram text.d-title { fill: var(--muted); font-size: 12px; font-weight: 600; }
+.d-box { fill: var(--surface); stroke: var(--text); stroke-width: 1.2; }
+.d-focus { fill: var(--accent-soft); stroke: var(--accent); stroke-width: 1.6; }
+.d-ext { fill: var(--bg); stroke: var(--muted); stroke-width: 1.2; stroke-dasharray: 5 4; }
+.d-frame { fill: none; stroke: var(--line-strong); stroke-width: 1.2; }
+.d-bound { fill: none; stroke: var(--muted); stroke-width: 1.2; stroke-dasharray: 2 4; }
+.d-line { fill: none; stroke: var(--muted); stroke-width: 1.3; }
+.d-ret { stroke-dasharray: 4 3; }
+.d-head { fill: var(--muted); }
+.d-life { stroke: var(--line-strong); stroke-width: 1; stroke-dasharray: 3 4; }
+.d-solid { fill: var(--text); }
+.d-act { fill: var(--surface); stroke: var(--muted); stroke-width: 1.2; }
+.d-note { fill: var(--note); stroke: var(--line-strong); stroke-width: 1; }
+.d-hollow { fill: var(--surface); stroke: var(--muted); stroke-width: 1.2; }
+.d-lane { fill: none; stroke: var(--line-strong); stroke-width: 1; }
+svg.diagram text.d-name { font-weight: 600; }
+svg.diagram text.d-field { font: 12px ui-monospace, "SF Mono", Menlo, monospace; }
+</style>
+</head>
+<body>
+<main>
+
+<h1>State diagram parts</h1>
+<p class="meta">Building parts for state diagrams in a spec. How to use them is explained in the comments in the
+source. Back to the <a href="spec-template.html">spec template</a>. The parts are not exhaustive; add what a diagram needs.</p>
+
+<h2 id="states">States</h2>
+<div class="parts">
+
+<!--
+  STATE — a condition the thing is in. 130 × 40, rounded. Anchors: edge centres (0,20), (130,20), (65,0), (65,40).
+-->
+<figure>
+<svg class="diagram" width="150" height="60" viewBox="0 0 150 60" role="img" aria-label="State">
+  <g transform="translate(10,10)">
+    <rect class="d-box" width="130" height="40" rx="12"/>
+    <text x="65" y="25" text-anchor="middle">‹state›</text>
+  </g>
+</svg>
+<figcaption>State</figcaption>
+</figure>
+
+<!--
+  INITIAL STATE — where the lifecycle starts. Exactly one per diagram (inside a composite state, one more for the
+  composite). Its single outgoing transition is labelled with what creates the thing.
+-->
+<figure>
+<svg class="diagram" width="40" height="40" viewBox="0 0 40 40" role="img" aria-label="Initial state">
+  <g transform="translate(13,13)">
+    <circle class="d-solid" cx="7" cy="7" r="7"/>
+  </g>
+</svg>
+<figcaption>Initial state</figcaption>
+</figure>
+
+<!--
+  FINAL STATE — the thing no longer exists (deleted, stopped for good). Leave it out if the lifecycle never ends.
+-->
+<figure>
+<svg class="diagram" width="40" height="40" viewBox="0 0 40 40" role="img" aria-label="Final state">
+  <g transform="translate(10,10)">
+    <circle class="d-box" cx="10" cy="10" r="10"/>
+    <circle class="d-solid" cx="10" cy="10" r="5.5"/>
+  </g>
+</svg>
+<figcaption>Final state</figcaption>
+</figure>
+
+<!--
+  CHOICE — one trigger leads to different states depending on a guard. Each outgoing transition carries only its
+  guard in brackets; together the guards must cover every case.
+-->
+<figure>
+<svg class="diagram" width="50" height="50" viewBox="0 0 50 50" role="img" aria-label="Choice">
+  <g transform="translate(10,10)">
+    <path class="d-box" d="M15,0 L30,15 L15,30 L0,15 Z"/>
+  </g>
+</svg>
+<figcaption>Choice</figcaption>
+</figure>
+
+<!--
+  COMPOSITE STATE — a state with sub-states, e.g. "running" containing "idle" and "listening". Use it when
+  several states share a transition (one "stop" arrow from the composite replaces one per sub-state), or to keep
+  the top level under about eight states. Resize freely; title top-left.
+-->
+<figure>
+<svg class="diagram" width="240" height="110" viewBox="0 0 240 110" role="img" aria-label="Composite state">
+  <g transform="translate(10,10)">
+    <rect class="d-frame" width="220" height="90" rx="14"/>
+    <text class="d-title" x="14" y="20">‹composite state›</text>
+    <rect class="d-box" x="45" y="36" width="130" height="36" rx="12"/>
+    <text x="110" y="59" text-anchor="middle">‹sub-state›</text>
+  </g>
+</svg>
+<figcaption>Composite state</figcaption>
+</figure>
+
+<!--
+  NOTE — a fact needed to read the diagram that isn't a state or transition, e.g. "persisted across restarts".
+-->
+<figure>
+<svg class="diagram" width="200" height="70" viewBox="0 0 200 70" role="img" aria-label="Note">
+  <g transform="translate(10,10)">
+    <rect class="d-note" width="180" height="46" rx="4"/>
+    <text class="d-small" x="90" y="20" text-anchor="middle">‹note line one›</text>
+    <text class="d-small" x="90" y="36" text-anchor="middle">‹note line two›</text>
+  </g>
+</svg>
+<figcaption>Note</figcaption>
+</figure>
+
+</div>
+
+<h2 id="transitions">Transitions</h2>
+
+<!--
+  TRANSITIONS — solid arrows from state to state, label "trigger [guard] / effect" (class d-small) above the
+  middle. Two transitions between the same pair of states run in parallel, 14 px apart, labels on the outer sides.
+  A self transition (the trigger is handled but the state stays the same) is a loop over the top of the state;
+  draw it only when the reader would otherwise wonder whether the trigger changes the state.
+-->
+<figure>
+<svg class="diagram" viewBox="0 0 720 120" role="img" aria-label="Transitions">
+  <defs><marker id="m-st" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="d-head" d="M0,0 L10,5 L0,10 z"/></marker></defs>
+  <line class="d-line" x1="20" y1="60" x2="300" y2="60" marker-end="url(#m-st)"/>
+  <text class="d-small" x="160" y="52" text-anchor="middle">‹trigger› [‹guard›] / ‹effect›</text>
+  <text x="160" y="95" text-anchor="middle">Transition</text>
+  <rect class="d-box" x="470" y="50" width="130" height="40" rx="12"/>
+  <text x="535" y="75" text-anchor="middle">‹state›</text>
+  <path class="d-line" d="M515,50 C515,18 555,18 555,48" marker-end="url(#m-st)"/>
+  <text class="d-small" x="535" y="16" text-anchor="middle">‹trigger›</text>
+  <text x="535" y="112" text-anchor="middle">Self transition</text>
+</svg>
+<figcaption>A transition and a self transition.</figcaption>
+</figure>
+
+<h2 id="example">Example</h2>
+
+<!--
+  EXAMPLE — the parts combined: the lifecycle of a comment thread. Illustration of the parts only, not the design
+  of the comments feature. Note the choice right after creation, the pair of opposite transitions between open and
+  resolved, and the exceptional state (detached) below the main path.
+-->
+<figure>
+<svg class="diagram" viewBox="0 0 720 270" role="img" aria-label="Example state diagram">
+  <defs><marker id="m-stx" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="d-head" d="M0,0 L10,5 L0,10 z"/></marker></defs>
+  <circle class="d-solid" cx="24" cy="80" r="7"/>
+  <path class="d-box" d="M90,65 L105,80 L90,95 L75,80 Z"/>
+  <rect class="d-box" x="150" y="60" width="130" height="40" rx="12"/>
+  <text x="215" y="85" text-anchor="middle">draft</text>
+  <rect class="d-box" x="360" y="60" width="130" height="40" rx="12"/>
+  <text x="425" y="85" text-anchor="middle">open</text>
+  <rect class="d-box" x="570" y="60" width="130" height="40" rx="12"/>
+  <text x="635" y="85" text-anchor="middle">resolved</text>
+  <rect class="d-box" x="385" y="210" width="130" height="40" rx="12"/>
+  <text x="450" y="235" text-anchor="middle">detached</text>
+  <circle class="d-box" cx="650" cy="230" r="10"/>
+  <circle class="d-solid" cx="650" cy="230" r="5.5"/>
+  <line class="d-line" x1="31" y1="80" x2="73" y2="80" marker-end="url(#m-stx)"/>
+  <text class="d-small" x="52" y="72" text-anchor="middle">add</text>
+  <line class="d-line" x1="105" y1="80" x2="148" y2="80" marker-end="url(#m-stx)"/>
+  <text class="d-small" x="127" y="72" text-anchor="middle">[review]</text>
+  <path class="d-line" d="M90,95 V150 H400 V102" marker-end="url(#m-stx)"/>
+  <text class="d-small" x="245" y="144" text-anchor="middle">[Ask agent] / send now</text>
+  <line class="d-line" x1="280" y1="80" x2="358" y2="80" marker-end="url(#m-stx)"/>
+  <text class="d-small" x="319" y="72" text-anchor="middle">Send to agent</text>
+  <line class="d-line" x1="490" y1="73" x2="568" y2="73" marker-end="url(#m-stx)"/>
+  <text class="d-small" x="529" y="66" text-anchor="middle">resolve</text>
+  <line class="d-line" x1="570" y1="87" x2="492" y2="87" marker-end="url(#m-stx)"/>
+  <text class="d-small" x="531" y="101" text-anchor="middle">reopen</text>
+  <path class="d-line" d="M405,60 C405,28 445,28 445,58" marker-end="url(#m-stx)"/>
+  <text class="d-small" x="425" y="25" text-anchor="middle">reply</text>
+  <line class="d-line" x1="450" y1="102" x2="450" y2="208" marker-end="url(#m-stx)"/>
+  <text class="d-small" x="458" y="178">anchored text deleted</text>
+  <line class="d-line" x1="515" y1="230" x2="638" y2="230" marker-end="url(#m-stx)"/>
+  <text class="d-small" x="576" y="222" text-anchor="middle">delete thread</text>
+  <line class="d-line" x1="640" y1="100" x2="650" y2="218" marker-end="url(#m-stx)"/>
+  <text class="d-small" x="636" y="160" text-anchor="end">delete thread</text>
+</svg>
+<figcaption>Example: the lifecycle of a comment thread. Illustration only.</figcaption>
+</figure>
+
+</main>
+</body>
+</html>
