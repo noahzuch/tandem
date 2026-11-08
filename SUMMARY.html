@@ -1421,7 +1421,7 @@ EOF
 <p class="muted">Collected while reviewing. Each note says where the idea came from and what the spikes already show about it.</p>
 
 <div class="card">
-<p><b>N1 · Keep agent edits highlighted until the user accepts them</b> <span class="muted">— Noah, 2026-10-25</span></p>
+<p id="n1"><b>N1 · Keep agent edits highlighted until the user accepts them</b> <span class="muted">— Noah, 2026-10-25</span></p>
 <p>A highlight of what the agent edited would be really helpful. The highlight could be accepted via an accept button shown on hover/focus.</p>
 <p class="ev">What exists so far:</p>
 <ul class="ev">
@@ -1434,7 +1434,7 @@ EOF
 </div>
 
 <div class="card">
-<p><b>N2 · Scope: Claude Code only for now</b> <span class="muted">— Noah, 2026-10-25</span></p>
+<p id="n2"><b>N2 · Scope: Claude Code only for now</b> <span class="muted">— Noah, 2026-10-25</span></p>
 <p>We focus on Claude Code only for now. Other coding tools could be introduced later.</p>
 <p class="ev">What this means for the spike results:</p>
 <ul class="ev">
@@ -1445,7 +1445,7 @@ EOF
 </div>
 
 <div class="card">
-<p><b>N3 · Fixed styles for standard blocks</b> <span class="muted">— Noah, 2026-10-25</span></p>
+<p id="n3"><b>N3 · Fixed styles for standard blocks</b> <span class="muted">— Noah, 2026-10-25</span></p>
 <p>We have to think about fixed styles. Either the tool allows any and all styles for standard blocks (quotes, callouts, tables …), or it allows only one specific style per block type, or this is configurable. If we allow any, a block added manually would only ever get the standard style we configured.</p>
 <p class="ev">What the spikes do today (spike 04/05):</p>
 <ul class="ev">
@@ -1456,7 +1456,7 @@ EOF
 </div>
 
 <div class="card">
-<p><b>N4 · Look deeper into the merge logic</b> <span class="muted">— Noah, 2026-10-25</span></p>
+<p id="n4"><b>N4 · Look deeper into the merge logic</b> <span class="muted">— Noah, 2026-10-25</span></p>
 <p>Look deeper into the merge logic: what exactly does it do that Yjs / Tiptap's collaboration feature cannot do by itself right now?</p>
 <p class="ev">Starting points from the spikes:</p>
 <ul class="ev">
@@ -1468,7 +1468,7 @@ EOF
 </div>
 
 <div class="card">
-<p><b>N5 · Table controls as handles instead of a bubble menu</b> <span class="muted">— Noah, 2026-10-25</span></p>
+<p id="n5"><b>N5 · Table controls as handles instead of a bubble menu</b> <span class="muted">— Noah, 2026-10-25</span></p>
 <p>It might make more sense to put the table controls on the table itself as handles — e.g. on the left/right of rows, above columns, and between columns/rows to insert — instead of a bubble menu. This needs thinking and a design.</p>
 <p class="ev">What the spikes show so far:</p>
 <ul class="ev">
@@ -1478,7 +1478,7 @@ EOF
 </div>
 
 <div class="card">
-<p><b>N6 · Agent instructions: how to write HTML that works well with collab</b> <span class="muted">— Noah, 2026-10-25</span></p>
+<p id="n6"><b>N6 · Agent instructions: how to write HTML that works well with collab</b> <span class="muted">— Noah, 2026-10-25</span></p>
 <p>Add an agent instruction that lists how best to write HTML files so they work with collab.</p>
 <p class="ev">Material the spikes already produced for it:</p>
 <ul class="ev">
@@ -1490,7 +1490,7 @@ EOF
 </div>
 
 <div class="card">
-<p><b>N7 · Do we have sanitizing?</b> <span class="muted">— Noah, 2026-10-25</span></p>
+<p id="n7"><b>N7 · Do we have sanitizing?</b> <span class="muted">— Noah, 2026-10-25</span></p>
 <p><b>Partly — for display, not for storage, and not with a real sanitizer.</b> What exists:</p>
 <ul class="ev">
 <li><b>Islands, when shown in the editor (spike 04):</b> event handlers (<code>on…</code>) and <code>javascript:</code>/<code>vbscript:</code>/<code>data:text/html</code> URLs removed, iframes sandboxed, no autoplay, form controls disabled, <code>meta/base/link</code> neutralised, links don't navigate; <code>&lt;script&gt;</code>, <code>&lt;style&gt;</code>, <code>&lt;noscript&gt;</code> islands are shown as a chip and never run. This only rewrites attributes for display; the stored source stays as written.</li>
@@ -1502,7 +1502,7 @@ EOF
 </div>
 
 <div class="card">
-<p><b>N8 · Audit every extension for attributes it writes into the HTML; vendor or write small ones ourselves</b> <span class="muted">— Noah, 2026-10-25</span></p>
+<p id="n8"><b>N8 · Audit every extension for attributes it writes into the HTML; vendor or write small ones ourselves</b> <span class="muted">— Noah, 2026-10-25</span></p>
 <p>General rule from the <code>data-toc-id</code> case: check every existing extension for attributes it writes into the HTML. For small extensions it may be better to vendor them or write our own.</p>
 <p class="ev">What the spikes show:</p>
 <ul class="ev">
@@ -1513,7 +1513,7 @@ EOF
 </div>
 
 <div class="card">
-<p><b>N9 · Checkboxes as elements inside normal list items, instead of a separate task list</b> <span class="muted">— Noah, 2026-10-25</span></p>
+<p id="n9"><b>N9 · Checkboxes as elements inside normal list items, instead of a separate task list</b> <span class="muted">— Noah, 2026-10-25</span></p>
 <p>Maybe reconsider the task-list extension and simply allow a checkbox as an element. The list extension could then automatically add one to the next list item when the previous item starts with a checkbox.</p>
 <p class="ev">What the spikes show:</p>
 <ul class="ev">
@@ -1524,7 +1524,7 @@ EOF
 </div>
 
 <div class="card">
-<p><b>N10 · Look into a character-level diff for agent edits</b> <span class="muted">— Noah, 2026-10-25</span></p>
+<p id="n10"><b>N10 · Look into a character-level diff for agent edits</b> <span class="muted">— Noah, 2026-10-25</span></p>
 <p>Investigate turning agent edits into character-level changes inside changed text blocks, instead of one replace per changed text run.</p>
 <p class="ev">Why, from the spikes:</p>
 <ul class="ev">
@@ -1536,7 +1536,7 @@ EOF
 </div>
 
 <div class="card">
-<p><b>N11 · Comment events must not narrow the agent's view</b> <span class="muted">— Noah, 2026-10-25</span></p>
+<p id="n11"><b>N11 · Comment events must not narrow the agent's view</b> <span class="muted">— Noah, 2026-10-25</span></p>
 <p>Giving the agent "everything it needs to act without reading the file" is problematic: a change at one location often implies edits elsewhere (a renamed term, a changed decision that affects other sections). An event scoped to one block discourages that.</p>
 <p class="ev">What the spikes show and what follows:</p>
 <ul class="ev">
@@ -1547,7 +1547,7 @@ EOF
 </div>
 
 <div class="card">
-<p><b>N12 · The comment feature needs a thorough design phase for the final version</b> <span class="muted">— Noah, 2026-10-25</span></p>
+<p id="n12"><b>N12 · The comment feature needs a thorough design phase for the final version</b> <span class="muted">— Noah, 2026-10-25</span></p>
 <p>Spike 06 proved the mechanics (anchoring, persistence, events, UI); its data model is a spike artefact and must be designed properly.</p>
 <p class="ev">Inconsistencies already visible in the spike's schemas:</p>
 <ul class="ev">
@@ -1559,7 +1559,7 @@ EOF
 </div>
 
 <div class="card">
-<p><b>N13 · Should undo/redo include the agent's changes?</b> <span class="muted">— Noah, 2026-10-25</span></p>
+<p id="n13"><b>N13 · Should undo/redo include the agent's changes?</b> <span class="muted">— Noah, 2026-10-25</span></p>
 <p>Question raised in review. Current answer: <b>not on the normal ⌘Z, but as a separate, explicit "undo agent change"</b>.</p>
 <ul class="ev">
 <li><b>Today:</b> ⌘Z undoes only your own changes (spike 07: the undo manager tracks only local edits); agent edits — including proposals you accept, which the server applies — are never on your undo stack (spike 08).</li>
@@ -1569,7 +1569,7 @@ EOF
 </div>
 
 <div class="card">
-<p><b>N14 · Multiple human users in parallel — in scope?</b> <span class="muted">— Noah, 2026-10-25</span></p>
+<p id="n14"><b>N14 · Multiple human users in parallel — in scope?</b> <span class="muted">— Noah, 2026-10-25</span></p>
 <p>Question raised in review: Noah and Pat appear as example users — do we allow several people to work in parallel? <b>Priority: low. The target for now is one user + the agent.</b></p>
 <ul class="ev">
 <li><b>Technically yes, tested locally:</b> spike 07 ran two browser sessions (<code>?user=Noah</code>, <code>?user=Pat</code>) plus the agent; each saw the others' carets and presence, and the document converged. Comments, presence and the change highlight are multi-user (the highlight's attribution is approximate with several peers).</li>
@@ -1580,7 +1580,7 @@ EOF
 </div>
 
 <div class="card">
-<p><b>N15 · A gutter beside the text</b> <span class="muted">— Noah, 2026-10-25</span></p>
+<p id="n15"><b>N15 · A gutter beside the text</b> <span class="muted">— Noah, 2026-10-25</span></p>
 <p>Think about a gutter next to the text that marks where there are comments and unchecked Claude edits.</p>
 <ul class="ev">
 <li><b>Related, from the spikes:</b> spike 05 listed (not built) "a gutter bar or tinted background on blocks the agent touched … plus an 'N agent changes' chip that steps through them", next to the drag handle; and outline badges per section (open comments, agent edits). Spike 06 built the comment margin with cards aligned to their anchors; spike 07 built the short-lived change flash by block id.</li>
@@ -1589,7 +1589,7 @@ EOF
 </div>
 
 <div class="card">
-<p><b>N16 · Comments not anchored to anything</b> <span class="muted">— Noah, 2026-10-25</span></p>
+<p id="n16"><b>N16 · Comments not anchored to anything</b> <span class="muted">— Noah, 2026-10-25</span></p>
 <p>It should be possible to write a comment that isn't attached to any text — about the document as a whole.</p>
 <ul class="ev">
 <li><b>Today (spike 06):</b> a thread targets text, a block or an island. The data model already allows <code>anchor: null</code>, but the UI treats that as "Detached" (anchored text was deleted). Comments on journal entries (spike 09) are only events, not stored threads.</li>
@@ -1598,7 +1598,7 @@ EOF
 </div>
 
 <div class="card">
-<p><b>N17 · Comment threads track the changes made because of them</b> <span class="muted">— Noah, 2026-10-25</span></p>
+<p id="n17"><b>N17 · Comment threads track the changes made because of them</b> <span class="muted">— Noah, 2026-10-25</span></p>
 <p>Edits made because of a comment can reach far beyond the commented range (see N11). Instead of only anchoring the comment, the thread could track every change made for it, so it's easy to see what was changed in response.</p>
 <ul class="ev">
 <li><b>Building blocks that exist:</b> the server already knows what each agent edit touched — the merge returns the changed range as relative positions and the touched blocks (spike 08 <code>mergeInto</code>); spike 07 identifies changed blocks by block id; spike 08's <code>--propose</code> already stores a change on a thread.</li>
@@ -1607,7 +1607,7 @@ EOF
 </div>
 
 <div class="card">
-<p><b>N18 · Is caret avoidance needed if the merge works? Make it precise instead of per block</b> <span class="muted">— Noah, 2026-10-25</span></p>
+<p id="n18"><b>N18 · Is caret avoidance needed if the merge works? Make it precise instead of per block</b> <span class="muted">— Noah, 2026-10-25</span></p>
 <p>Question raised in review: if the agent can safely edit in the same section or even paragraph, why add <code>--avoid-caret</code>?</p>
 <ul class="ev">
 <li><b>Two different goals:</b> fresh data + a merge that loses no characters (always), and caret awareness (extra). Spike 08's default is "apply and warn"; <code>--avoid-caret</code> / <code>--propose</code> are opt-in.</li>
@@ -1618,7 +1618,7 @@ EOF
 </div>
 
 <div class="card">
-<p><b>N19 · Rethink "avoid caret": maybe only a hint for the agent</b> <span class="muted">— Noah, 2026-10-25</span></p>
+<p id="n19"><b>N19 · Rethink "avoid caret": maybe only a hint for the agent</b> <span class="muted">— Noah, 2026-10-25</span></p>
 <p>If the measurements show that nothing is lost in the cases where the agent edits near or at the user's caret — garbled is "fine-ish" — then avoiding the caret should not block or refuse, but only be a hint to the agent. In essence this is the same problem as two humans working on a collaborative document.</p>
 <ul class="ev">
 <li><b>Result (<a href="#s11">spike 11</a>):</b> with the merge fixes (word-level diff + caret records) only the cases that are identical with two humans remain, so a hint is enough; rewriting the words being typed should still be a proposal; until the fixes land, the span rule <code>--avoid-jump</code> blocks exactly the bad cases.</li>
@@ -1628,7 +1628,7 @@ EOF
 </div>
 
 <div class="card">
-<p><b>N20 · Remove the island lock</b> <span class="muted">— Noah, 2026-10-25</span></p>
+<p id="n20"><b>N20 · Remove the island lock</b> <span class="muted">— Noah, 2026-10-25</span></p>
 <p>See whether the island soft lock can be removed entirely instead of moving it into the server.</p>
 <ul class="ev">
 <li><b>Why it exists:</b> an island is one value, so concurrent edits are last-writer-wins (spike 07 S4b). Both <code>patch</code> and <code>set-island-text</code> overwrite the whole island.</li>
@@ -1638,7 +1638,7 @@ EOF
 </div>
 
 <div class="card">
-<p><b>N21 · Simple rule instead of <code>data-edit</code>: islands for a fixed list, everything else a free generic node</b> <span class="muted">— Noah, 2026-10-25</span></p>
+<p id="n21"><b>N21 · Simple rule instead of <code>data-edit</code>: islands for a fixed list, everything else a free generic node</b> <span class="muted">— Noah, 2026-10-25</span></p>
 <p>Do we need the attribute at all? Preferred: SVG, embeds, forms, scripts → islands; everything else → generic node.</p>
 <ul class="ev">
 <li><b>Fits spike 10's evidence:</b> the island list is exactly spike 10's fixed list (SVG, MathML, canvas, embeds, forms/controls, scripts/styles, comments, captioned tables). The only thing dropped is the <b>locked</b> mode — and with it <code>data-edit</code> and the selector rules.</li>
@@ -1648,7 +1648,7 @@ EOF
 </div>
 
 <div class="card">
-<p><b>N22 · The intent (question, change request …) belongs to each thread entry, not to the comment</b> <span class="muted">— Noah, 2026-10-25</span></p>
+<p id="n22"><b>N22 · The intent (question, change request …) belongs to each thread entry, not to the comment</b> <span class="muted">— Noah, 2026-10-25</span></p>
 <p>Whether something is a question or a request should be part of the individual thread entry, not the comment object: a question can turn into a change request during the conversation.</p>
 <ul class="ev">
 <li><b>Today (spike 06):</b> <code>kind</code> (comment | question | change | approve) is a field of the thread, set once in the composer; messages have no kind. Replies are sent to the agent as <code>annotation_reply</code> carrying the <i>thread's</i> kind, and the kind is what tells the agent whether to answer, edit, or do nothing.</li>
@@ -1657,7 +1657,7 @@ EOF
 </div>
 
 <div class="card">
-<p><b>N23 · Fewer injected <code>&lt;p&gt;</code>: a textblock that saves as bare text</b> <span class="muted">— Noah, 2026-10-25</span></p>
+<p id="n23"><b>N23 · Fewer injected <code>&lt;p&gt;</code>: a textblock that saves as bare text</b> <span class="muted">— Noah, 2026-10-25</span></p>
 <p>Reduce the cases where a <code>&lt;p&gt;</code> is injected into a node that holds block content. Idea: a textblock node that is written to the HTML as just its text, without an element around it.</p>
 <ul class="ev">
 <li><b>Where it happens today</b> (spikes 02, 04, 10): text directly in a callout or blockquote, list items (<code>&lt;li&gt;text&lt;/li&gt;</code> → <code>&lt;li&gt;&lt;p&gt;text&lt;/p&gt;&lt;/li&gt;</code>), table cells (<code>&lt;td&gt;&lt;p&gt;…</code>), and the image in <code>figure &gt; img + figcaption</code>. ProseMirror needs a textblock to hold inline content inside a block container, so the parser creates one.</li>
@@ -1667,7 +1667,7 @@ EOF
 </div>
 
 <div class="card">
-<p><b>N24 · Prior art: "Tandem" (bloknayrb/tandem) — and the name question</b> <span class="muted">— found 2026-10-25 while checking names</span></p>
+<p id="n24"><b>N24 · Prior art: "Tandem" (bloknayrb/tandem) — and the name question</b> <span class="muted">— found 2026-10-25 while checking names</span></p>
 <ul class="ev">
 <li><b>What it is</b> (from its GitHub README, not tested): a collaborative editor where a user and an AI work on the same document at once; the AI's comments and suggested rewrites appear as cards beside the text with word-level diffs, which the user accepts, dismisses or replies to. Tiptap/ProseMirror, Yjs + Hocuspocus, an MCP server that Claude Code connects to; a Tauri 2 / Svelte 5 desktop app. Edits Markdown/plain text; HTML opens read-only. Business Source License 1.1 (free during beta, paid $45 one-time from v1.0). Published as a Claude Code plugin (<code>/plugin install tandem@tandem-editor</code>), 26 stars, ~4,000 commits, close to v1.0.</li>
 <li><b>Same core architecture as ours</b> (Tiptap + Yjs + Hocuspocus + live server + suggestion cards). Our differences: HTML with islands / generic nodes instead of Markdown; a CLI with <code>patch</code> and a 3-way merge instead of MCP; browser instead of a desktop app; open source instead of source-available.</li>
