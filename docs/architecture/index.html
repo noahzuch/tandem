@@ -277,7 +277,7 @@ Claude Code fixes this; F10 should check again before relying on bare commands i
 once on the pinned Node 24 and once on the latest Node LTS (26, named explicitly), to notice early when a newer Node breaks something.
 <code>pr-title.yml</code> checks the pull-request title against Conventional Commits. <code>agent-tests.yml</code> runs
 the agent tests by hand or on the maintainer's <code>agent-tests</code> label. The required checks for
-<code>main</code> are <code>check (pinned)</code>, <code>check (26)</code> and <code>pr-title</code>; merges are squash only
+<code>main</code> are <code>check (pinned)</code>, <code>check (lts)</code> and <code>pr-title</code>; merges are squash only
 (<a href="../adr/0006-setup.md">ADR 0006</a>).</p>
 
 <h2 id="deployment">Deployment</h2>
