@@ -4,78 +4,898 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>F00 · Project setup</title>
-<link rel="stylesheet" href="style.css">
+<style>
+:root {
+  --bg: #f7f6f3; --surface: #ffffff; --text: #1d1d1b; --muted: #6b6a66; --line: #e3e1db; --line-strong: #b9b6ae;
+  --accent: #3b5bdb; --accent-soft: #e7ecff; --code: #f0eee9; --note: #fff8e6;
+  --sx-fn: #3b5bdb; --sx-ty: #0f7b6c; --sx-kw: #9c36b5;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #161615; --surface: #1f1f1d; --text: #ecebe7; --muted: #a09e98; --line: #33322f; --line-strong: #5a5853;
+    --accent: #8ea6ff; --accent-soft: #232a45; --code: #2a2927; --note: #2b2618;
+    --sx-fn: #8ea6ff; --sx-ty: #4fd1b8; --sx-kw: #da77f2;
+  }
+}
+body { margin: 0; background: var(--bg); color: var(--text);
+  font: 15px/1.6 -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, sans-serif; }
+main { max-width: 860px; margin: 0 auto; padding: 32px 16px 64px; }
+a { color: var(--accent); }
+h1 { font-size: 28px; margin: 0 0 4px; letter-spacing: -0.01em; }
+h2 { font-size: 21px; margin: 48px 0 12px; padding-top: 8px; border-top: 1px solid var(--line); }
+h3 { font-size: 17px; margin: 28px 0 8px; }
+h4 { font-size: 15px; margin: 22px 0 6px; }
+.meta { color: var(--muted); margin: 0 0 24px; }
+.ph { color: var(--muted); font-style: italic; }
+.note { background: var(--note); border-radius: 8px; padding: 10px 14px; margin: 16px 0; }
+code { font-family: ui-monospace, "SF Mono", Menlo, monospace; font-size: 13px; background: var(--code); padding: 1px 4px; border-radius: 4px; }
+table { width: 100%; border-collapse: collapse; font-size: 14px; margin: 8px 0 16px; }
+th, td { text-align: left; vertical-align: top; padding: 7px 10px; border-bottom: 1px solid var(--line); }
+th { color: var(--muted); font-weight: 600; }
+figure { margin: 16px 0; }
+figcaption { color: var(--muted); font-size: 13px; margin-top: 4px; }
+svg.diagram { display: block; width: 100%; height: auto; }
+svg.diagram text { fill: var(--text); font: 13px -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, sans-serif; }
+svg.diagram text.d-small { fill: var(--muted); font-size: 11px; }
+svg.diagram text.d-title { fill: var(--muted); font-size: 12px; font-weight: 600; }
+.d-box { fill: var(--surface); stroke: var(--text); stroke-width: 1.2; }
+.d-focus { fill: var(--accent-soft); stroke: var(--accent); stroke-width: 1.6; }
+.d-ext { fill: var(--bg); stroke: var(--muted); stroke-width: 1.2; stroke-dasharray: 5 4; }
+.d-frame { fill: none; stroke: var(--line-strong); stroke-width: 1.2; }
+.d-bound { fill: none; stroke: var(--muted); stroke-width: 1.2; stroke-dasharray: 2 4; }
+.d-line { fill: none; stroke: var(--muted); stroke-width: 1.3; }
+.d-ret { stroke-dasharray: 4 3; }
+.d-life { stroke: var(--line-strong); stroke-width: 1; stroke-dasharray: 3 4; }
+.d-head { fill: var(--muted); }
+.d-solid { fill: var(--text); }
+.d-act { fill: var(--surface); stroke: var(--muted); stroke-width: 1.2; }
+.d-note { fill: var(--note); stroke: var(--line-strong); stroke-width: 1; }
+.d-hollow { fill: var(--surface); stroke: var(--muted); stroke-width: 1.2; }
+.d-lane { fill: none; stroke: var(--line-strong); stroke-width: 1; }
+svg.diagram text.d-name { font-weight: 600; }
+svg.diagram text.d-field { font: 12px ui-monospace, "SF Mono", Menlo, monospace; }
+.mockup { border: 1px solid var(--line-strong); border-radius: 10px; background: var(--surface); overflow: hidden; font-size: 14px; }
+.mock-bar { background: var(--code); color: var(--muted); font-size: 12px; padding: 6px 12px; border-bottom: 1px solid var(--line); }
+.mock-body { padding: 14px 16px; }
+.mock-btn { display: inline-block; background: var(--accent); color: var(--surface); border-radius: 6px; padding: 3px 12px; font-size: 13px; }
+.mock-btn.secondary { background: none; color: var(--accent); border: 1px solid var(--accent); }
+.mock-input { display: inline-block; min-width: 55%; border: 1px solid var(--line-strong); border-radius: 6px; padding: 3px 10px; background: var(--bg); }
+.mock-hint { color: var(--muted); font-size: 13px; }
+svg.diagram text.d-member { font: 10px ui-monospace, "SF Mono", Menlo, monospace; }
+svg.diagram .sx-fn { fill: var(--sx-fn); }
+svg.diagram .sx-ty { fill: var(--sx-ty); }
+svg.diagram .sx-kw { fill: var(--sx-kw); }
+svg.diagram .sx-p { fill: var(--muted); }
+.member { margin: 6px 0 6px 20px; }
+</style>
 </head>
 <body>
 <main>
-<nav class="crumbs"><a href="index.html">Features</a> / F00</nav>
-<h1>F00 · Project setup <span class="status">specification pending</span></h1>
-<p class="tagline">The decisions that are expensive to change later: stack, tooling, repo layout, CI and the Claude plugin skeleton.</p>
 
-<h2>Overview</h2>
-<p>Sets up the repository every other feature is built in. Only covers choices that shape code from the first commit or are
-costly to migrate: languages and runtime, frameworks and core libraries, repo/package layout, linting, formatting, type checking,
-test layers, CI on GitHub and the Claude Code plugin skeleton. Everything that only matters for a public release (dependency
-automation, README, changelog, publishing) is in <a href="12-publishing.html">F12 · Publishing</a>.</p>
+<h1>F00 · Project setup</h1>
+<p class="meta">Status: <b>In review</b></p>
 
-<h2>Already fixed by you or the spikes</h2>
+<h2 id="goal">Goal</h2>
+<p>Before the first product feature can be built, there is no project to build it in. There is no agreed repository
+layout, toolchain, CI, plugin structure or documentation convention. Every later feature, mostly written by coding
+agents, would otherwise make its own choices, and packaging or plugin problems would surface in the middle of
+designing something else.</p>
+<p>With this feature, tandem has a public repository in which a developer or an agent clones, runs one command, and
+has formatting, linting, type checking, architecture checks, unit tests with coverage and end-to-end tests working
+the same way on their machine and in GitHub Actions. <code>main</code> only changes through green, squash-merged pull
+requests. The Claude Code plugin loads straight from the working tree. A small throwaway placeholder gives every tool
+and every CI job real code to run against. A README, a contribution guide, an architecture document and the first
+architecture decision records explain how to work in the repository. The next feature starts by deleting the
+placeholder, not by setting anything up.</p>
+
+<h3 id="non-goals">Non-goals</h3>
 <ul>
-<li>Vue 3 + <code>@tiptap/vue-3</code>, Vite, TypeScript (CONTEXT.md).</li>
-<li>Open source only: MIT Tiptap packages, Yjs, self-hosted Hocuspocus — no Tiptap Cloud/Pro (CONTEXT.md, 05 · Free vs. paid).</li>
-<li>Playwright (headless Chromium) for verification (CONTEXT.md).</li>
-<li>Separate repo and plugin, not part of nessy (decisions · Packaging) — this repo.</li>
-<li>Claude Code only for now (N2); the CLI ships as a plain binary in the plugin's <code>bin/</code> (08).</li>
+<li>How tandem works inside: no session loop, storage, editor or collaboration. The placeholder only exercises the
+tooling and is deleted by the next feature (<a href="#solution-placeholder">Placeholder</a>).</li>
+<li>Reusing spike code. The spikes were throwaway experiments; their code is never copied in as the design.</li>
+<li>Releases and the public face: versioning, the release workflow, publishing to a marketplace, dependency update
+automation, the public README with screenshots, a changelog, issue templates, code of conduct and
+<code>SECURITY.md</code> belong to <a href="12-publishing.html">F12 · Publishing</a>. F00 only makes the plugin loadable
+from the local working tree and prepares the layout the release will use.</li>
+<li>The product name. “tandem” is a working name that is already taken by a similar project; F00 keeps it cheap to
+change (<a href="#functional-renaming">Renaming</a>) but does not choose a new one.</li>
+<li>Coding tools other than Claude Code.</li>
+<li>Product security. The placeholder server listens on 127.0.0.1 without authentication; endpoint protection and
+sanitising are <a href="11-security.html">F11 · Security &amp; sanitising</a>. F00 only sets a security baseline for
+CI (<a href="#solution-ci">CI on GitHub</a>).</li>
+<li>Windows. Only macOS and Linux are supported for now; the plugin's entry point is a bash script.</li>
+<li>UI component library, CSS approach and theming: decided by <a href="04-editor-ui.html">F04 · Editor UI</a>, which
+designs the editor they are for.</li>
+<li>CI on macOS: decided by <a href="01-session-loop.html">F01 · Session loop</a>, where process handling and file
+watching first make the platforms differ.</li>
+<li>Proving that the heavy runtime libraries (Hocuspocus, Yjs, an HTML parser) bundle into the plugin and that server
+and browser share one pinned <code>@tiptap/y-tiptap</code>: required of the features that introduce them
+(<a href="02-document-storage.html">F02</a>, <a href="05-live-collaboration.html">F05</a>).</li>
 </ul>
 
-<h2>Decide early</h2>
-<div class="card"><table>
-<thead><tr><th>Area</th><th>Spikes used</th><th>To decide</th></tr></thead>
-<tbody>
-<tr><td>Runtime &amp; package manager</td><td>Node 24, npm 11; each spike its own <code>package.json</code></td><td>Node version floor for plugin users; npm vs. pnpm; one workspace (monorepo) vs. single package</td></tr>
-<tr><td>Repo layout</td><td>Copied code between spike folders; server, editor, CLI and agent demo side by side</td><td>Packages/folders for server, editor app, CLI, shared schema (comments, events, shell config); where specs and ADRs live for the SDLC flow</td></tr>
-<tr><td>Language settings</td><td>TypeScript 5.9, server via <code>tsx</code>, <code>vue-tsc</code> typecheck</td><td>Strictness flags, ESM only, how server/CLI are built for shipping (bundle vs. <code>tsx</code> at runtime)</td></tr>
-<tr><td>Core libraries &amp; pinning</td><td>Tiptap 3.32, <code>@tiptap/y-tiptap</code> 3.0.10, Yjs 13.6, Hocuspocus 4.7; jsdom/parse5 for headless parsing; <code>ws</code>/crossws</td><td>Exact pins for the collaboration stack — server and browser must use the same y-tiptap (risks); one HTML parser; HTTP/WebSocket server framework</td></tr>
-<tr><td>UI framework &amp; styling</td><td>No component library; own CSS, <code>lucide-vue-next</code> icons, <code>@floating-ui/dom</code> for popovers (05)</td><td>Own components vs. a (headless) component library; CSS approach (plain CSS + variables vs. utility CSS); theming incl. dark mode</td></tr>
-<tr><td>Linting</td><td>None — spikes only typechecked</td><td>ESLint (typescript-eslint, eslint-plugin-vue) vs. Biome; rule set; lint in CI from day one</td></tr>
-<tr><td>Formatting</td><td>Prettier 3 already a runtime dependency (formats the saved HTML, 02)</td><td>Prettier for the code too (one tool) vs. another formatter; editor/IDE config, format check in CI</td></tr>
-<tr><td>Testing layers</td><td>One <code>npm run verify</code> per spike (Playwright, minutes long); fidelity scripts</td><td>Unit runner (e.g. Vitest, fits Vite); which spike verify suites become contract tests for the merge engine (risks); split fast vs. slow suites</td></tr>
-<tr><td>CI &amp; GitHub</td><td>None</td><td>GitHub Actions: lint + typecheck + unit on every push, Playwright e2e with cached Chromium; branch protection on <code>main</code>; commit convention (affects the F12 changelog)</td></tr>
-<tr><td>Claude plugin skeleton</td><td>Draft <code>SKILL.md</code> sections (01, 08, 09); hooks proposed, not built</td><td>Plugin/marketplace manifests, skill/hook/bin layout, local dev loop (install from the working tree), how bundled JS reaches users (built output in the repo vs. a release branch)</td></tr>
-<tr><td>Licence</td><td>—</td><td>Licence for the project (deps are MIT)</td></tr>
-</tbody>
-</table></div>
+<h2 id="functional">Functional design</h2>
+<p>Someone — the maintainer, a coding agent, later other contributors — clones the public repository, installs mise
+and runs <code>mise install</code>. That one command installs the pinned Node, pnpm and Claude Code versions, the
+project's dependencies, the browser for end-to-end tests and the git hooks. They work on a branch. Every commit
+formats and lints the staged files and type-checks the whole project if code changed; every push runs the unit
+tests. <code>mise run check</code> runs everything locally, and <code>mise run claude-dev</code> starts Claude Code
+with the plugin under development loaded. They open a pull request whose title follows Conventional Commits. CI
+shows lint and type errors on the changed lines, enforces test coverage on every touched file and runs the
+end-to-end test; only when everything is green can the pull request be squash-merged into <code>main</code>.
+Agents never push and never skip hooks unless the user explicitly asks.</p>
 
-<h2>Not decided here</h2>
+<h3 id="functional-setup">Setting up</h3>
+<p>The only thing to install by hand is mise; to try the plugin interactively, the developer also needs their own
+Claude Code. Everything else is pinned by the repository, including the Claude Code version the checks use.
+<code>mise install</code> installs the tools and then runs <code>mise run setup</code>, which installs the
+dependencies, downloads the Playwright browser and installs the git hooks. mise only runs
+that step when it actually installed a tool, so after a pull that changed dependencies the developer runs
+<code>mise run setup</code> by hand (<a href="#solution-toolchain">Toolchain and versions</a>). The repository works
+on macOS and Linux.</p>
+
+<h3 id="functional-tasks">Tasks</h3>
+<p>Every tool that checks or formats code has one task for local use and one for CI. The local task fixes what the
+tool can fix and prints its findings; the <code>-ci</code> variant never changes files, fails on any finding and
+writes a report CI can show. Three aggregate tasks combine them: <code>check-fast</code> runs everything except the
+tests, <code>check</code> runs everything including unit and end-to-end tests, and <code>check-ci</code> is exactly
+what CI runs. Tools that neither check nor format get one plain task each.</p>
+<table>
+<thead><tr><th>Task</th><th>What it does locally</th><th>The <code>-ci</code> variant</th></tr></thead>
+<tbody>
+<tr><td><code>format</code></td><td>Formats code and config files (not <code>docs/</code>)</td><td>Fails if anything is unformatted</td></tr>
+<tr><td><code>lint</code></td><td>Lints TypeScript and Vue, applying safe fixes</td><td>Fails on findings, annotates the lines</td></tr>
+<tr><td><code>typecheck</code></td><td>Type-checks the whole project</td><td>Same, errors annotated on the lines</td></tr>
+<tr><td><code>arch</code></td><td>Checks the import rules between the source folders</td><td>Same, with a report</td></tr>
+<tr><td><code>plugin-validate</code></td><td>Validates the plugin and marketplace manifests strictly</td><td>Same, machine-readable output</td></tr>
+<tr><td><code>test</code></td><td>Runs the unit tests</td><td>Runs them with coverage and enforces the coverage rule</td></tr>
+<tr><td><code>e2e</code></td><td>Runs the end-to-end tests against the built plugin</td><td>Same, with a report and traces on failure</td></tr>
+<tr><td><code>test-agent</code></td><td>Runs the agent tests (costs model usage)</td><td>Same, with threshold and cost ceiling</td></tr>
+<tr><td><code>setup</code>, <code>build</code>, <code>serve</code>, <code>claude-dev</code></td><td>Install, build, run the placeholder, start Claude Code with the plugin</td><td>—</td></tr>
+</tbody>
+</table>
+<p>There is no development server with live reload yet; F04 adds one when the editor needs it.</p>
+<figure>
+<div class="mockup">
+<div class="mock-bar">Terminal · mise run check-fast</div>
+<div class="mock-body">
+<p><code>[format]</code> 14 files checked, 1 fixed<br>
+<code>[lint]</code> 0 problems<br>
+<code>[typecheck]</code> 0 errors<br>
+<code>[arch]</code> no dependency violations (31 modules)<br>
+<code>[plugin-validate]</code> Validation passed</p>
+<p class="mock-hint">Finished in 6.8 s</p>
+</div>
+</div>
+<figcaption>Mockup: the aggregate task locally, after one file was reformatted. Exact output lines come from the tools and are not designed here.</figcaption>
+</figure>
+
+<h3 id="functional-hooks">Git hooks</h3>
+<p>Hooks give feedback before anything leaves the machine; CI is still the gate. Each hook only runs a tool when a
+file that can change the tool's result is involved — but a tool whose result depends on the whole code base runs on
+the whole code base, because an edit to one file can break another.</p>
 <ul>
-<li>Product name — “tandem” is a working name (N24); manifests and package names depend on it.</li>
-<li>Shared samples and fidelity checks: move <code>samples/</code> into the test fixtures or keep them as the spike record.</li>
+<li><b>Before each commit</b>, for the staged files: format and lint with fixes, and the fixed files are staged
+again. If any TypeScript or Vue file or a TypeScript config is staged, the whole project is type-checked. If anything
+under <code>src/</code> is staged, the import rules are checked; if anything under <code>plugin/</code> is staged, the
+plugin is validated.</li>
+<li><b>Before each push</b>: the unit tests, if the pushed commits change anything under <code>src/</code>. Coverage
+is not measured in hooks.</li>
+<li>End-to-end tests and agent tests never run in hooks.</li>
+</ul>
+<p>The hooks have a time budget: about 10 seconds before a commit and about 60 seconds before a push, for a normal
+change. If they get slower, the tools they run are made faster, or the slowness is accepted; type checking is never
+moved out of the commit hook, because cross-file type errors are cheapest to fix right away. When a hook fails, the
+cause is fixed; nobody skips hooks, and agents only do so when the user explicitly asks.</p>
+
+<h3 id="functional-changes">Changing main</h3>
+<p>Every change reaches <code>main</code> through a pull request; nobody pushes to <code>main</code> directly, and
+force-pushes are blocked. A pull request can be merged only when all required checks are green, and only as a squash
+merge, so one pull request becomes exactly one commit on <code>main</code> whose message is the pull request's
+title. The title must follow Conventional Commits (<code>feat(cli): add serve command</code>,
+<code>fix(server): …</code>); a check fails the pull request otherwise. Commits inside a branch are free-form. While
+the maintainer works alone with agents, no approvals are required — GitHub does not let anyone approve their own pull
+request, so a required approval would block every merge; required reviewers can be added later without changing
+anything else. Agents work on branches, never push unless the user asks, and the user merges.</p>
+
+<h3 id="functional-ci">What CI reports</h3>
+<p>CI runs on every pull request to <code>main</code> and on every push to <code>main</code>. Findings appear where
+they are: lint and type errors as annotations on the changed lines of the pull request, a short summary per run
+(which checks passed, test counts, failures), and, when an end-to-end test fails, the Playwright report with trace and
+screenshot attached to the run.</p>
+<p>Coverage is a gate: every file a pull request adds or changes must reach at least 80 % line coverage and 80 % branch
+coverage on its own, measured from unit tests. A new file without any test counts as 0 % and fails the gate. Changing
+one line in an old, poorly tested file means raising that whole file to 80 %. On the push to <code>main</code> after
+a merge, the same rule is applied to the files of that one squash commit.</p>
+<p>Agent tests run only on demand: started by hand or by a pull-request label only the maintainer can set. They are
+not a required check, because they cost model usage and their results can vary between runs. Pull requests from forks
+never get the Claude credential they need.</p>
+
+<h3 id="functional-skeleton">Trying the skeleton</h3>
+<p>The placeholder is the smallest thing that touches every tool: <code>tandem hello</code> prints a greeting, and
+<code>tandem serve</code> starts a local server, prints its URL and shows a page that fetches the greeting from the
+server. The server picks any free port unless <code>--port</code> is given, so several runs never collide; the URL is
+read from the output. Ctrl+C stops it. Every placeholder file starts with
+<code>PLACEHOLDER (F00) — delete in the next feature</code>, and the next feature deletes all of them before it builds
+anything.</p>
+<figure>
+<div class="mockup">
+<div class="mock-bar">Terminal · tandem serve</div>
+<div class="mock-body">
+<p><code>$ tandem serve</code><br><code>tandem placeholder running at http://127.0.0.1:53817/</code></p>
+</div>
+</div>
+<figcaption>Mockup: starting the placeholder server. The port differs on every run.</figcaption>
+</figure>
+<figure>
+<div class="mockup">
+<div class="mock-bar">http://127.0.0.1:53817/</div>
+<div class="mock-body">
+<p><b>Hello, world — from tandem</b></p>
+<p class="mock-hint">Placeholder page (F00). Deleted by the next feature.</p>
+</div>
+</div>
+<figcaption>Mockup: the placeholder page. Wording is illustrative; the page has no design and no styling beyond a few plain CSS lines.</figcaption>
+</figure>
+<p>If Node is missing or older than 24, <code>tandem</code> stops before doing anything and says which version is
+needed and where to get it (<a href="#solution-build">Build and bundling</a>).</p>
+
+<h3 id="functional-plugin">Developing the plugin</h3>
+<p><code>mise run claude-dev</code> builds everything and starts Claude Code with the plugin loaded from the working
+tree for that one session; nothing is installed and nothing is written to the user's settings. After a change, the
+developer rebuilds and runs <code>/reload-plugins</code> in that session. Normal Claude Code sessions in this
+repository — including the agents writing tandem — never have the development plugin active, so its hooks cannot get
+in the way of working on the project itself. The placeholder plugin has a stub skill that tells Claude to run
+<code>tandem hello</code>, one hook that does nothing but leave a trace, and one agent test checking that Claude runs
+<code>tandem hello</code> when asked to greet using the plugin.</p>
+
+<h3 id="functional-docs">Documentation and conventions</h3>
+<p>All documentation lives in <code>docs/</code>, and <code>docs/</code> is never touched by the code formatter: its
+HTML files are tandem documents whose formatting tandem itself will own.</p>
+<ul>
+<li><code>docs/features/</code> — the feature pages, which become specs. A spec is written once and not updated after
+its feature is implemented; it must be self-contained. It may mention a spike as a soft reference — the branch
+<code>spike</code> and a path, as text — but never relies on a spike or on the spike summary to explain its content.</li>
+<li><code>docs/architecture/</code> — the architecture document, describing the system as it is now. Every feature's
+implementation updates it.</li>
+<li><code>docs/adr/</code> — architecture decision records: the history of decisions that bind later features, and
+why they were made.</li>
+</ul>
+<p>Brainstorming journals are working notes that keep decisions from getting lost while a spec is being designed.
+They sit next to the feature page while it is written and are never committed; every accepted decision ends up in the
+spec, and the binding ones in an ADR. <code>CONTRIBUTING.md</code> holds the rules for everyone, human or agent;
+<code>CLAUDE.md</code> only says what tandem is, points to <code>CONTRIBUTING.md</code> and adds the rules for agents.
+A feature is done only when its living documents are updated; a pull-request template with three checkboxes — tests,
+living documents, ADR if a binding decision changed — makes that visible on every pull request.</p>
+
+<h3 id="functional-renaming">Renaming</h3>
+<p>The working name appears in code exactly once, as a constant, and otherwise only where a file name or a manifest
+cannot refer to a constant: the CLI entry point <code>plugin/bin/tandem</code>, the skill folder, the plugin and
+marketplace manifests and <code>package.json</code>. The README lists these places as the renaming steps, so a rename
+is a short, mechanical pull request.</p>
+
+<h2 id="context">Context</h2>
+<p>F00 is the foundation the other features are built on; it has no role in tandem at runtime, and its placeholder is
+deleted by the next feature. Around it are the people and agents working in the repository, the tools and services
+the setup relies on, the machine of a future plugin user, and the later features that inherit the setup.</p>
+
+<figure>
+<svg class="diagram" viewBox="0 0 720 370" role="img" aria-label="Context diagram of F00 Project setup">
+  <defs><marker id="m-ctx" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="d-head" d="M0,0 L10,5 L0,10 z"/></marker></defs>
+  <g transform="translate(20,20)">
+    <circle class="d-box" cx="40" cy="14" r="12"/>
+    <path class="d-box" d="M14,62 C14,42 26,32 40,32 C54,32 66,42 66,62 Z"/>
+    <text x="40" y="82" text-anchor="middle">Developer</text>
+  </g>
+  <g transform="translate(20,170)">
+    <rect class="d-box" x="27" y="6" width="26" height="22" rx="6"/>
+    <circle class="d-head" cx="35" cy="17" r="2.2"/>
+    <circle class="d-head" cx="45" cy="17" r="2.2"/>
+    <rect class="d-box" x="16" y="34" width="48" height="28" rx="8"/>
+    <text x="40" y="82" text-anchor="middle">Coding agent</text>
+  </g>
+  <g transform="translate(250,130)">
+    <rect class="d-focus" width="180" height="46" rx="6"/>
+    <text x="90" y="28" text-anchor="middle">Project setup</text>
+  </g>
+  <g transform="translate(530,20)">
+    <rect class="d-ext" width="170" height="46" rx="6"/>
+    <text x="85" y="28" text-anchor="middle">GitHub</text>
+  </g>
+  <g transform="translate(530,100)">
+    <rect class="d-ext" width="170" height="46" rx="6"/>
+    <text x="85" y="28" text-anchor="middle">mise · npm registry</text>
+  </g>
+  <g transform="translate(530,180)">
+    <rect class="d-ext" width="170" height="46" rx="6"/>
+    <text x="85" y="28" text-anchor="middle">Claude Code</text>
+  </g>
+  <g transform="translate(530,260)">
+    <rect class="d-ext" width="170" height="46" rx="6"/>
+    <text x="85" y="28" text-anchor="middle">Plugin user's machine</text>
+  </g>
+  <g transform="translate(255,300)">
+    <rect class="d-box" width="170" height="46" rx="6"/>
+    <text x="85" y="21" text-anchor="middle">Later features</text>
+    <text class="d-small" x="85" y="37" text-anchor="middle">F01–F12</text>
+  </g>
+  <line class="d-line" x1="88" y1="67" x2="248" y2="145" marker-end="url(#m-ctx)"/>
+  <text class="d-small" x="172" y="95" text-anchor="middle">tasks, hooks, PRs</text>
+  <line class="d-line" x1="84" y1="218" x2="248" y2="162" marker-end="url(#m-ctx)"/>
+  <text class="d-small" x="160" y="208" text-anchor="middle">same rules</text>
+  <line class="d-line" x1="430" y1="140" x2="528" y2="48" marker-end="url(#m-ctx)"/>
+  <text class="d-small" x="470" y="82" text-anchor="middle">workflows, rules</text>
+  <line class="d-line" x1="430" y1="148" x2="528" y2="124" marker-end="url(#m-ctx)"/>
+  <text class="d-small" x="478" y="128" text-anchor="middle">pinned tools</text>
+  <line class="d-line" x1="430" y1="160" x2="528" y2="200" marker-end="url(#m-ctx)"/>
+  <text class="d-small" x="474" y="196" text-anchor="middle">validate, eval</text>
+  <line class="d-line d-ret" x1="420" y1="176" x2="528" y2="278" marker-end="url(#m-ctx)"/>
+  <text class="d-small" x="470" y="266" text-anchor="end">bundled plugin</text>
+  <line class="d-line" x1="340" y1="298" x2="340" y2="178" marker-end="url(#m-ctx)"/>
+  <text class="d-small" x="332" y="250" text-anchor="end">builds on, replaces placeholder</text>
+</svg>
+<figcaption>F00 and its neighbours. Dashed boxes are not built by tandem. The bundled plugin reaches users only once F12 releases it.</figcaption>
+</figure>
+
+<h3 id="boundaries">Boundaries</h3>
+<table>
+<thead><tr><th>Neighbour</th><th>Provides to F00</th><th>Expects from F00</th><th>Owned by</th></tr></thead>
+<tbody>
+<tr><td>Developers and coding agents</td><td>Changes through pull requests</td><td>One-command setup, per-tool tasks, git hooks, <code>CONTRIBUTING.md</code>, <code>CLAUDE.md</code></td><td>F00</td></tr>
+<tr><td>GitHub</td><td>Repository, Actions, rulesets on <code>main</code>, secret scanning, Dependabot alerts</td><td>Workflows, the pull-request title check, repository settings as specified</td><td>Platform: GitHub. Configuration: F00</td></tr>
+<tr><td>mise and the npm registry (through pnpm)</td><td>Exact versions of Node, pnpm and Claude Code; packages</td><td><code>mise.toml</code>, the lockfile, exact version pins</td><td>F00</td></tr>
+<tr><td>Claude Code</td><td><code>--plugin-dir</code>, <code>claude plugin validate</code>, <code>claude plugin eval</code>, plugin loading</td><td>Valid plugin manifest in <code>plugin/</code>, valid marketplace manifest at the repository root</td><td>Claude Code: Anthropic. Manifests: F00</td></tr>
+<tr><td>Plugin user's machine</td><td>Node ≥ 24, bash, Claude Code</td><td>A plugin that needs no install step; a clear message if Node is missing or too old</td><td>F00, until F12 releases it</td></tr>
+<tr><td><a href="01-session-loop.html">F01 · Session loop</a></td><td>—</td><td>Deletes the placeholder first; decides the process model and whether CI also runs on macOS</td><td>F01</td></tr>
+<tr><td><a href="02-document-storage.html">F02</a>, <a href="05-live-collaboration.html">F05</a></td><td>—</td><td>Prove that their heavy runtime libraries bundle into the plugin and that server and browser use one pinned <code>@tiptap/y-tiptap</code></td><td>F02, F05</td></tr>
+<tr><td><a href="04-editor-ui.html">F04 · Editor UI</a></td><td>—</td><td>Chooses component library, CSS approach and theming, and adds the tooling they need (and a live-reload task)</td><td>F04</td></tr>
+<tr><td><a href="10-agent-skill.html">F10 · Agent skill &amp; guard rails</a></td><td>—</td><td>Replaces the stub skill and hook with the real ones; adds a minimum-Claude-Code check if a feature needs one</td><td>F10</td></tr>
+<tr><td><a href="11-security.html">F11 · Security &amp; sanitising</a></td><td>—</td><td>Product security beyond the CI baseline</td><td>F11</td></tr>
+<tr><td><a href="12-publishing.html">F12 · Publishing</a></td><td>—</td><td>Release workflow and branch, versioning, dependency update automation with the collaboration stack upgraded as a group, public README, changelog, remaining community files</td><td>F12</td></tr>
+<tr><td>Every later feature</td><td>—</td><td>Builds on the layout, tooling and CI; updates the architecture document and ADRs as part of being done</td><td>Each feature</td></tr>
+</tbody>
+</table>
+
+<h3 id="assumptions">Assumptions and constraints</h3>
+<ul>
+<li>Developers and plugin users run macOS or Linux. A Windows user would need a different entry point and CI job.</li>
+<li>Plugin users have Node 24 or newer. Node 24 is supported until about April 2028; the minimum must be raised before
+then.</li>
+<li>The repository is public. On GitHub's free plan, rulesets and protected branches only work for public
+repositories, and Actions minutes are free only there; a private repository would need a paid plan for the gate to
+hold.</li>
+<li>TypeScript stays on version 6 until <code>vue-tsc</code> and <code>typescript-eslint</code> support TypeScript 7,
+whose native compiler has no stable programmatic API yet. The move is a separate change.</li>
+<li>Claude Code's plugin features behave as documented in November 2026: <code>--plugin-dir</code> loads a plugin
+in place, files in a plugin's <code>bin/</code> are on the Bash tool's PATH while the plugin is enabled,
+<code>claude plugin validate</code> and <code>claude plugin eval</code> work as described, and a marketplace entry can
+point at a subfolder of a branch. Points not yet verified are listed under <a href="#solution-proofs">Must prove
+first</a>.</li>
+<li>The next feature deletes the placeholder before building its own code; nothing may depend on it.</li>
 </ul>
 
-<h2>Summary sections &amp; notes</h2>
-<div class="card"><table>
-<tbody>
-<tr><td><a href="../../SUMMARY.html#decisions">Decisions for you</a></td><td>Summary section</td></tr>
-<tr><td><a href="../../SUMMARY.html#risks">Risks, ranked</a></td><td>Summary section</td></tr>
-<tr><td><a href="../../SUMMARY.html#s02">Spike 02 · tiptap wysiwyg</a></td><td>Summary section</td></tr>
-<tr><td><a href="../../SUMMARY.html#s05">Spike 05 · editor ui</a></td><td>Summary section</td></tr>
-<tr><td><a href="../../SUMMARY.html#n2">N2</a></td><td>Scope: Claude Code only</td></tr>
-<tr><td><a href="../../SUMMARY.html#n8">N8</a></td><td>Audit extensions for attributes they write</td></tr>
-<tr><td><a href="../../SUMMARY.html#n24">N24</a></td><td>Prior art: bloknayrb/tandem</td></tr>
-<tr><td><a href="../../CONTEXT.md">CONTEXT.md</a></td><td>Your stack decisions and spike conventions</td></tr>
-</tbody>
-</table></div>
+<h2 id="solution">Solution design</h2>
+<p>The repository is one pnpm package with four source folders whose import rules are enforced by
+dependency-cruiser. mise pins every tool and is the task runner; lefthook runs the checks as git hooks; GitHub Actions
+runs the <code>-ci</code> variants of the same tasks. Vite builds all three outputs — the page, the server and the
+CLI — into the plugin folder, with every runtime dependency bundled in, so the plugin runs without an install step.
+The plugin lives in its own subfolder, which is what a user will install; the marketplace manifest at the repository
+root points at that folder on a release branch that F12 will produce. A placeholder in each source folder exercises
+the whole chain, and a short list of points must be proven before anything else is built on top.</p>
 
-<h2>Spikes worth reading</h2>
-<div class="card"><table>
-<tbody>
-<tr><td><a href="../../09-shell-sidebar/README.md">09-shell-sidebar</a></td><td>Most complete <code>package.json</code>, server + CLI + editor in one folder</td></tr>
-<tr><td><a href="../../05-editor-ui/README.md">05-editor-ui</a></td><td>UI dependencies: icons, floating-ui, command registry</td></tr>
-<tr><td><a href="../../08-agent-edit-path/README.md">08-agent-edit-path</a></td><td>Why the CLI must be a plain binary; <code>SKILL.md</code> draft</td></tr>
-<tr><td><a href="../../01-outer-loop/README.md">01-outer-loop</a></td><td>Server-per-document process model, <code>SKILL.md</code> draft</td></tr>
-</tbody>
-</table></div>
+<h3 id="solution-layout">Repository layout</h3>
+<pre>.claude-plugin/marketplace.json     marketplace entry → plugin/ on branch release
+plugin/                             plugin root: what a user installs
+  .claude-plugin/plugin.json
+  bin/tandem                        bash entry point (executable bit committed)
+  skills/tandem/SKILL.md
+  hooks/hooks.json
+  evals/                            agent-test cases; evals/results/ ignored
+  dist/                             build output; ignored on main
+src/cli/  src/server/  src/web/  src/shared/
+e2e/                                end-to-end tests
+docs/features/  docs/architecture/  docs/adr/
+.github/workflows/  .github/pull_request_template.md
+mise.toml  lefthook.yml  package.json  pnpm-lock.yaml  pnpm-workspace.yaml
+vite.config.ts  vitest.config.ts  playwright.config.ts
+eslint.config.js  .prettierrc.json  .prettierignore  .dependency-cruiser.cjs
+tsconfig.json  tsconfig.node.json  tsconfig.web.json  .editorconfig  .gitignore
+README.md  CONTRIBUTING.md  CLAUDE.md  LICENSE</pre>
+<p>The plugin is a subfolder rather than the repository root for two reasons: a user then installs only the plugin,
+not the sources, documents and tests; and Claude Code warns about a <code>CLAUDE.md</code> at a plugin root, which
+would fail the strict validation. Unit tests sit next to the code they test as <code>‹name›.test.ts</code>; end-to-end
+tests test the whole plugin and therefore live in <code>e2e/</code>. <code>.gitignore</code> also ignores the
+brainstorming journals (<code>docs/features/*-decisions.md</code>), <code>plugin/dist/</code> and
+<code>plugin/evals/results/</code>.</p>
 
-<p class="crumbs" style="margin-top:32px"><a href="01-session-loop.html">Session loop</a> →</p>
+<h3 id="solution-toolchain">Toolchain and versions</h3>
+<p><code>mise.toml</code> pins exact versions of Node 24, pnpm and Claude Code (the npm package
+<code>@anthropic-ai/claude-code</code>), so every machine and CI run uses the same tools for building and checking; the Claude Code version is
+the one the README names as “tested with”. Its <code>postinstall</code> hook runs the <code>setup</code> task:
+<code>pnpm install --frozen-lockfile</code>, <code>playwright install chromium</code> and <code>lefthook install</code>. lefthook itself is a development dependency
+with an exact version, like every other npm tool.
+mise only fires <code>postinstall</code> when it installed a tool, hence the separate task for later runs.</p>
+<p>pnpm is configured to save exact versions (<code>save-exact</code>) and keeps its minimum release age, which
+refuses package versions published less than about a day ago.
+pnpm's strict <code>node_modules</code> only lets code import packages it declares, so nothing undeclared can slip into
+the bundle. Every direct dependency has an exact version; the lockfile is committed; CI installs with a frozen
+lockfile and fails if <code>package.json</code> and the lockfile disagree. Exact versions make every upgrade a visible
+change and satisfy the requirement that server and browser use exactly the same collaboration packages once F05
+brings them in.</p>
+<p>TypeScript 6, ESM only (<code>"type": "module"</code>). On top of <code>strict</code>:
+<code>noUncheckedIndexedAccess</code> (an indexed value may be undefined), <code>noImplicitOverride</code>,
+<code>noImplicitReturns</code>, <code>noFallthroughCasesInSwitch</code>, <code>verbatimModuleSyntax</code> (type
+imports are explicit) and <code>erasableSyntaxOnly</code> (no <code>enum</code>, <code>namespace</code> or parameter
+properties, so Node 24 can run scripts directly). <code>exactOptionalPropertyTypes</code> and
+<code>noPropertyAccessFromIndexSignature</code> are left out: they fight third-party and Vue prop types for little
+gain. Three configs share the base: <code>tsconfig.node.json</code> for <code>src/cli</code>, <code>src/server</code>
+and the tool configs, <code>tsconfig.web.json</code> (DOM types) for <code>src/web</code>, and both include
+<code>src/shared</code>, which therefore may use neither Node nor DOM APIs.</p>
+<p>Linting is ESLint with typescript-eslint's type-aware recommended rules and eslint-plugin-vue's recommended rules;
+eslint-config-prettier turns off rules that formatting covers. Formatting is Prettier for TypeScript, Vue, CSS, JSON,
+YAML and Markdown outside <code>docs/</code>. <code>.editorconfig</code> sets two-space indentation, LF line endings,
+UTF-8 and a final newline for every editor; no editor-specific settings are committed.</p>
+
+<h3 id="solution-build">Build and bundling</h3>
+<p>One <code>vite.config.ts</code> produces three outputs into <code>plugin/dist/</code>: the page
+(<code>dist/web/</code>, built for the browser from <code>src/web</code>), the server (<code>dist/server.js</code>) and
+the CLI (<code>dist/cli.js</code>), both built for Node 24 from <code>src/server</code> and <code>src/cli</code> with
+every dependency inlined (Vite's server build with nothing left external). One bundler for all three means shared code
+and libraries are resolved the same way in browser and Node — which matters as soon as a library such as Yjs must
+exist only once on each side. An installed plugin therefore needs no <code>node_modules</code> and no install step:
+nothing can fail on the user's machine, and it runs exactly the versions that were tested. Claude Code could install
+dependencies from a lockfile next to a plugin's <code>package.json</code>, but that would add an install step on every
+user's machine; <code>plugin/</code> has no <code>package.json</code>, so it never does.</p>
+<p><code>plugin/bin/tandem</code> is a bash script that runs under the bash 3.2 shipped with macOS. It looks for
+<code>node</code>, checks that its major version is at least 24 and, if not, prints which version is needed and exits
+non-zero; otherwise it runs <code>node "$(dirname "$0")/../dist/cli.js" "$@"</code>. A plain executable is needed
+because Claude Code's permission guard was seen refusing input piped into <code>npm run</code> while accepting the same
+input piped into a plain command (spike 08, branch <code>spike</code>, <code>08-agent-edit-path/README.md</code>).</p>
+
+<h3 id="solution-placeholder">Placeholder</h3>
+<p><code>tandem serve</code> starts <code>dist/server.js</code> as a child process in the foreground, passes the port
+on, lets its output through, forwards Ctrl+C and termination signals and exits with the child's exit code. The server
+listens on 127.0.0.1, port 0 by default so the operating system picks a free port, prints the URL once it is listening,
+serves the built page and answers <code>GET /api/hello</code>. It uses Node's built-in <code>http</code> module;
+choosing a server framework, like the process model as a whole, is F01's decision. The separate server bundle keeps
+the three-output build real; how and when the server process is started for real is designed in F01.</p>
+<p>The placeholder exists only so that every tool has something to run on. Each file starts with
+<code>PLACEHOLDER (F00) — delete in the next feature</code>, the architecture document marks the placeholder as such,
+and nothing outside the placeholder may import it.</p>
+
+<h3 id="solution-architecture-rules">Import rules</h3>
+<p><code>.dependency-cruiser.cjs</code> enforces:</p>
+<ul>
+<li><code>src/cli</code>, <code>src/server</code> and <code>src/web</code> may import <code>src/shared</code>, but not
+each other. The CLI starts the built server as a process instead of importing its code.</li>
+<li><code>src/shared</code> imports nothing from the other folders and no Node built-ins, because it also runs in the
+browser.</li>
+<li><code>src/web</code> imports no Node built-ins.</li>
+<li>No circular imports, no orphan modules, and no development-only dependency in code that ships.</li>
+</ul>
+<p>These rules run before each commit when <code>src/</code> changes and in CI. Several of them catch bundling mistakes
+early — a Node module pulled into the page, a test helper pulled into the plugin.</p>
+
+<h3 id="solution-hooks">Git hooks</h3>
+<p><code>lefthook.yml</code> defines the hooks of <a href="#functional-hooks">Git hooks</a>. Each command has a
+<code>glob</code>; lefthook skips the command when no staged (pre-commit) or pushed (pre-push) file matches. A command
+that receives <code>{staged_files}</code> runs on those files only — formatting and linting, with
+<code>stage_fixed</code> re-staging what they fixed. A command without a file list runs as written on the whole project
+— type checking, the import rules, plugin validation and the unit tests. Globs use the doublestar matcher so that
+top-level files match too. Pre-commit commands run in parallel. CI sets <code>LEFTHOOK=0</code>, since it runs the
+tasks itself. The skeleton measures a baseline for the time budget — about 10 seconds for the pre-commit hook and about
+60 seconds for the pre-push hook — on a typical change: one source file and its test edited.</p>
+
+<h3 id="solution-reports">Tasks and reports</h3>
+<p>All tasks are mise tasks; aggregates only list their dependencies, which mise runs in parallel where it can.</p>
+<table>
+<thead><tr><th>Task</th><th>Local command</th><th><code>-ci</code> variant and report</th></tr></thead>
+<tbody>
+<tr><td><code>format</code></td><td><code>prettier --write .</code></td><td><code>prettier --check .</code></td></tr>
+<tr><td><code>lint</code></td><td><code>eslint --fix .</code></td><td><code>eslint .</code> with a formatter that emits GitHub annotations</td></tr>
+<tr><td><code>typecheck</code></td><td><code>vue-tsc --build</code></td><td>Same; a problem matcher turns errors into annotations</td></tr>
+<tr><td><code>arch</code></td><td><code>depcruise src</code></td><td>Same, plus a Markdown report in the job summary</td></tr>
+<tr><td><code>plugin-validate</code></td><td><code>claude plugin validate --strict plugin</code> and on the repository root (marketplace)</td><td>Same with <code>--json</code></td></tr>
+<tr><td><code>test</code></td><td><code>vitest run</code></td><td><code>vitest run --coverage</code> with GitHub, JUnit and summary reporters</td></tr>
+<tr><td><code>e2e</code></td><td><code>playwright test</code> (after <code>build</code>)</td><td>Same with the GitHub reporter; HTML report and traces uploaded on failure</td></tr>
+<tr><td><code>test-agent</code></td><td><code>claude plugin eval plugin --runs 1</code></td><td><code>claude plugin eval plugin --json --threshold … --max-cost-usd … --trust-plugin</code></td></tr>
+<tr><td><code>check-fast</code></td><td>format, lint, typecheck, arch, plugin-validate</td><td>—</td></tr>
+<tr><td><code>check</code></td><td><code>check-fast</code> + <code>test</code> + <code>e2e</code></td><td>—</td></tr>
+<tr><td><code>check-ci</code></td><td>—</td><td>all <code>-ci</code> variants except <code>test-agent-ci</code>, plus <code>build</code></td></tr>
+</tbody>
+</table>
+<p>Unit tests use Vitest with two projects: Node for <code>src/cli</code>, <code>src/server</code> and
+<code>src/shared</code>, and happy-dom, a simulated DOM, for <code>src/web</code>. Most Vue components can be tested
+without a real browser; tests that need one — expected for the interactive Tiptap integration in F04 — switch to
+Vitest's browser mode selectively. End-to-end tests use Playwright Test with Chromium.</p>
+
+<h3 id="solution-coverage">Coverage gate</h3>
+<p><code>test-ci</code> measures coverage with V8 over <code>src/**</code> (test files excluded). The source folders
+are listed explicitly in the coverage configuration, because otherwise a file no test imports would not appear in the
+report at all and would slip past the gate. Thresholds are 80 % lines and 80 % branches, checked per file, limited to
+files changed since the base: <code>origin/main</code> on a pull request, the parent commit on a push to
+<code>main</code> (squash merges make that commit the whole pull request).</p>
+
+<h3 id="solution-ci">CI on GitHub</h3>
+<figure>
+<svg class="diagram" viewBox="0 0 720 300" role="img" aria-label="Flow of a change through hooks and CI">
+  <defs><marker id="m-flow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="d-head" d="M0,0 L10,5 L0,10 z"/></marker></defs>
+  <rect class="d-lane" x="10" y="10" width="700" height="90"/>
+  <text class="d-title" x="22" y="28">Developer or agent</text>
+  <rect class="d-lane" x="10" y="100" width="700" height="90"/>
+  <text class="d-title" x="22" y="118">lefthook (local)</text>
+  <rect class="d-lane" x="10" y="190" width="700" height="100"/>
+  <text class="d-title" x="22" y="208">GitHub</text>
+  <rect class="d-box" x="30" y="40" width="100" height="34" rx="17"/>
+  <text x="80" y="62" text-anchor="middle">change</text>
+  <rect class="d-box" x="160" y="37" width="110" height="40" rx="6"/>
+  <text x="215" y="62" text-anchor="middle">git commit</text>
+  <rect class="d-box" x="340" y="37" width="110" height="40" rx="6"/>
+  <text x="395" y="62" text-anchor="middle">git push</text>
+  <rect class="d-box" x="520" y="37" width="140" height="40" rx="6"/>
+  <text x="590" y="62" text-anchor="middle">open pull request</text>
+  <rect class="d-box" x="160" y="127" width="110" height="40" rx="6"/>
+  <text x="215" y="152" text-anchor="middle">pre-commit</text>
+  <rect class="d-box" x="340" y="127" width="110" height="40" rx="6"/>
+  <text x="395" y="152" text-anchor="middle">pre-push</text>
+  <rect class="d-box" x="505" y="220" width="170" height="40" rx="6"/>
+  <text x="590" y="245" text-anchor="middle">CI + PR-title check</text>
+  <path class="d-box" d="M390,208 L455,240 L390,272 L325,240 Z"/>
+  <text x="390" y="244" text-anchor="middle">all green?</text>
+  <rect class="d-box" x="160" y="223" width="130" height="34" rx="17"/>
+  <text x="225" y="245" text-anchor="middle">squash merge</text>
+  <line class="d-line" x1="130" y1="57" x2="158" y2="57" marker-end="url(#m-flow)"/>
+  <line class="d-line" x1="215" y1="77" x2="215" y2="125" marker-end="url(#m-flow)"/>
+  <line class="d-line" x1="270" y1="140" x2="345" y2="79" marker-end="url(#m-flow)"/>
+  <line class="d-line" x1="395" y1="77" x2="395" y2="125" marker-end="url(#m-flow)"/>
+  <line class="d-line" x1="450" y1="140" x2="525" y2="79" marker-end="url(#m-flow)"/>
+  <line class="d-line" x1="590" y1="77" x2="590" y2="218" marker-end="url(#m-flow)"/>
+  <line class="d-line" x1="505" y1="240" x2="457" y2="240" marker-end="url(#m-flow)"/>
+  <line class="d-line" x1="325" y1="240" x2="292" y2="240" marker-end="url(#m-flow)"/>
+  <text class="d-small" x="308" y="232" text-anchor="middle">yes</text>
+  <path class="d-line" d="M390,272 V282 H80 V76" marker-end="url(#m-flow)"/>
+  <text class="d-small" x="250" y="278" text-anchor="middle">no: fix and push again</text>
+</svg>
+<figcaption>The path of a change. Hooks give fast local feedback; the checks on GitHub are the gate.</figcaption>
+</figure>
+<p>Three workflows:</p>
+<ul>
+<li><code>ci.yml</code>, on pull requests to <code>main</code> and pushes to <code>main</code>. Job <b>check</b> on
+Linux with Node 24 runs <code>mise run check-ci</code>. Job <b>node-latest</b> on Linux with the latest Node LTS
+(currently 26) runs <code>build</code> and <code>e2e-ci</code>, to notice early when a newer Node breaks something.
+Both set up the pinned tools with the official mise action, cache the pnpm store and the Playwright browser, and a
+newer run on the same pull request cancels the older one.</li>
+<li><code>pr-title.yml</code>, on pull requests (opened, edited, synchronised): a small script of our own checks the
+title against <code>type(scope)?: description</code> with the Conventional Commits types. It needs no third-party
+action, no checkout of the pull request's code and no secret.</li>
+<li><code>agent-tests.yml</code>, started by hand or when the maintainer adds the label <code>agent-tests</code> to a
+pull request. It installs bubblewrap and socat (needed by Claude Code's sandbox on Linux), runs
+<code>mise run test-agent-ci</code> with the Claude credential from a repository secret, a score threshold and a cost
+ceiling, and uploads the JSON result. Secrets are never available to pull requests from forks.</li>
+</ul>
+<p>Security baseline: the default workflow token is read-only and each job asks only for the permissions it needs;
+third-party actions are pinned to full commit hashes, not movable tags; the Claude credential is used only in
+<code>agent-tests.yml</code>. Repository settings: a ruleset on <code>main</code> that requires a pull request, requires
+the checks <b>check</b>, <b>node-latest</b> and <b>pr-title</b>, allows only squash merges and blocks force pushes and
+deletion; secret scanning with push protection; Dependabot alerts (not update pull requests, which are F12's). Creating
+the repository, pushing <code>main</code> and <code>spike</code>, and applying these settings are implementation steps
+done with the maintainer, since they publish to GitHub.</p>
+
+<h3 id="solution-plugin">Plugin and marketplace</h3>
+<p><code>plugin/.claude-plugin/plugin.json</code> names the plugin (working name), with description, author, licence
+and repository. The repository root's <code>.claude-plugin/marketplace.json</code> lists one plugin whose source is a
+<code>git-subdir</code>: this repository, path <code>plugin</code>, ref <code>release</code>. Users add the marketplace
+from the default branch and install the plugin from the release branch, where F12's release workflow will commit the
+built <code>dist/</code>; on <code>main</code>, <code>dist/</code> is never committed. No minimum Claude Code version
+can be declared in a manifest; the README states the version the project is tested with, and a later feature that
+needs a minimum checks it in its hooks.</p>
+<p><code>claude plugin validate --strict</code> runs on <code>plugin/</code> and on the repository root, which validates
+the marketplace. Agent-test cases live in <code>plugin/evals/</code>, the only place <code>claude plugin eval</code>
+accepts (its directory must lie inside the plugin root); whether the release drops them is F12's call. The placeholder
+case asks Claude to greet using the plugin and is graded by a deterministic check that Claude ran <code>tandem
+hello</code>, without a judge model.</p>
+
+<h3 id="solution-docs">Documents</h3>
+<p>F00 writes:</p>
+<ul>
+<li><code>README.md</code> for developers: what tandem is, with a working-name notice; status, linking
+<code>docs/features/index.html</code>; prerequisites (mise, Claude Code, macOS or Linux, tested Claude Code version);
+setup; the main tasks; trying the skeleton and the plugin; how changes are made, with details in
+<code>CONTRIBUTING.md</code>; the renaming steps; the licence.</li>
+<li><code>CONTRIBUTING.md</code>: setup, tasks, hooks and the rule never to skip them, branch → pull request → squash
+merge, the title convention, how features are specified (<code>docs/features/SPEC-PROCESS.md</code>), specs frozen and
+living documents updated as part of being done, ADRs, journals never committed, spikes as soft references only. It
+links the ADRs instead of repeating their reasons.</li>
+<li><code>CLAUDE.md</code>, trimmed: what tandem is, “follow <code>CONTRIBUTING.md</code>”, and the agent-only rules
+(never push or skip hooks unless asked; spikes are a reference, not a blueprint).</li>
+<li><code>.github/pull_request_template.md</code> with three checkboxes: tests added or updated, living documents
+updated, ADR written or superseded if a binding decision changed.</li>
+<li><code>docs/architecture/index.html</code>, built like a spec page with the same diagram parts: context and
+runtime (placeholders for F01), building blocks (the source folders and their import rules), cross-cutting concepts
+(build and bundling, tooling and CI), deployment (how the plugin reaches a user), and links to the ADRs. The
+placeholder is marked as such.</li>
+<li><code>docs/adr/</code> in Markdown (<code>NNNN-title.md</code>: context, decision, consequences, status):
+<ol>
+<li>Working conventions — spec and journal locations, specs frozen and living documents updated per feature, specs
+self-contained with soft spike references, branch → pull request → squash merge, hooks never skipped.</li>
+<li>One package with enforced import boundaries.</li>
+<li>All runtime dependencies bundled; Vite builds every output.</li>
+<li>Node 24 or newer on users' machines.</li>
+<li>The plugin lives in <code>plugin/</code> and reaches users through a release branch.</li>
+<li>Setup — the tool choices with short reasons and references: mise, pnpm, exact versions, lefthook and the hook
+budget, ESLint and Prettier, dependency-cruiser, Vitest with happy-dom, Playwright, TypeScript 6 and its flags, the
+coverage rule, the CI security baseline, MIT.</li>
+</ol></li>
+<li>Updates to <code>docs/features/SPEC-PROCESS.md</code> and the spec template: decisions are stated in the spec with
+their rejected alternatives instead of linking a journal; no links to the spike summary, only soft spike references;
+updating the living documents is part of implementing a feature.</li>
+<li><code>LICENSE</code>: MIT.</li>
+</ul>
+
+<h3 id="solution-proofs">Must prove first</h3>
+<p>These points rest on documentation or on one observation. The first implementation step proves each before
+anything else is built; each has a fallback that keeps the rest of the design intact.</p>
+<table>
+<thead><tr><th>Must prove</th><th>How</th><th>Fallback if it fails</th></tr></thead>
+<tbody>
+<tr><td>Vite builds the two Node bundles with every dependency inlined</td><td><code>build</code>, then run <code>dist/cli.js</code> and <code>dist/server.js</code> from a folder without <code>node_modules</code></td><td>Revisit the option rejected under Decisions: a Node-library bundler (tsdown or esbuild) for the two Node outputs, keeping Vite for the page</td></tr>
+<tr><td>Files in <code>plugin/bin/</code> are on the Bash PATH with <code>--plugin-dir</code></td><td>In a <code>claude-dev</code> session, ask Claude to run <code>tandem hello</code></td><td><code>claude-dev</code> also puts <code>plugin/bin</code> on PATH for that session</td></tr>
+<tr><td>The plugin installs and runs through the real marketplace path</td><td>Commit a build to a local release-like branch, add the local repository as a marketplace, install, run <code>tandem hello</code>; check that <code>bin/tandem</code> kept its executable bit</td><td>If the subfolder source fails: a <code>github</code> source on a release branch that contains only the plugin at its root. If the executable bit is lost: the release step sets it explicitly. F12 builds on whichever shape worked</td></tr>
+<tr><td>lefthook's re-staging does not commit unstaged changes of partially staged files</td><td>Stage half of a file that needs formatting, commit, inspect the commit</td><td>Format and lint only check in pre-commit (no fixes); developers run the local tasks to fix</td></tr>
+<tr><td>Coverage works with happy-dom for <code>src/web</code></td><td><code>test-ci</code> reports per-file coverage for <code>App.vue</code></td><td>Exclude <code>src/web</code> from the gate until F04 decides how the editor is tested</td></tr>
+<tr><td><code>claude plugin validate</code> runs in CI without signing in</td><td>The first CI run of <code>plugin-validate-ci</code></td><td>Run it only locally and in the pre-commit hook</td></tr>
+<tr><td>The CLI can start the server inside the agent-test sandbox</td><td>A temporary agent-test case (not kept) that asks Claude to run <code>tandem serve</code> and fetch the page</td><td>Record the limit for F01 and F10; agent tests stay with commands that need no server</td></tr>
+<tr><td>The hooks stay within their time budget</td><td>Time a commit and a push that change one source file and its test; pass if about 10 s and 60 s are not exceeded</td><td>Make the slow tool faster (cache, narrower globs); type checking stays in pre-commit</td></tr>
+</tbody>
+</table>
+
+<h2 id="building-blocks">Building blocks</h2>
+<p>The repository as a whole, minus configuration, CI and documents, which <a href="#solution">Solution design</a>
+describes. Its building blocks are the source code in <code>src/</code>, the plugin folder in <code>plugin/</code>
+that the source is built into, and the end-to-end tests in <code>e2e/</code>. Everything in <code>src/</code> and the
+plugin's stub skill, hook and agent-test case is placeholder and is deleted by the next feature; what stays is the
+structure — the folders, their import rules and the plugin layout.</p>
+
+<figure>
+<svg class="diagram" viewBox="0 0 720 150" role="img" aria-label="Top-level building blocks">
+  <defs><marker id="m-bb0" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="d-head" d="M0,0 L10,5 L0,10 z"/></marker></defs>
+  <rect class="d-frame" x="10" y="10" width="700" height="130" rx="8"/>
+  <text class="d-title" x="24" y="30">tandem · repository root</text>
+  <rect class="d-box" x="40" y="70" width="190" height="40" rx="6"/>
+  <rect class="d-frame" x="43" y="73" width="184" height="34" rx="4"/>
+  <text class="d-name" x="54" y="95">src/</text>
+  <rect class="d-box" x="300" y="70" width="190" height="40" rx="6"/>
+  <rect class="d-frame" x="303" y="73" width="184" height="34" rx="4"/>
+  <text class="d-name" x="314" y="95">plugin/</text>
+  <rect class="d-box" x="560" y="70" width="130" height="40" rx="6"/>
+  <text class="d-name" x="572" y="95">e2e/</text>
+  <line class="d-line d-ret" x1="230" y1="90" x2="298" y2="90" marker-end="url(#m-bb0)"/>
+  <text class="d-small" x="264" y="82" text-anchor="middle">built into</text>
+  <line class="d-line" x1="560" y1="90" x2="492" y2="90" marker-end="url(#m-bb0)"/>
+  <text class="d-small" x="526" y="82" text-anchor="middle">runs</text>
+</svg>
+<figcaption>Top level. Double borders mark parts with their own subsection. <code>src/</code> is built into <code>plugin/dist/</code>; the end-to-end test runs <code>plugin/bin/tandem</code>.</figcaption>
+</figure>
+
+<p><code>src/</code> does not depend on <code>plugin/</code> at code level: the build writes its output into
+<code>plugin/dist/</code>. The end-to-end test uses <code>plugin/</code> exactly as Claude Code will, through
+<code>bin/tandem</code>, so it also covers the entry point and the bundles.</p>
+
+<p><b>e2e/</b> — <code>e2e/hello.spec.ts</code> starts <code>plugin/bin/tandem serve</code>, reads the URL from its
+output, opens it in Chromium, waits for the greeting from <code>GET /api/hello</code> and stops the process. It is a
+test with no interface of its own, and placeholder like everything it tests; <code>playwright.config.ts</code> and the
+fixtures pattern for starting the CLI stay.</p>
+
+<h3 id="bb-src">src/</h3>
+<p>All source code, one folder per runtime environment: <code>cli/</code> and <code>server/</code> run in Node,
+<code>web/</code> in the browser, <code>shared/</code> in both. Each folder below is placeholder; the folders and their
+import rules (<a href="#solution-architecture-rules">Import rules</a>) are permanent.</p>
+
+<figure>
+<svg class="diagram" viewBox="0 0 720 420" role="img" aria-label="Parts of src/">
+  <defs><marker id="m-bb1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="d-head" d="M0,0 L10,5 L0,10 z"/></marker></defs>
+  <rect class="d-frame" x="10" y="10" width="700" height="400" rx="8"/>
+  <text class="d-title" x="24" y="30">src/ · src</text>
+  <rect class="d-frame" x="20" y="40" width="220" height="200" rx="6"/>
+  <text class="d-title" x="32" y="58">cli/</text>
+  <rect class="d-box" x="32" y="70" width="196" height="40" rx="6"/>
+  <text class="d-name" x="44" y="88">main.ts</text>
+  <text class="d-small" x="44" y="102">entry of dist/cli.js</text>
+  <rect class="d-box" x="32" y="124" width="196" height="86" rx="6"/>
+  <text class="d-name" x="44" y="143">cli.ts</text>
+  <line class="d-line" x1="32" y1="152" x2="228" y2="152"/>
+  <text class="d-member" x="44" y="168"><tspan class="sx-fn">runCli</tspan><tspan class="sx-p">(</tspan>argv<tspan class="sx-p">:</tspan> <tspan class="sx-ty">string</tspan><tspan class="sx-p">[],</tspan></text>
+  <text class="d-member" x="58" y="184">out<tspan class="sx-p">:</tspan> <tspan class="sx-ty">Writable</tspan><tspan class="sx-p">):</tspan></text>
+  <text class="d-member" x="58" y="200"><tspan class="sx-ty">Promise</tspan><tspan class="sx-p">&lt;</tspan><tspan class="sx-ty">number</tspan><tspan class="sx-p">&gt;</tspan></text>
+  <rect class="d-frame" x="250" y="40" width="220" height="200" rx="6"/>
+  <text class="d-title" x="262" y="58">server/</text>
+  <rect class="d-box" x="262" y="70" width="196" height="40" rx="6"/>
+  <text class="d-name" x="274" y="88">main.ts</text>
+  <text class="d-small" x="274" y="102">entry of dist/server.js</text>
+  <rect class="d-box" x="262" y="124" width="196" height="100" rx="6"/>
+  <text class="d-name" x="274" y="143">server.ts</text>
+  <line class="d-line" x1="262" y1="152" x2="458" y2="152"/>
+  <text class="d-member" x="274" y="168"><tspan class="sx-fn">startServer</tspan><tspan class="sx-p">(</tspan>options<tspan class="sx-p">:</tspan></text>
+  <text class="d-member" x="288" y="184"><tspan class="sx-ty">StartOptions</tspan><tspan class="sx-p">):</tspan></text>
+  <text class="d-member" x="288" y="200"><tspan class="sx-ty">Promise</tspan><tspan class="sx-p">&lt;</tspan><tspan class="sx-ty">RunningServer</tspan><tspan class="sx-p">&gt;</tspan></text>
+  <rect class="d-frame" x="480" y="40" width="220" height="200" rx="6"/>
+  <text class="d-title" x="492" y="58">web/</text>
+  <rect class="d-box" x="492" y="70" width="196" height="40" rx="6"/>
+  <text class="d-name" x="504" y="88">main.ts</text>
+  <text class="d-small" x="504" y="102">entry of dist/web/</text>
+  <rect class="d-box" x="492" y="124" width="196" height="54" rx="6"/>
+  <text class="d-name" x="504" y="143">App.vue</text>
+  <line class="d-line" x1="492" y1="152" x2="688" y2="152"/>
+  <text class="d-member" x="504" y="168">no props</text>
+  <rect class="d-frame" x="150" y="290" width="420" height="110" rx="6"/>
+  <text class="d-title" x="162" y="308">shared/</text>
+  <rect class="d-box" x="165" y="320" width="205" height="62" rx="6"/>
+  <text class="d-name" x="177" y="339">greeting.ts</text>
+  <line class="d-line" x1="165" y1="348" x2="370" y2="348"/>
+  <text class="d-member" x="177" y="368"><tspan class="sx-fn">greeting</tspan><tspan class="sx-p">(</tspan>name<tspan class="sx-p">:</tspan> <tspan class="sx-ty">string</tspan><tspan class="sx-p">):</tspan> <tspan class="sx-ty">string</tspan></text>
+  <rect class="d-box" x="390" y="320" width="165" height="62" rx="6"/>
+  <text class="d-name" x="402" y="339">product.ts</text>
+  <line class="d-line" x1="390" y1="348" x2="555" y2="348"/>
+  <text class="d-member" x="402" y="368">PRODUCT_NAME<tspan class="sx-p">:</tspan> <tspan class="sx-ty">string</tspan></text>
+  <line class="d-line" x1="130" y1="110" x2="130" y2="122" marker-end="url(#m-bb1)"/>
+  <line class="d-line" x1="360" y1="110" x2="360" y2="122" marker-end="url(#m-bb1)"/>
+  <line class="d-line" x1="590" y1="110" x2="590" y2="122" marker-end="url(#m-bb1)"/>
+  <path class="d-line" d="M130,210 V270 H230 V318" marker-end="url(#m-bb1)"/>
+  <line class="d-line" x1="300" y1="224" x2="300" y2="318" marker-end="url(#m-bb1)"/>
+  <path class="d-line" d="M590,178 V270 H500 V318" marker-end="url(#m-bb1)"/>
+  <line class="d-line" x1="370" y1="351" x2="388" y2="351" marker-end="url(#m-bb1)"/>
+  <line class="d-line d-ret" x1="228" y1="140" x2="260" y2="96" marker-end="url(#m-bb1)"/>
+  <text class="d-small" x="236" y="122">spawns</text>
+</svg>
+<figcaption>Parts of <code>src/</code>: the four folders, each drawn with its modules (described in a subsection per folder below). Solid arrows are imports. The dashed arrow is not an import: <code>cli.ts</code> starts the built <code>dist/server.js</code> as a child process.</figcaption>
+</figure>
+
+<p>Each entry module (<code>main.ts</code>) only wires its folder's module to the process or page. The three
+environment folders import <code>shared/</code> and nothing of each other; <code>cli.ts</code> reaches the server only
+by starting its built bundle, which keeps the CLI bundle free of server code and leaves the process model to F01.
+<code>greeting.ts</code> depends on <code>product.ts</code>, the one place the working name lives in code.</p>
+
+<h4 id="bb-cli">cli/</h4>
+<p>The command-line interface Claude and the end-to-end test call through <code>plugin/bin/tandem</code>; built into
+<code>dist/cli.js</code>.</p>
+
+<p><b>cli/main.ts</b> — entry of <code>dist/cli.js</code>. Calls <code>runCli(process.argv.slice(2),
+process.stdout)</code> and exits with the returned code. No exports.</p>
+
+<p><b>cli/cli.ts</b> — the placeholder commands, testable without spawning anything when <code>serve</code> is not
+called.</p>
+<p class="member"><code>runCli(argv: string[], out: Writable): Promise&lt;number&gt;</code> — <code>hello [name]</code>
+writes <code>greeting(name ?? "world")</code> to <code>out</code> and returns 0. <code>serve [--port n]</code> starts
+<code>node dist/server.js --port n</code> (path resolved next to the running <code>cli.js</code>) as a child process
+with inherited output, forwards SIGINT and SIGTERM to it and resolves with its exit code. Unknown commands write a
+short usage text and return 2.</p>
+
+<h4 id="bb-server">server/</h4>
+<p>The local HTTP server; built into <code>dist/server.js</code> and started by <code>tandem serve</code>.</p>
+
+<p><b>server/main.ts</b> — entry of <code>dist/server.js</code>. Reads <code>--port</code> (default 0), calls
+<code>startServer</code> with the built page folder next to it, prints
+<code>‹PRODUCT_NAME› placeholder running at ‹url›</code> and calls <code>close()</code> on SIGINT or SIGTERM before
+exiting with 0. No exports.</p>
+
+<p><b>server/server.ts</b> — a minimal HTTP server on Node's <code>http</code> module, bound to 127.0.0.1.</p>
+<p class="member"><code>startServer(options: StartOptions): Promise&lt;RunningServer&gt;</code> — listens on
+<code>options.port</code>; answers <code>GET /api/hello</code> with <code>200 { "message": greeting("world") }</code>
+as JSON, serves files from <code>options.webRoot</code> for every other <code>GET</code> (<code>index.html</code> for
+<code>/</code>, 404 for missing files and for paths that leave <code>webRoot</code>), and answers other methods with
+405. Resolves once listening. <code>StartOptions</code> is <code>{ port: number; webRoot: string }</code>;
+<code>RunningServer</code> is <code>{ url: string; close(): Promise&lt;void&gt; }</code>, where <code>url</code> carries
+the actual port and <code>close</code> stops accepting connections and resolves when the server is closed.</p>
+
+<h4 id="bb-web">web/</h4>
+<p>The page the server delivers; built into <code>dist/web/</code>.</p>
+
+<p><b>web/main.ts</b> — entry of <code>dist/web/</code>. Creates the Vue app with <code>App.vue</code> and mounts it.
+No exports.</p>
+
+<p><b>web/App.vue</b> — the placeholder page, a component without props. On mount it fetches
+<code>/api/hello</code> and shows the message, or “Server not reachable” if the request fails; the note “Placeholder
+page (F00)” sits below it. A few lines of plain scoped CSS.</p>
+
+<h4 id="bb-shared">shared/</h4>
+<p>Code that runs in Node and in the browser; imported by the three other folders and built into each of their
+outputs.</p>
+
+<p><b>shared/greeting.ts</b> — <code>greeting(name: string): string</code> returns
+<code>Hello, ‹name› — from ‹PRODUCT_NAME›</code>. Pure, no I/O.</p>
+
+<p><b>shared/product.ts</b> — <code>PRODUCT_NAME: string</code>, the working name <code>"tandem"</code>. Renaming
+changes this constant and the file names and manifests listed in <a href="#functional-renaming">Renaming</a>.</p>
+
+<h3 id="bb-plugin">plugin/</h3>
+<p>The plugin root: exactly what a user installs and what <code>--plugin-dir</code> loads. Its structure is permanent;
+the stub skill, the hook and the agent-test case are placeholder. It contains no code of its own — the CLI, server and
+page come from <code>src/</code> through the build — so its parts are files.</p>
+
+<figure>
+<svg class="diagram" viewBox="0 0 720 200" role="img" aria-label="Parts of plugin/">
+  <defs><marker id="m-bb2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="d-head" d="M0,0 L10,5 L0,10 z"/></marker></defs>
+  <rect class="d-frame" x="10" y="10" width="700" height="180" rx="8"/>
+  <text class="d-title" x="24" y="30">plugin/ · plugin</text>
+  <rect class="d-box" x="30" y="50" width="190" height="40" rx="6"/>
+  <text class="d-name" x="42" y="75">.claude-plugin/plugin.json</text>
+  <rect class="d-box" x="30" y="120" width="190" height="40" rx="6"/>
+  <text class="d-name" x="42" y="145">skills/tandem/SKILL.md</text>
+  <rect class="d-box" x="265" y="50" width="190" height="40" rx="6"/>
+  <text class="d-name" x="277" y="75">bin/tandem</text>
+  <rect class="d-box" x="265" y="120" width="190" height="40" rx="6"/>
+  <text class="d-name" x="277" y="145">hooks/hooks.json</text>
+  <rect class="d-box" x="500" y="50" width="190" height="40" rx="6"/>
+  <text class="d-name" x="512" y="75">dist/</text>
+  <rect class="d-box" x="500" y="120" width="190" height="40" rx="6"/>
+  <text class="d-name" x="512" y="145">evals/hello/</text>
+  <line class="d-line" x1="455" y1="70" x2="498" y2="70" marker-end="url(#m-bb2)"/>
+  <text class="d-small" x="476" y="62" text-anchor="middle">runs</text>
+  <line class="d-line" x1="220" y1="140" x2="263" y2="80" marker-end="url(#m-bb2)"/>
+  <text class="d-small" x="232" y="104">tells Claude to call</text>
+</svg>
+<figcaption>Parts of <code>plugin/</code>. Claude Code finds each part in its default folder; the skill tells Claude to call <code>bin/tandem</code>, which runs the built CLI in <code>dist/</code>.</figcaption>
+</figure>
+
+<p><b>.claude-plugin/plugin.json</b> — the manifest: plugin name (working name), description, author, licence,
+repository. The plugin's components sit in their default folders, so the manifest lists no paths.</p>
+
+<p><b>bin/tandem</b> — the entry point Claude and the end-to-end test call; on the Bash PATH while the plugin is
+enabled. Checks for Node ≥ 24 and runs <code>dist/cli.js</code> with all arguments
+(<a href="#solution-build">Build and bundling</a>).</p>
+
+<p><b>skills/tandem/SKILL.md</b> — stub skill: when the user asks for a greeting from the plugin, run
+<code>tandem hello</code> and show the output. Replaced by F10's real skill.</p>
+
+<p><b>hooks/hooks.json</b> — one hook on session start that appends a timestamp line to a file under
+<code>${CLAUDE_PLUGIN_DATA}</code>, proving that the plugin's hooks fire in a real session. Replaced by F10.</p>
+
+<p><b>evals/hello/</b> — the agent-test case: the prompt asks Claude to greet the user using the plugin; one
+<code>tool_used</code> grader checks that Claude ran <code>tandem hello</code>.</p>
+
+<p><b>dist/</b> — build output (<code>cli.js</code>, <code>server.js</code>, <code>web/</code>); ignored on
+<code>main</code>, committed only on the release branch by F12.</p>
+
+<h2 id="decisions">Decisions</h2>
+<table>
+<thead><tr><th>Decision</th><th>Rejected alternatives and why</th><th>Details</th></tr></thead>
+<tbody>
+<tr><td>F00 delivers tooling plus a throwaway walking skeleton</td><td>Tooling only — bundling, the plain-executable CLI, plugin loading and e2e in CI would stay unproven until a feature trips over them. Skeleton built from spike code — imports code that was never designed.</td><td><a href="#goal">Goal</a></td></tr>
+<tr><td>The placeholder uses none of the product's runtime libraries</td><td>Real libraries as a “hello world” — forces parser and server-framework choices, which is implementation work this feature must not do. Libraries declared but not used — proves nothing about bundling them. A static page without a server — leaves no build or e2e path for code that runs in Node and the browser. Server code inside the CLI bundle — would leave the separate server bundle for F01 to introduce, a build change F00 is meant to settle.</td><td><a href="#solution-placeholder">Placeholder</a></td></tr>
+<tr><td>Renaming is cheap: name in one constant plus unavoidable file names and manifests</td><td>Using the name freely — the name is known to change, so spreading it is known future work.</td><td><a href="#functional-renaming">Renaming</a></td></tr>
+<tr><td>macOS and Linux only</td><td>Windows now — needs a Node-based entry point and a Windows CI job without a current user.</td><td><a href="#non-goals">Non-goals</a></td></tr>
+<tr><td>UI library, CSS and theming left to F04</td><td>Deciding now (plain CSS with variables, a utility framework or a headless component library) — decided before anyone designs the editor; F04 would inherit or overturn it.</td><td><a href="#non-goals">Non-goals</a></td></tr>
+<tr><td>Changes reach <code>main</code> only via pull requests; protected <code>main</code>; required green checks; no required approvals while solo</td><td>Direct pushes with CI only reporting — an agent can break <code>main</code> unnoticed. Direct pushes plus a local pre-push hook — local hooks can be skipped and are not installed in every agent sandbox.</td><td><a href="#functional-changes">Changing main</a></td></tr>
+<tr><td>Squash merge; Conventional Commits pull-request titles checked by our own script</td><td>Rebase merge with a convention on every commit — every agent commit must be well-formed and fix-ups land on <code>main</code>. No convention — F12 could not generate a changelog. A third-party action — an extra dependency to pin for a ten-line check.</td><td><a href="#solution-ci">CI on GitHub</a></td></tr>
+<tr><td>Agents never push or skip hooks unless explicitly asked</td><td>—</td><td><a href="#functional-hooks">Git hooks</a></td></tr>
+<tr><td>Public repository from day one</td><td>Private with a paid plan, public later — pays to hide spec-phase work. Private on the free plan — rulesets would not be enforced, so the gate would be a convention.</td><td><a href="#assumptions">Assumptions</a></td></tr>
+<tr><td>MIT licence</td><td>Apache-2.0 — longer, its patent grant buys little for a local plugin. AGPL-3.0 — deters users, unusual for a local developer tool.</td><td><a href="#solution-docs">Documents</a></td></tr>
+<tr><td>mise is the only prerequisite and the task runner</td><td><code>package.json</code> scripts — mise also pins Node, pnpm and Claude Code, runs aggregates in parallel and can skip unchanged work.</td><td><a href="#solution-toolchain">Toolchain</a></td></tr>
+<tr><td>One task per tool with a <code>-ci</code> variant; aggregates <code>check-fast</code>, <code>check</code> (incl. e2e), <code>check-ci</code>; no live-reload task yet</td><td><code>check</code> / <code>check:all</code> / <code>fix</code> — mixes tools and modes; the per-tool split lets hooks, local runs and CI call exactly the same thing.</td><td><a href="#solution-reports">Tasks and reports</a></td></tr>
+<tr><td>lefthook; pre-commit formats and lints staged files and type-checks the whole project; pre-push runs unit tests; time budget, typecheck never moved out of pre-commit</td><td>No hooks — feedback only in CI. hk — installed through mise rather than npm, configured in an extra language, whole-project runs not documented. husky + lint-staged — two tools, whole-project runs need a workaround. Everything at commit — commits slow down as tests grow. Only formatting at commit — type errors sit in local commits until the push. Moving type checking to pre-push when hooks get slow — cross-file type errors must be caught at commit; slow tools are made faster instead.</td><td><a href="#solution-hooks">Git hooks</a></td></tr>
+<tr><td>pnpm</td><td>npm — undeclared imports can work by accident (a risk for the bundle); release-age and install-script protections are off by default.</td><td><a href="#solution-toolchain">Toolchain</a></td></tr>
+<tr><td>Exact versions for every direct dependency, frozen lockfile in CI</td><td>Exact only for the collaboration stack — <code>package.json</code> no longer shows what is installed. Ranges with a lockfile — contradicts the need for identical collaboration packages on server and browser.</td><td><a href="#solution-toolchain">Toolchain</a></td></tr>
+<tr><td>Plugin users need Node ≥ 24, checked by the entry script</td><td>Node ≥ 22 — its support ends around April 2027, likely before the first release. Standalone executables — four build targets and about 100 MB each.</td><td><a href="#solution-build">Build and bundling</a></td></tr>
+<tr><td>TypeScript 6 with <code>strict</code> plus the bug-catching flags; ESM only</td><td>TypeScript 7 now — no stable API, so <code>vue-tsc</code> and <code>typescript-eslint</code> cannot use it. Maximum strictness — fights library and Vue prop types for little gain. <code>strict</code> only — index-access and fallthrough bugs stay possible, and tightening later means fixing every file.</td><td><a href="#solution-toolchain">Toolchain</a></td></tr>
+<tr><td>ESLint with typescript-eslint and eslint-plugin-vue; Prettier</td><td>Biome — Vue support still partial by its own documentation, no type-aware rules on the same level. oxlint + oxfmt — no official Vue template linting, formatter before 1.0.</td><td><a href="#solution-toolchain">Toolchain</a></td></tr>
+<tr><td>One package with four folders; import rules enforced by dependency-cruiser</td><td>A workspace of packages — per-package configuration and linking pay off for separately published packages, not for one bundled plugin. ArchUnitTS — rules only run with the tests. eslint-plugin-boundaries — import rules only, tied to the linter.</td><td><a href="#solution-architecture-rules">Import rules</a></td></tr>
+<tr><td>Vite builds page, server and CLI; every runtime dependency bundled</td><td>tsdown or esbuild for the Node bundles — a second build configuration or engine whose resolution can differ from the page build. <code>node_modules</code> on the release branch, or letting Claude Code install from a lockfile — an install step on users' machines and untested versions.</td><td><a href="#solution-build">Build and bundling</a></td></tr>
+<tr><td>Vitest (Node and happy-dom), Playwright Test; unit tests next to the code, e2e in <code>e2e/</code></td><td>Vitest browser mode for all web code — most components don't need a real browser, and its coverage support is unconfirmed; it is used selectively instead.</td><td><a href="#solution-reports">Tasks and reports</a></td></tr>
+<tr><td>CI reports findings on the pull request (annotations, run summary, e2e report on failure); coverage ≥ 80 % lines and branches per added or changed file, from unit tests</td><td>Logs plus uploaded report files only — finding an error means opening files instead of seeing it at the line. Coverage as a comment on every pull request — noise; the gate is enough. Only added files — needs an own script and exempts modified files. Changed lines only — needs a tool outside the Node toolchain or an external service. Coverage from e2e — a separate browser setup, and e2e tests check the path, not branches.</td><td><a href="#solution-coverage">Coverage gate</a></td></tr>
+<tr><td>Only an <code>.editorconfig</code></td><td>Shared VS Code or IntelliJ settings, or VS Code extension recommendations — committed editor files tend to fight personal setups, and hooks and CI enforce the result anyway. Nothing at all — no shared basics for indentation and line endings.</td><td><a href="#solution-toolchain">Toolchain</a></td></tr>
+<tr><td>Plugin in <code>plugin/</code>; marketplace at the root points at it on the release branch; release workflow in F12</td><td>Plugin root = repository root — users would install sources and docs, and the repository's <code>CLAUDE.md</code> fails strict validation. Non-strict validation — hides real warnings. Stripping <code>CLAUDE.md</code> on release — the release branch would differ from <code>main</code> beyond build output. Designing the whole release path in F00 — release automation is F12's; only the layout-shaping part is expensive to change later.</td><td><a href="#solution-plugin">Plugin and marketplace</a></td></tr>
+<tr><td>Plugin development through <code>claude-dev</code> with <code>--plugin-dir</code></td><td>Local marketplace install — likely copied into a cache, reinstall per change, leaves install state. Auto-loading through the repository's <code>.claude/skills/</code> — every session working on tandem would run the development plugin and its hooks.</td><td><a href="#functional-plugin">Developing the plugin</a></td></tr>
+<tr><td>Agent tests with <code>claude plugin eval</code>, on demand; cases in <code>plugin/evals/</code></td><td>Hand-written <code>claude -p</code> scripts — would rebuild runs, graders, baseline, threshold and cost ceiling. Agent tests in hooks or <code>check</code> — cost money, take minutes, results vary.</td><td><a href="#solution-ci">CI on GitHub</a></td></tr>
+<tr><td>CI on Linux: Node 24 full checks, latest LTS build + e2e; macOS decided in F01; strict plugin validation with pinned Claude Code; no declared minimum Claude Code version</td><td>macOS on every pull request now, macOS only after merging, or no macOS at all — decided in F01, where the platform differences first matter. A manifest field for the minimum version — none exists.</td><td><a href="#solution-ci">CI on GitHub</a></td></tr>
+<tr><td>CI security baseline in F00</td><td>Leaving it to F11 or F12 — CI would hold a secret without basic protection.</td><td><a href="#solution-ci">CI on GitHub</a></td></tr>
+<tr><td><code>docs/</code> holds all documentation and is not formatted; specs frozen, living documents updated per feature; Markdown ADRs (five binding plus one setup ADR); HTML architecture document; <code>CONTRIBUTING.md</code> and a pull-request template; nessy config stays local</td><td>An ADR per tool — clutters the binding decisions. HTML ADRs — short, stable texts read mostly on GitHub, where Markdown renders. No ADRs — frozen specs leave cross-feature decisions without a home that can be superseded. Committing the brainstorming tool's config — conventions belong in tool-independent documents. Moving the feature pages into <code>docs/</code> later — specs would be written and then moved with every path they mention.</td><td><a href="#solution-docs">Documents</a></td></tr>
+<tr><td>Journals never committed and git-ignored; specs self-contained; spikes stay on a pushed <code>spike</code> branch and are referenced softly</td><td>Committing journals with or beside the spec — they are working notes; the spec and ADRs are the record. Archiving spikes in <code>main</code> — keeps throwaway code forever. Links to a tagged spike commit — hard links to evidence specs must not depend on. Keeping spikes local — they stay useful as a design reference.</td><td><a href="#functional-docs">Documentation and conventions</a></td></tr>
+</tbody>
+</table>
+
+<h2 id="open-questions">Open questions</h2>
+<p>None. Points that still need proof are listed under <a href="#solution-proofs">Must prove first</a>, each with a
+fallback.</p>
+
 </main>
 </body>
 </html>
