@@ -1,0 +1,11 @@
+{
+  // Code that runs in Node: src/cli, src/server, src/shared, the end-to-end tests and the tool configs.
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "composite": true,
+    "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.node.tsbuildinfo",
+    "lib": ["ES2024"],
+    "types": ["node"]
+  },
+  "include": ["src/cli/**/*.ts", "src/server/**/*.ts", "src/shared/**/*.ts", "e2e/**/*.ts", "*.config.ts"]
+}

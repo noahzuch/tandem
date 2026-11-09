@@ -1,0 +1,6 @@
+# pnpm settings (single package, no workspace packages).
+# Every direct dependency is saved with an exact version. pnpm's default minimum release age stays on.
+saveExact: true
+# Dependency install scripts stay off. lefthook's would install the git hooks; `mise run setup` does that explicitly.
+allowBuilds:
+  lefthook: false

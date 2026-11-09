@@ -1,0 +1,84 @@
+name: ci
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+# The default token is read-only; jobs ask for nothing more.
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+env:
+  CI: 'true'
+  LEFTHOOK: '0'
+
+jobs:
+  check:
+    # The full checks on the Node version mise pins (the oldest users may have) and on the latest Node LTS, to notice
+    # early when a newer Node breaks something. The LTS is named by its major version: mise's `lts` alias is outdated
+    # (it still means 24) and `latest` would include non-LTS releases. Raise it when a new LTS comes out (each April).
+    # Required checks: "check (pinned)" and "check (26)".
+    name: check (${{ matrix.node }})
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        node: [pinned, '26']
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0 # the coverage gate diffs against the base
+          persist-credentials: false
+
+      - name: Use the matrix Node version instead of the pinned one
+        if: matrix.node != 'pinned'
+        run: echo "MISE_NODE_VERSION=${{ matrix.node }}" >> "$GITHUB_ENV"
+
+      - name: Cache pnpm store and Playwright browser
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: |
+            ~/.local/share/pnpm/store
+            ~/.cache/ms-playwright
+          key: deps-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}
+
+      - uses: jdx/mise-action@b44d12e7d0d8ee7461bb893e1b1993500433185b # v5.2.7
+        with:
+          version: 2026.10.17
+
+      - name: Setup
+        run: |
+          echo "Node $(node --version)"
+          mise run setup
+          mise exec -- playwright install-deps chromium
+
+      - name: Coverage base
+        run: |
+          if [ "${{ github.event_name }}" = pull_request ]; then
+            echo "COVERAGE_BASE=origin/${{ github.base_ref }}" >> "$GITHUB_ENV"
+          else
+            echo "COVERAGE_BASE=HEAD~1" >> "$GITHUB_ENV"
+          fi
+
+      - name: Annotate type errors
+        run: echo "::add-matcher::.github/tsc-problem-matcher.json"
+
+      - name: mise run check-ci
+        run: mise run check-ci
+
+      # Every report the tools wrote: coverage, JUnit, import rules, end-to-end report (traces on failure).
+      - name: Upload reports
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: reports-${{ matrix.node }}
+          path: reports/
+          if-no-files-found: ignore
+          retention-days: 14

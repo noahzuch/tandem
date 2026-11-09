@@ -1,0 +1,6 @@
+# docs/ holds tandem documents whose formatting tandem itself will own.
+docs/
+pnpm-lock.yaml
+plugin/dist/
+plugin/evals/results/
+reports/

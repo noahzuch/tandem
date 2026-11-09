@@ -1,0 +1,17 @@
+{
+  "name": "tandem",
+  "description": "Marketplace for the tandem plugin",
+  "owner": { "name": "Noah Zuch" },
+  "plugins": [
+    {
+      "name": "tandem",
+      "description": "Write and edit HTML documents together with Claude in a live browser editor",
+      "source": {
+        "source": "git-subdir",
+        "url": "https://github.com/noahzuch/tandem.git",
+        "path": "plugin",
+        "ref": "release"
+      }
+    }
+  ]
+}

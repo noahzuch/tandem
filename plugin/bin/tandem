@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+# Entry point of the plugin: on the Bash tool's PATH while the plugin is enabled.
+# Checks for Node >= 24 and runs the bundled CLI. Must run under bash 3.2 (macOS default).
+
+required_major=24
+
+if ! command -v node >/dev/null 2>&1; then
+  echo "This plugin needs Node.js ${required_major} or newer, but 'node' was not found on PATH." >&2
+  echo "Install it from https://nodejs.org/ (or with a version manager such as mise or nvm)." >&2
+  exit 1
+fi
+
+node_version=$(node --version 2>/dev/null)
+node_major=${node_version#v}
+node_major=${node_major%%.*}
+case $node_major in
+  '' | *[!0-9]*) node_major=0 ;;
+esac
+
+if [ "$node_major" -lt "$required_major" ]; then
+  echo "This plugin needs Node.js ${required_major} or newer, but found ${node_version:-an unknown version}." >&2
+  echo "Install a newer version from https://nodejs.org/ (or with a version manager such as mise or nvm)." >&2
+  exit 1
+fi
+
+script_dir=$(cd "$(dirname "$0")" && pwd)
+exec node "$script_dir/../dist/cli.js" "$@"
