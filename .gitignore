@@ -4,3 +4,14 @@ node_modules/
 .idea/
 .vscode/
 .claude/settings.local.json
+
+# Build output: committed only on the release branch.
+plugin/dist/
+# Agent-test results.
+plugin/evals/results/
+
+# Reports of every tool (coverage, test results, e2e traces, agent tests).
+reports/
+
+# Brainstorming journals are working notes and never committed.
+docs/features/*-decisions.md

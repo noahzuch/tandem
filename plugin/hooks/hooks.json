@@ -1,0 +1,15 @@
+{
+  "description": "PLACEHOLDER (F00) — delete in the next feature (F10 replaces this hook). Leaves a trace that the plugin's hooks fire.",
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "date -u '+%Y-%m-%dT%H:%M:%SZ session start' >> \"${CLAUDE_PLUGIN_DATA}/session-start.log\""
+          }
+        ]
+      }
+    ]
+  }
+}

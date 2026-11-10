@@ -1,0 +1,337 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Architecture</title>
+<style>
+:root {
+  --bg: #f7f6f3; --surface: #ffffff; --text: #1d1d1b; --muted: #6b6a66; --line: #e3e1db; --line-strong: #b9b6ae;
+  --accent: #3b5bdb; --accent-soft: #e7ecff; --code: #f0eee9; --note: #fff8e6;
+  --sx-fn: #3b5bdb; --sx-ty: #0f7b6c; --sx-kw: #9c36b5;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #161615; --surface: #1f1f1d; --text: #ecebe7; --muted: #a09e98; --line: #33322f; --line-strong: #5a5853;
+    --accent: #8ea6ff; --accent-soft: #232a45; --code: #2a2927; --note: #2b2618;
+    --sx-fn: #8ea6ff; --sx-ty: #4fd1b8; --sx-kw: #da77f2;
+  }
+}
+body { margin: 0; background: var(--bg); color: var(--text);
+  font: 15px/1.6 -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, sans-serif; }
+main { max-width: 860px; margin: 0 auto; padding: 32px 16px 64px; }
+a { color: var(--accent); }
+h1 { font-size: 28px; margin: 0 0 4px; letter-spacing: -0.01em; }
+h2 { font-size: 21px; margin: 48px 0 12px; padding-top: 8px; border-top: 1px solid var(--line); }
+h3 { font-size: 17px; margin: 28px 0 8px; }
+h4 { font-size: 15px; margin: 22px 0 6px; }
+.meta { color: var(--muted); margin: 0 0 24px; }
+.ph { color: var(--muted); font-style: italic; }
+.note { background: var(--note); border-radius: 8px; padding: 10px 14px; margin: 16px 0; }
+code { font-family: ui-monospace, "SF Mono", Menlo, monospace; font-size: 13px; background: var(--code); padding: 1px 4px; border-radius: 4px; }
+table { width: 100%; border-collapse: collapse; font-size: 14px; margin: 8px 0 16px; }
+th, td { text-align: left; vertical-align: top; padding: 7px 10px; border-bottom: 1px solid var(--line); }
+th { color: var(--muted); font-weight: 600; }
+figure { margin: 16px 0; }
+figcaption { color: var(--muted); font-size: 13px; margin-top: 4px; }
+svg.diagram { display: block; width: 100%; height: auto; }
+svg.diagram text { fill: var(--text); font: 13px -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, sans-serif; }
+svg.diagram text.d-small { fill: var(--muted); font-size: 11px; }
+svg.diagram text.d-title { fill: var(--muted); font-size: 12px; font-weight: 600; }
+.d-box { fill: var(--surface); stroke: var(--text); stroke-width: 1.2; }
+.d-focus { fill: var(--accent-soft); stroke: var(--accent); stroke-width: 1.6; }
+.d-ext { fill: var(--bg); stroke: var(--muted); stroke-width: 1.2; stroke-dasharray: 5 4; }
+.d-frame { fill: none; stroke: var(--line-strong); stroke-width: 1.2; }
+.d-bound { fill: none; stroke: var(--muted); stroke-width: 1.2; stroke-dasharray: 2 4; }
+.d-line { fill: none; stroke: var(--muted); stroke-width: 1.3; }
+.d-ret { stroke-dasharray: 4 3; }
+.d-life { stroke: var(--line-strong); stroke-width: 1; stroke-dasharray: 3 4; }
+.d-head { fill: var(--muted); }
+.d-solid { fill: var(--text); }
+.d-act { fill: var(--surface); stroke: var(--muted); stroke-width: 1.2; }
+.d-note { fill: var(--note); stroke: var(--line-strong); stroke-width: 1; }
+.d-hollow { fill: var(--surface); stroke: var(--muted); stroke-width: 1.2; }
+.d-lane { fill: none; stroke: var(--line-strong); stroke-width: 1; }
+svg.diagram text.d-name { font-weight: 600; }
+svg.diagram text.d-field { font: 12px ui-monospace, "SF Mono", Menlo, monospace; }
+.mockup { border: 1px solid var(--line-strong); border-radius: 10px; background: var(--surface); overflow: hidden; font-size: 14px; }
+.mock-bar { background: var(--code); color: var(--muted); font-size: 12px; padding: 6px 12px; border-bottom: 1px solid var(--line); }
+.mock-body { padding: 14px 16px; }
+.mock-btn { display: inline-block; background: var(--accent); color: var(--surface); border-radius: 6px; padding: 3px 12px; font-size: 13px; }
+.mock-btn.secondary { background: none; color: var(--accent); border: 1px solid var(--accent); }
+.mock-input { display: inline-block; min-width: 55%; border: 1px solid var(--line-strong); border-radius: 6px; padding: 3px 10px; background: var(--bg); }
+.mock-hint { color: var(--muted); font-size: 13px; }
+svg.diagram text.d-member { font: 10px ui-monospace, "SF Mono", Menlo, monospace; }
+svg.diagram .sx-fn { fill: var(--sx-fn); }
+svg.diagram .sx-ty { fill: var(--sx-ty); }
+svg.diagram .sx-kw { fill: var(--sx-kw); }
+svg.diagram .sx-p { fill: var(--muted); }
+.member { margin: 6px 0 6px 20px; }
+</style>
+</head>
+<body>
+<main>
+
+<h1>Architecture</h1>
+<p class="meta">Living document · describes the system as it is now · updated by every feature · last update: F00 · Project setup</p>
+
+<p>This document describes tandem as it is built today. Specs in <a href="../features/index.html">docs/features/</a>
+say what was decided for each feature at the time; the <a href="../adr/README.md">architecture decision records</a>
+say which decisions bind every feature, and why. When a feature is implemented, it updates this document in the same
+pull request.</p>
+
+<p class="meta"><b>Placeholder.</b> Everything under <code>src/</code>, and the plugin's stub skill, hook and
+agent-test case, is a throwaway placeholder from F00 (each file starts with
+<code>PLACEHOLDER (F00) — delete in the next feature</code>). It only gives the tooling real code to run against. The
+next feature deletes it before building anything; what stays is the structure described here.</p>
+
+<h2 id="context">Context</h2>
+<p>To be written by F01 · Session loop. Today tandem has no runtime role: the placeholder CLI prints a greeting and
+starts a local server on 127.0.0.1 that serves a page and one endpoint.</p>
+
+<h2 id="runtime">Runtime</h2>
+<p>To be written by F01 · Session loop, which decides the process model. The placeholder: <code>tandem serve</code>
+starts the built <code>dist/server.js</code> as a child process in the foreground, forwards Ctrl+C and termination
+signals to it and exits with its exit code. The server listens on a free port unless <code>--port</code> is given and
+prints its URL; the page fetches <code>GET /api/hello</code>.</p>
+
+<h2 id="building-blocks">Building blocks</h2>
+<p>The repository has three building blocks: the source code in <code>src/</code>, the plugin folder
+<code>plugin/</code> that the source is built into, and the end-to-end tests in <code>e2e/</code>.</p>
+<figure>
+<svg class="diagram" viewBox="0 0 720 150" role="img" aria-label="Top-level building blocks">
+  <defs><marker id="m-bb0" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="d-head" d="M0,0 L10,5 L0,10 z"/></marker></defs>
+  <rect class="d-frame" x="10" y="10" width="700" height="130" rx="8"/>
+  <text class="d-title" x="24" y="30">tandem · repository root</text>
+  <rect class="d-box" x="40" y="70" width="190" height="40" rx="6"/>
+  <rect class="d-frame" x="43" y="73" width="184" height="34" rx="4"/>
+  <text class="d-name" x="54" y="95">src/</text>
+  <rect class="d-box" x="300" y="70" width="190" height="40" rx="6"/>
+  <rect class="d-frame" x="303" y="73" width="184" height="34" rx="4"/>
+  <text class="d-name" x="314" y="95">plugin/</text>
+  <rect class="d-box" x="560" y="70" width="130" height="40" rx="6"/>
+  <text class="d-name" x="572" y="95">e2e/</text>
+  <line class="d-line d-ret" x1="230" y1="90" x2="298" y2="90" marker-end="url(#m-bb0)"/>
+  <text class="d-small" x="264" y="82" text-anchor="middle">built into</text>
+  <line class="d-line" x1="560" y1="90" x2="492" y2="90" marker-end="url(#m-bb0)"/>
+  <text class="d-small" x="526" y="82" text-anchor="middle">runs</text>
+</svg>
+<figcaption>Top level. Double borders mark parts with their own subsection. <code>src/</code> is built into <code>plugin/dist/</code>; the end-to-end test runs <code>plugin/bin/tandem</code>.</figcaption>
+</figure>
+
+<h3 id="src">src/ and its import rules</h3>
+<p>One folder per runtime environment: <code>cli/</code> and <code>server/</code> run in Node, <code>web/</code> in the
+browser, <code>shared/</code> in both. The rules are enforced by dependency-cruiser (<code>.dependency-cruiser.cjs</code>,
+<code>mise run arch</code>) before each commit that touches <code>src/</code> and in CI
+(<a href="../adr/0002-one-package-with-import-boundaries.md">ADR 0002</a>):</p>
+<ul>
+<li><code>cli</code>, <code>server</code> and <code>web</code> may import <code>shared</code>, but not each other. The
+CLI starts the built server as a process instead of importing its code.</li>
+<li><code>shared</code> imports none of the other folders and no Node built-ins; <code>web</code> imports no Node
+built-ins.</li>
+<li>No circular imports, no orphan modules, no development-only dependency in shipped code.</li>
+</ul>
+<p>TypeScript enforces the environments as well: <code>tsconfig.node.json</code> (Node types) covers
+<code>src/cli</code>, <code>src/server</code>, the end-to-end tests and the tool configs; <code>tsconfig.web.json</code>
+(DOM types) covers <code>src/web</code>; both include <code>src/shared</code>. Unit tests sit next to the code as
+<code>‹name›.test.ts</code>.</p>
+<figure>
+<svg class="diagram" viewBox="0 0 720 420" role="img" aria-label="Parts of src/">
+  <defs><marker id="m-bb1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="d-head" d="M0,0 L10,5 L0,10 z"/></marker></defs>
+  <rect class="d-frame" x="10" y="10" width="700" height="400" rx="8"/>
+  <text class="d-title" x="24" y="30">src/ · src</text>
+  <rect class="d-frame" x="20" y="40" width="220" height="200" rx="6"/>
+  <text class="d-title" x="32" y="58">cli/</text>
+  <rect class="d-box" x="32" y="70" width="196" height="40" rx="6"/>
+  <text class="d-name" x="44" y="88">main.ts</text>
+  <text class="d-small" x="44" y="102">entry of dist/cli.js</text>
+  <rect class="d-box" x="32" y="124" width="196" height="86" rx="6"/>
+  <text class="d-name" x="44" y="143">cli.ts</text>
+  <line class="d-line" x1="32" y1="152" x2="228" y2="152"/>
+  <text class="d-member" x="44" y="168"><tspan class="sx-fn">runCli</tspan><tspan class="sx-p">(</tspan>argv<tspan class="sx-p">:</tspan> <tspan class="sx-ty">string</tspan><tspan class="sx-p">[],</tspan></text>
+  <text class="d-member" x="58" y="184">out<tspan class="sx-p">:</tspan> <tspan class="sx-ty">Writable</tspan><tspan class="sx-p">):</tspan></text>
+  <text class="d-member" x="58" y="200"><tspan class="sx-ty">Promise</tspan><tspan class="sx-p">&lt;</tspan><tspan class="sx-ty">number</tspan><tspan class="sx-p">&gt;</tspan></text>
+  <rect class="d-frame" x="250" y="40" width="220" height="200" rx="6"/>
+  <text class="d-title" x="262" y="58">server/</text>
+  <rect class="d-box" x="262" y="70" width="196" height="40" rx="6"/>
+  <text class="d-name" x="274" y="88">main.ts</text>
+  <text class="d-small" x="274" y="102">entry of dist/server.js</text>
+  <rect class="d-box" x="262" y="124" width="196" height="100" rx="6"/>
+  <text class="d-name" x="274" y="143">server.ts</text>
+  <line class="d-line" x1="262" y1="152" x2="458" y2="152"/>
+  <text class="d-member" x="274" y="168"><tspan class="sx-fn">startServer</tspan><tspan class="sx-p">(</tspan>options<tspan class="sx-p">:</tspan></text>
+  <text class="d-member" x="288" y="184"><tspan class="sx-ty">StartOptions</tspan><tspan class="sx-p">):</tspan></text>
+  <text class="d-member" x="288" y="200"><tspan class="sx-ty">Promise</tspan><tspan class="sx-p">&lt;</tspan><tspan class="sx-ty">RunningServer</tspan><tspan class="sx-p">&gt;</tspan></text>
+  <rect class="d-frame" x="480" y="40" width="220" height="200" rx="6"/>
+  <text class="d-title" x="492" y="58">web/</text>
+  <rect class="d-box" x="492" y="70" width="196" height="40" rx="6"/>
+  <text class="d-name" x="504" y="88">main.ts</text>
+  <text class="d-small" x="504" y="102">entry of dist/web/</text>
+  <rect class="d-box" x="492" y="124" width="196" height="54" rx="6"/>
+  <text class="d-name" x="504" y="143">App.vue</text>
+  <line class="d-line" x1="492" y1="152" x2="688" y2="152"/>
+  <text class="d-member" x="504" y="168">no props</text>
+  <rect class="d-frame" x="150" y="290" width="420" height="110" rx="6"/>
+  <text class="d-title" x="162" y="308">shared/</text>
+  <rect class="d-box" x="165" y="320" width="205" height="62" rx="6"/>
+  <text class="d-name" x="177" y="339">greeting.ts</text>
+  <line class="d-line" x1="165" y1="348" x2="370" y2="348"/>
+  <text class="d-member" x="177" y="368"><tspan class="sx-fn">greeting</tspan><tspan class="sx-p">(</tspan>name<tspan class="sx-p">:</tspan> <tspan class="sx-ty">string</tspan><tspan class="sx-p">):</tspan> <tspan class="sx-ty">string</tspan></text>
+  <rect class="d-box" x="390" y="320" width="165" height="62" rx="6"/>
+  <text class="d-name" x="402" y="339">product.ts</text>
+  <line class="d-line" x1="390" y1="348" x2="555" y2="348"/>
+  <text class="d-member" x="402" y="368">PRODUCT_NAME<tspan class="sx-p">:</tspan> <tspan class="sx-ty">string</tspan></text>
+  <line class="d-line" x1="130" y1="110" x2="130" y2="122" marker-end="url(#m-bb1)"/>
+  <line class="d-line" x1="360" y1="110" x2="360" y2="122" marker-end="url(#m-bb1)"/>
+  <line class="d-line" x1="590" y1="110" x2="590" y2="122" marker-end="url(#m-bb1)"/>
+  <path class="d-line" d="M130,210 V270 H230 V318" marker-end="url(#m-bb1)"/>
+  <line class="d-line" x1="300" y1="224" x2="300" y2="318" marker-end="url(#m-bb1)"/>
+  <path class="d-line" d="M590,178 V270 H500 V318" marker-end="url(#m-bb1)"/>
+  <line class="d-line" x1="370" y1="351" x2="388" y2="351" marker-end="url(#m-bb1)"/>
+  <line class="d-line d-ret" x1="228" y1="140" x2="260" y2="96" marker-end="url(#m-bb1)"/>
+  <text class="d-small" x="236" y="122">spawns</text>
+</svg>
+<figcaption>Parts of <code>src/</code>: the four folders, each drawn with its modules (described in a subsection per folder below). Solid arrows are imports. The dashed arrow is not an import: <code>cli.ts</code> starts the built <code>dist/server.js</code> as a child process.</figcaption>
+</figure>
+<p>Placeholder modules: <code>shared/product.ts</code> holds <code>PRODUCT_NAME</code>, the only place the working name
+appears in code; <code>shared/greeting.ts</code> builds the greeting; <code>server/server.ts</code> is a minimal
+<code>node:http</code> server (<code>GET /api/hello</code>, static files from the built page, 404 for missing files and
+paths that leave the web root, 405 for other methods); <code>cli/cli.ts</code> implements <code>hello [name]</code>
+and <code>serve [--port n]</code>; <code>web/App.vue</code> shows the greeting or “Server not reachable”.</p>
+
+<h3 id="plugin">plugin/</h3>
+<p>The plugin root: exactly what a user installs and what <code>--plugin-dir</code> loads. It contains no code of its
+own; the CLI, server and page come from <code>src/</code> through the build. <code>plugin/</code> has no
+<code>package.json</code>, so Claude Code never installs dependencies for it.</p>
+<figure>
+<svg class="diagram" viewBox="0 0 720 200" role="img" aria-label="Parts of plugin/">
+  <defs><marker id="m-bb2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="d-head" d="M0,0 L10,5 L0,10 z"/></marker></defs>
+  <rect class="d-frame" x="10" y="10" width="700" height="180" rx="8"/>
+  <text class="d-title" x="24" y="30">plugin/ · plugin</text>
+  <rect class="d-box" x="30" y="50" width="190" height="40" rx="6"/>
+  <text class="d-name" x="42" y="75">.claude-plugin/plugin.json</text>
+  <rect class="d-box" x="30" y="120" width="190" height="40" rx="6"/>
+  <text class="d-name" x="42" y="145">skills/tandem/SKILL.md</text>
+  <rect class="d-box" x="265" y="50" width="190" height="40" rx="6"/>
+  <text class="d-name" x="277" y="75">bin/tandem</text>
+  <rect class="d-box" x="265" y="120" width="190" height="40" rx="6"/>
+  <text class="d-name" x="277" y="145">hooks/hooks.json</text>
+  <rect class="d-box" x="500" y="50" width="190" height="40" rx="6"/>
+  <text class="d-name" x="512" y="75">dist/</text>
+  <rect class="d-box" x="500" y="120" width="190" height="40" rx="6"/>
+  <text class="d-name" x="512" y="145">evals/hello/</text>
+  <line class="d-line" x1="455" y1="70" x2="498" y2="70" marker-end="url(#m-bb2)"/>
+  <text class="d-small" x="476" y="62" text-anchor="middle">runs</text>
+  <line class="d-line" x1="220" y1="140" x2="263" y2="80" marker-end="url(#m-bb2)"/>
+  <text class="d-small" x="232" y="104">tells Claude to call</text>
+</svg>
+<figcaption>Parts of <code>plugin/</code>. Claude Code finds each part in its default folder; the skill tells Claude to call <code>bin/tandem</code>, which runs the built CLI in <code>dist/</code>.</figcaption>
+</figure>
+
+<h3 id="e2e">e2e/</h3>
+<p><code>e2e/fixtures.ts</code> provides <code>startCli(args)</code>, which runs <code>plugin/bin/tandem</code>, waits
+for the URL it prints and stops the process after the test. End-to-end tests therefore exercise the entry script and
+the bundles exactly as Claude Code runs them. <code>e2e/hello.spec.ts</code> is placeholder.</p>
+
+<h2 id="concepts">Cross-cutting concepts</h2>
+
+<h3 id="build">Build and bundling</h3>
+<p>One <code>vite.config.ts</code> builds three outputs into <code>plugin/dist/</code>: the page (<code>web/</code>),
+the server (<code>server.js</code>) and the CLI (<code>cli.js</code>). The two Node outputs target Node 24 and inline
+every dependency, so only <code>node:</code> imports remain. Vite also defines a default <code>ssr</code> environment;
+the config's <code>builder.buildApp</code> builds only the three named environments
+(<a href="../adr/0003-bundle-everything-with-vite.md">ADR 0003</a>). <code>plugin/bin/tandem</code> is a bash 3.2
+script that requires Node ≥ 24 and runs <code>dist/cli.js</code>
+(<a href="../adr/0004-node-24-on-users-machines.md">ADR 0004</a>).</p>
+
+<h3 id="tooling">Tooling and checks</h3>
+<p>mise pins Node, pnpm and Claude Code and runs every task (<code>mise.toml</code>). Each checking tool has a local
+task that fixes what it can and a <code>-ci</code> variant that never changes files:</p>
+<table>
+<thead><tr><th>Task</th><th>Tool</th><th>In hooks</th></tr></thead>
+<tbody>
+<tr><td><code>format</code></td><td>Prettier (not <code>docs/</code>)</td><td>pre-commit, staged files</td></tr>
+<tr><td><code>lint</code></td><td>ESLint, typescript-eslint (type-aware), eslint-plugin-vue</td><td>pre-commit, staged files</td></tr>
+<tr><td><code>typecheck</code></td><td>vue-tsc --build</td><td>pre-commit, whole project</td></tr>
+<tr><td><code>arch</code></td><td>dependency-cruiser</td><td>pre-commit, if <code>src/</code> changed</td></tr>
+<tr><td><code>plugin-validate</code></td><td>claude plugin validate --strict</td><td>pre-commit, if the plugin changed</td></tr>
+<tr><td><code>test</code></td><td>Vitest (Node; happy-dom for <code>src/web</code>)</td><td>pre-push, if <code>src/</code> changed</td></tr>
+<tr><td><code>e2e</code></td><td>Playwright Test, Chromium</td><td>never</td></tr>
+<tr><td><code>test-agent</code></td><td>claude plugin eval</td><td>never; on demand only</td></tr>
+</tbody>
+</table>
+<p>The <code>-ci</code> variants fail on any finding and write a machine-readable report to
+<code>reports/&lt;task&gt;/</code> (Prettier and vue-tsc output as logs; ESLint, dependency-cruiser, plugin validation,
+Vitest and Playwright as JSON; Vitest also JUnit and the coverage summary). They contain nothing specific to GitHub.</p>
+<p>Coverage gate (<code>test-ci</code>): every source file changed since <code>COVERAGE_BASE</code> must reach 80 %
+line and branch coverage on its own. It uses Vitest's own <code>coverage.changed</code>: only the changed files
+are measured, each must pass the per-file threshold, and a changed file without tests counts as 0 %. The report in
+<code>reports/coverage/</code> therefore covers only the changed files; <code>mise run test -- --coverage</code>
+measures and gates all files.</p>
+
+<p><b>Known limit (Claude Code 2.1.319):</b> during <code>claude plugin eval</code> runs, the plugin's
+<code>bin/</code> is not on the Bash tool's PATH, so the agent test fails at <code>tandem hello</code> with
+<code>operation not permitted: tandem</code>. The same file runs inside the eval sandbox when called by its absolute
+path, and the bare command works in normal sessions with <code>--plugin-dir</code>. The test is kept as written until
+Claude Code fixes this; F10 should check again before relying on bare commands in agent tests.</p>
+
+<h3 id="ci">CI</h3>
+<p>GitHub Actions on Linux. <code>ci.yml</code>: job <code>check</code> runs <code>mise run check-ci</code> as a matrix,
+once on the pinned Node 24 and once on the latest Node LTS (26, named explicitly), to notice early when a newer Node breaks something.
+<code>check-ci</code> runs with <code>--continue-on-error</code>, so every check runs even when one fails; a
+following step, <code>.github/ci-report.ts</code>, reads the reports and writes the job summary (one row per check,
+then the findings of the failed checks with links to the lines) and the annotations on the pull request. The reports
+are uploaded as an artifact of the run. <code>pr-title.yml</code> checks the pull-request title against Conventional Commits. <code>agent-tests.yml</code> runs
+the agent tests by hand or on the maintainer's <code>agent-tests</code> label. The required checks for
+<code>main</code> are <code>check (pinned)</code>, <code>check (lts)</code> and <code>pr-title</code>; merges are squash only
+(<a href="../adr/0006-setup.md">ADR 0006</a>).</p>
+
+<h2 id="deployment">Deployment</h2>
+<p>The plugin reaches users through the marketplace at the repository root, whose single entry points at
+<code>plugin/</code> on branch <code>release</code> (<a href="../adr/0005-plugin-folder-and-release-branch.md">ADR 0005</a>).
+Until F12 creates the release workflow, the plugin is only used in development.</p>
+<figure>
+<svg class="diagram" viewBox="0 0 720 210" role="img" aria-label="How the plugin reaches a user">
+  <defs><marker id="m-dep" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="d-head" d="M0,0 L10,5 L0,10 z"/></marker></defs>
+  <rect class="d-frame" x="10" y="10" width="330" height="190" rx="8"/>
+  <text class="d-title" x="24" y="30">GitHub repository</text>
+  <rect class="d-box" x="26" y="44" width="140" height="62" rx="6"/>
+  <text class="d-name" x="38" y="66">branch main</text>
+  <text class="d-small" x="38" y="84">sources, no dist/</text>
+  <text class="d-small" x="38" y="98">marketplace.json</text>
+  <rect class="d-box d-ext" x="186" y="44" width="140" height="62" rx="6"/>
+  <text class="d-name" x="198" y="66">branch release</text>
+  <text class="d-small" x="198" y="84">plugin/ with dist/</text>
+  <text class="d-small" x="198" y="98">(written by F12)</text>
+  <rect class="d-box" x="26" y="130" width="300" height="54" rx="6"/>
+  <text class="d-name" x="38" y="152">mise run claude-dev</text>
+  <text class="d-small" x="38" y="170">--plugin-dir plugin, built working tree, one session</text>
+  <rect class="d-frame" x="380" y="10" width="330" height="190" rx="8"/>
+  <text class="d-title" x="394" y="30">User's machine (macOS, Linux)</text>
+  <rect class="d-box d-ext" x="396" y="44" width="300" height="62" rx="6"/>
+  <text class="d-name" x="408" y="66">Claude Code</text>
+  <text class="d-small" x="408" y="84">marketplace from main, plugin via git-subdir</text>
+  <text class="d-small" x="408" y="98">plugin/ on release → plugin cache</text>
+  <rect class="d-box" x="396" y="130" width="300" height="54" rx="6"/>
+  <text class="d-name" x="408" y="152">bin/tandem → node ≥ 24 → dist/cli.js</text>
+  <text class="d-small" x="408" y="170">no install step, no node_modules</text>
+  <line class="d-line" x1="166" y1="75" x2="184" y2="75" marker-end="url(#m-dep)"/>
+  <path class="d-line" d="M326,75 H394" marker-end="url(#m-dep)"/>
+  <line class="d-line" x1="546" y1="106" x2="546" y2="128" marker-end="url(#m-dep)"/>
+</svg>
+<figcaption>Deployment. Dashed boxes are not built by tandem: Claude Code, and the release branch, which F12's release workflow will produce. During development the plugin is loaded in place from the working tree.</figcaption>
+</figure>
+
+<h2 id="decisions">Decisions</h2>
+<ul>
+<li><a href="../adr/0001-working-conventions.md">0001 · Working conventions</a></li>
+<li><a href="../adr/0002-one-package-with-import-boundaries.md">0002 · One package with enforced import boundaries</a></li>
+<li><a href="../adr/0003-bundle-everything-with-vite.md">0003 · All runtime dependencies bundled; Vite builds every output</a></li>
+<li><a href="../adr/0004-node-24-on-users-machines.md">0004 · Node 24 or newer on users' machines</a></li>
+<li><a href="../adr/0005-plugin-folder-and-release-branch.md">0005 · The plugin lives in plugin/ and reaches users through a release branch</a></li>
+<li><a href="../adr/0006-setup.md">0006 · Setup</a></li>
+</ul>
+
+</main>
+</body>
+</html>

@@ -20,8 +20,11 @@
   Rules for the whole document
   - Reading order: every section may only rely on what came before it. If two parts truly depend on each other,
     link instead of repeating.
-  - State each fact once. Link to other specs, SUMMARY.html, spike READMEs or the brainstorming journal instead
-    of restating them; a copy goes stale.
+  - State each fact once. Link to other specs, the architecture document or ADRs instead of restating them; a
+    copy goes stale.
+  - Self-contained: the spec never relies on a spike, the spike summary or a brainstorming journal to explain its
+    content. Journals are never committed, and spikes live only on branch `spike`. A spike may be mentioned as a
+    soft reference — the branch and a path as text (branch `spike`, `09-shell-sidebar/README.md`), never a link.
   - Explain the reason behind every decision that isn't obvious.
   - No numbers in headings. Point to a section by linking its id (<a href="#solution">).
   - Diagrams are inline SVG using the d-* classes from the <style> below, so they work in light and dark mode
@@ -137,7 +140,7 @@ The guidance for each section is in HTML comments in the source. Delete this not
     for every rule that isn't obvious.
   - No implementation: no components, protocols or storage. If a rule exists for a technical reason, state the
     rule here and link to the Solution design subsection that explains it.
-  - Show what the user will see. Either a screenshot (e.g. from a spike: <img src="../../‹NN-spike›/screenshot.png">)
+  - Show what the user will see. Either a screenshot saved next to the spec (not a link into a spike)
     or an HTML mockup built from the mock-* classes in <style>, inside a <figure> whose caption starts with
     "Mockup:". Mockups are static HTML and CSS only, never scripts (tandem shows scripts as inert chips). Use
     realistic content, and show the states that matter, not only the happy path. Say in the caption what is
@@ -338,14 +341,15 @@ The guidance for each section is in HTML comments in the source. Delete this not
 <!--
   DECISIONS — the choices that shaped this spec, with the alternatives that were rejected.
   One row per decision. The reason for the chosen option lives in the Solution design section it belongs to;
-  link there. Here, say why each alternative lost. If the decision was made in the brainstorming journal, link
-  the journal entry (D-n) instead of repeating its discussion.
+  link there. Here, say why each alternative lost. Every accepted decision from the brainstorming journal is
+  stated here with its rejected alternatives, since the journal is never committed; decisions that bind later
+  features also get an ADR in docs/adr/.
 -->
 <h2 id="decisions">Decisions</h2>
 <table>
 <thead><tr><th>Decision</th><th>Rejected alternatives and why</th><th>Details</th></tr></thead>
 <tbody>
-<tr><td class="ph">‹What was decided›</td><td class="ph">‹Alternative — why it lost›</td><td class="ph">‹link to solution section / journal entry›</td></tr>
+<tr><td class="ph">‹What was decided›</td><td class="ph">‹Alternative — why it lost›</td><td class="ph">‹link to solution section›</td></tr>
 </tbody>
 </table>
 

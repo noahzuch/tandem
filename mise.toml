@@ -1,0 +1,172 @@
+# Pinned tools and the project's tasks. `mise install` installs the tools and then runs `mise run setup`.
+#
+# Claude Code is pinned per task, not in [tools]: the tasks that check the plugin (plugin-validate*, test-agent*) run
+# exactly the version the README names as "tested with", while `claude` in a shell in this repository (and
+# `mise run claude-dev`) stays the developer's own installation. mise installs the pinned version on first use. mise
+# installs npm tools without running their install scripts, so the postinstall links Claude Code's native binary.
+# The version appears in four tasks below; change all of them together.
+
+[tools]
+node = "24.22.2"
+pnpm = "12.18.0"
+
+[settings]
+# Install npm-based tools with npm, independent of each developer's global mise setting.
+npm.package_manager = "npm"
+# Put the pinned tools ahead of PATH entries that come before mise's (e.g. a Node from nvm), so tasks and the shell in
+# this repository always use the pinned versions.
+activate_aggressive = true
+
+[hooks]
+# Runs only when mise actually installed a tool; after a pull that changed dependencies, run `mise run setup` by hand.
+postinstall = "mise run setup"
+
+[env]
+_.path = ["{{config_root}}/node_modules/.bin"]
+
+# ---------------------------------------------------------------------------------------------------------------------
+# Plain tasks
+
+[tasks.setup]
+description = "Install dependencies, the Playwright browser and the git hooks"
+run = [
+  "pnpm install --frozen-lockfile",
+  "playwright install chromium",
+  "lefthook install",
+]
+
+[tasks.build]
+description = "Build page, server and CLI into plugin/dist/"
+run = "vite build"
+sources = ["src/**/*", "vite.config.ts", "package.json", "pnpm-lock.yaml", "tsconfig*.json"]
+outputs = ["plugin/dist/cli.js", "plugin/dist/server.js", "plugin/dist/web/index.html"]
+
+[tasks.serve]
+description = "Build and run the placeholder server (tandem serve)"
+depends = ["build"]
+run = "plugin/bin/tandem serve"
+raw = true
+
+[tasks.claude-dev]
+description = "Build and start your own Claude Code with the plugin loaded from plugin/ for this session"
+depends = ["build"]
+run = "claude --plugin-dir plugin"
+raw = true
+
+# ---------------------------------------------------------------------------------------------------------------------
+# One task per tool: the local task fixes what it can, the -ci variant never changes files, fails on any finding and
+# writes a machine-readable report to reports/<task>/. The -ci tasks know nothing about GitHub: the CI workflow reads
+# the reports afterwards (.github/ci-report.ts). They run in bash with pipefail, so `| tee` keeps the tool's exit code.
+
+[tasks.format]
+description = "Format code and config files (not docs/)"
+run = "prettier --write --log-level warn ."
+
+[tasks.format-ci]
+shell = "bash -c -o errexit -o pipefail"
+run = ["mkdir -p reports/format", "prettier --check . 2>&1 | tee reports/format/prettier.log"]
+
+[tasks.lint]
+description = "Lint TypeScript and Vue, applying safe fixes"
+wait_for = ["format"] # both write files
+run = "eslint --fix ."
+
+[tasks.lint-ci]
+# The JSON report goes to the file only; on findings, ESLint runs again to show them in the log.
+shell = "bash -c -o errexit -o pipefail"
+run = """
+mkdir -p reports/lint
+eslint --max-warnings 0 --format json --output-file reports/lint/eslint.json . || { eslint --max-warnings 0 .; exit 1; }
+"""
+
+[tasks.typecheck]
+description = "Type-check the whole project"
+run = "vue-tsc --build"
+
+[tasks.typecheck-ci]
+shell = "bash -c -o errexit -o pipefail"
+run = ["mkdir -p reports/typecheck", "vue-tsc --build --pretty false 2>&1 | tee reports/typecheck/vue-tsc.log"]
+
+[tasks.arch]
+description = "Check the import rules between the source folders"
+run = "depcruise src"
+
+[tasks.arch-ci]
+# depcruise writes the JSON report; depcruise-fmt prints it for the log and sets the exit code.
+shell = "bash -c -o errexit -o pipefail"
+run = [
+  "mkdir -p reports/arch",
+  "depcruise src --output-type json --output-to reports/arch/depcruise.json || true",
+  "depcruise-fmt --exit-code --output-type err-long reports/arch/depcruise.json",
+]
+
+[tasks.plugin-validate]
+tools = { "npm:@anthropic-ai/claude-code" = { version = "2.1.319", postinstall = "node \"$MISE_TOOL_INSTALL_PATH/lib/node_modules/@anthropic-ai/claude-code/install.cjs\"" } }
+description = "Validate the plugin and marketplace manifests strictly"
+run = ["claude plugin validate --strict plugin", "claude plugin validate --strict ."]
+
+[tasks.plugin-validate-ci]
+tools = { "npm:@anthropic-ai/claude-code" = { version = "2.1.319", postinstall = "node \"$MISE_TOOL_INSTALL_PATH/lib/node_modules/@anthropic-ai/claude-code/install.cjs\"" } }
+shell = "bash -c -o errexit -o pipefail"
+run = """
+mkdir -p reports/plugin-validate
+status=0
+claude plugin validate --strict --json plugin | tee reports/plugin-validate/plugin.json || status=1
+claude plugin validate --strict --json . | tee reports/plugin-validate/marketplace.json || status=1
+exit $status
+"""
+
+[tasks.test]
+description = "Run the unit tests"
+run = "vitest run"
+
+[tasks.test-ci]
+description = "Run the unit tests; coverage is measured and gated for the files changed since COVERAGE_BASE"
+run = """
+vitest run --coverage --coverage.changed="${COVERAGE_BASE:-origin/main}" --reporter=default \
+  --reporter=junit --outputFile.junit=reports/unit/junit.xml --reporter=json --outputFile.json=reports/unit/results.json
+"""
+
+[tasks.e2e]
+description = "Run the end-to-end tests against the built plugin"
+depends = ["build"]
+run = "playwright test"
+
+[tasks.e2e-ci]
+depends = ["build"]
+env = { PLAYWRIGHT_HTML_OUTPUT_DIR = "reports/e2e/html", PLAYWRIGHT_HTML_OPEN = "never", PLAYWRIGHT_JSON_OUTPUT_FILE = "reports/e2e/results.json" }
+run = "playwright test --reporter=list,html,json"
+
+[tasks.test-agent]
+tools = { "npm:@anthropic-ai/claude-code" = { version = "2.1.319", postinstall = "node \"$MISE_TOOL_INSTALL_PATH/lib/node_modules/@anthropic-ai/claude-code/install.cjs\"" } }
+description = "Run the agent tests (costs model usage)"
+depends = ["build"]
+run = """
+claude plugin eval plugin --runs 1 --ablation none --no-publish --allow-tools 'Bash(tandem hello*)' \
+  --output-dir reports/agent-tests --report reports/agent-tests/report.html
+"""
+
+[tasks.test-agent-ci]
+tools = { "npm:@anthropic-ai/claude-code" = { version = "2.1.319", postinstall = "node \"$MISE_TOOL_INSTALL_PATH/lib/node_modules/@anthropic-ai/claude-code/install.cjs\"" } }
+depends = ["build"]
+run = """
+claude plugin eval plugin --runs 1 --ablation none --no-publish --trust-plugin \
+  --allow-tools 'Bash(tandem hello*)' \
+  --threshold 1 --max-cost-usd 2 --json reports/agent-tests/result.json \
+  --output-dir reports/agent-tests --report reports/agent-tests/report.html
+"""
+
+# ---------------------------------------------------------------------------------------------------------------------
+# Aggregates: mise runs the listed tasks in parallel where it can.
+
+[tasks.check-fast]
+description = "Everything except the tests"
+depends = ["format", "lint", "typecheck", "arch", "plugin-validate"]
+
+[tasks.check]
+description = "Everything, including unit and end-to-end tests"
+depends = ["check-fast", "test", "e2e"]
+
+[tasks.check-ci]
+description = "Exactly what CI runs"
+depends = ["format-ci", "lint-ci", "typecheck-ci", "arch-ci", "plugin-validate-ci", "test-ci", "e2e-ci", "build"]

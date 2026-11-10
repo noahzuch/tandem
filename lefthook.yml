@@ -1,0 +1,48 @@
+# Git hooks: fast feedback before anything leaves the machine. CI is still the gate and sets LEFTHOOK=0.
+# A job runs only when a staged (pre-commit) or pushed (pre-push) file matches its glob. Jobs given {staged_files}
+# run on those files; the others run on the whole project, because an edit to one file can break another.
+# Budget: about 10 s for pre-commit and 60 s for pre-push on a typical change. Never skip hooks; fix the cause.
+
+glob_matcher: doublestar
+
+pre-commit:
+  # First the fixers, one after the other (both write the staged files), then the read-only checks in parallel on
+  # the fixed files.
+  piped: true
+  jobs:
+    - name: fix
+      group:
+        piped: true
+        jobs:
+          - name: lint
+            glob: '**/*.{ts,vue,js,cjs}'
+            run: mise exec -- eslint --fix --no-warn-ignored {staged_files}
+            stage_fixed: true
+
+          - name: format
+            glob: '**/*'
+            exclude: ['docs/**']
+            run: mise exec -- prettier --write --ignore-unknown --log-level warn {staged_files}
+            stage_fixed: true
+
+    - name: check
+      group:
+        parallel: true
+        jobs:
+          - name: typecheck
+            glob: ['**/*.{ts,vue}', 'tsconfig*.json']
+            run: mise run typecheck
+
+          - name: arch
+            glob: 'src/**'
+            run: mise run arch
+
+          - name: plugin-validate
+            glob: ['plugin/**', '.claude-plugin/**']
+            run: mise run plugin-validate
+
+pre-push:
+  jobs:
+    - name: test
+      glob: 'src/**'
+      run: mise run test
