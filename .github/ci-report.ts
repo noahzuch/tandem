@@ -39,8 +39,12 @@ interface CheckResult {
 // ---------------------------------------------------------------------------------------------------------------------
 // Reading reports
 
+// eslint-disable-next-line no-control-regex -- matching the escape character is the point
+const stripAnsi = (text: string): string => text.replace(/\u001b\[[0-9;]*m/g, '');
+
+/** Reads a report; without colour codes, which tools add in CI even when they write through a pipe. */
 function readText(path: string): string | undefined {
-  return existsSync(path) ? readFileSync(path, 'utf8') : undefined;
+  return existsSync(path) ? stripAnsi(readFileSync(path, 'utf8')) : undefined;
 }
 
 function readJson<T>(path: string): T | undefined {
@@ -61,9 +65,6 @@ const missing = (name: string, report: string): CheckResult => ({
 });
 
 const toRepoPath = (file: string): string => (isAbsolute(file) ? relative(process.cwd(), file) : file);
-
-// eslint-disable-next-line no-control-regex -- matching the escape character is the point
-const stripAnsi = (text: string): string => text.replace(/\u001b\[[0-9;]*m/g, '');
 
 /** Drops the stack frames of an error message; the annotation sits on the line already. */
 const withoutStack = (text: string): string =>
@@ -460,7 +461,16 @@ function summaryMarkdown(results: CheckResult[]): string {
 
 const results = [format(), lint(), typecheck(), arch(), pluginValidate(), unitTests(), coverage(), e2e(), build()];
 
-for (const finding of results.flatMap((result) => result.findings)) console.log(annotation(finding));
+/**
+ * The findings of all checks, interleaved: the first of every check, then the second of every check, and so on.
+ * GitHub shows only the first 10 errors and 10 warnings of a step as annotations, so that every failed check gets one.
+ */
+function interleaved(lists: Finding[][]): Finding[] {
+  const longest = Math.max(0, ...lists.map((list) => list.length));
+  return Array.from({ length: longest }, (_, index) => lists.flatMap((list) => list[index] ?? [])).flat();
+}
+
+for (const finding of interleaved(results.map((result) => result.findings))) console.log(annotation(finding));
 
 const markdown = summaryMarkdown(results);
 if (process.env.GITHUB_STEP_SUMMARY) appendFileSync(process.env.GITHUB_STEP_SUMMARY, markdown);
