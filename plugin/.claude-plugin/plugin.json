@@ -4,5 +4,6 @@
   "description": "Write and edit HTML documents together with Claude in a live browser editor",
   "author": { "name": "Noah Zuch" },
   "license": "MIT",
+  "ciReportDemo": "unknown field, deliberate plugin-validate failure",
   "repository": "https://github.com/noahzuch/tandem"
 }
