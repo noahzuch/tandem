@@ -133,7 +133,9 @@ built-ins.</li>
 </ul>
 <p>TypeScript enforces the environments as well: <code>tsconfig.node.json</code> (Node types) covers
 <code>src/cli</code>, <code>src/server</code>, the end-to-end tests and the tool configs; <code>tsconfig.web.json</code>
-(DOM types) covers <code>src/web</code>; both include <code>src/shared</code>. Unit tests sit next to the code as
+(DOM types) covers <code>src/web</code>; both include <code>src/shared</code>. A third project,
+<code>.github/tsconfig.json</code> (Node types), covers the CI scripts in <code>.github/</code>, which Node runs
+directly without a build. Unit tests sit next to the code as
 <code>‹name›.test.ts</code>.</p>
 <figure>
 <svg class="diagram" viewBox="0 0 720 420" role="img" aria-label="Parts of src/">
@@ -280,7 +282,9 @@ Claude Code fixes this; F10 should check again before relying on bare commands i
 once on the pinned Node 24 and once on the latest Node LTS (26, named explicitly), to notice early when a newer Node breaks something.
 <code>check-ci</code> runs with <code>--continue-on-error</code>, so every check runs even when one fails; a
 following step, <code>.github/ci-report.ts</code>, reads the reports and writes the job summary (one row per check,
-then the findings of the failed checks with links to the lines) and the annotations on the pull request. The reports
+then the findings of the failed checks with links to the lines) and the annotations on the pull request. GitHub
+shows only 10 errors and 10 warnings per step as annotations, so the step interleaves the findings: one of every failed
+check first, then the second of each, and so on; the summary lists all of them. The reports
 are uploaded as an artifact of the run. <code>pr-title.yml</code> checks the pull-request title against Conventional Commits. <code>agent-tests.yml</code> runs
 the agent tests by hand or on the maintainer's <code>agent-tests</code> label. The required checks for
 <code>main</code> are <code>check (pinned)</code>, <code>check (lts)</code> and <code>pr-title</code>; merges are squash only
