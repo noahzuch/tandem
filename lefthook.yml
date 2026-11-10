@@ -30,7 +30,7 @@ pre-commit:
         parallel: true
         jobs:
           - name: typecheck
-            glob: ['**/*.{ts,vue}', 'tsconfig*.json']
+            glob: ['**/*.{ts,vue}', '**/tsconfig*.json']
             run: mise run typecheck
 
           - name: arch

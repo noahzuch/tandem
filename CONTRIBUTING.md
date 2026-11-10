@@ -38,8 +38,8 @@ before a push; if they get slower, make the tools faster.
 2. Open a pull request to `main`. Its title follows [Conventional Commits](https://www.conventionalcommits.org/):
    `type(scope)?: description`, type one of `feat`, `fix`, `docs`, `style`, `refactor`, `perf`, `test`, `build`, `ci`,
    `chore`, `revert`. The `pr-title` check enforces it.
-3. All required checks must be green: `check (pinned)`, `check (lts)`, `pr-title`. Lint and type errors appear as annotations
-   on the changed lines.
+3. All required checks must be green: `check (pinned)`, `check (lts)`, `pr-title`. Every finding appears as an
+   annotation on its line, and the job summary lists the result of every check.
 4. The pull request is squash-merged: one pull request becomes one commit on `main`, with the title as message.
 
 Nobody pushes to `main` directly. **Coverage gate:** every file a pull request adds or changes under `src/` must reach
