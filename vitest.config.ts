@@ -8,6 +8,8 @@ import { defineConfig } from 'vitest/config';
 
 export default defineConfig({
   test: {
+    // Test locations in the JSON report, so that CI can annotate the line of a failed test.
+    includeTaskLocation: true,
     projects: [
       {
         test: {
@@ -32,6 +34,8 @@ export default defineConfig({
       exclude: ['src/**/*.test.ts', 'src/**/*.d.ts'],
       reporter: [['text', { skipFull: false }], 'html', 'json-summary'],
       reportsDirectory: 'reports/coverage',
+      // Also when a test fails, so that CI reports coverage next to the failed test.
+      reportOnFailure: true,
       thresholds: { perFile: true, lines: 80, branches: 80 },
     },
   },

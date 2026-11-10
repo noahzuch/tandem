@@ -18,8 +18,10 @@ changes files and fails on any finding: `format`, `lint`, `typecheck`, `arch` (i
 `test-agent` (agent tests, costs model usage). Aggregates: `check-fast` (everything but tests), `check` (everything),
 `check-ci` (exactly what CI runs). Plain tasks: `setup`, `build`, `serve`, `claude-dev`.
 
-Every report a tool writes goes to the git-ignored `reports/` folder: `coverage/`, `unit/junit.xml`, `e2e/html/` and
-`e2e/results/` (traces and screenshots of failed end-to-end tests), `arch.md` and `agent-tests/`.
+Every report a tool writes goes to the git-ignored `reports/` folder, one subfolder per task: `format/`, `lint/`,
+`typecheck/`, `arch/`, `plugin-validate/`, `unit/` (JUnit and JSON), `coverage/`, `e2e/` (JSON, `html/`, and
+`results/` with traces and screenshots of failed tests) and `agent-tests/`. The `-ci` tasks know nothing about GitHub;
+in CI, `.github/ci-report.ts` reads their reports afterwards and writes the job summary and the annotations.
 
 ## Git hooks
 

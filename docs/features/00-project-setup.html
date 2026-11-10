@@ -491,18 +491,24 @@ tasks itself. The skeleton measures a baseline for the time budget — about 10 
 <thead><tr><th>Task</th><th>Local command</th><th><code>-ci</code> variant and report</th></tr></thead>
 <tbody>
 <tr><td><code>format</code></td><td><code>prettier --write .</code></td><td><code>prettier --check .</code></td></tr>
-<tr><td><code>lint</code></td><td><code>eslint --fix .</code></td><td><code>eslint .</code> with a formatter that emits GitHub annotations</td></tr>
-<tr><td><code>typecheck</code></td><td><code>vue-tsc --build</code></td><td>Same; a problem matcher turns errors into annotations</td></tr>
-<tr><td><code>arch</code></td><td><code>depcruise src</code></td><td>Same, plus a Markdown report in the job summary</td></tr>
+<tr><td><code>lint</code></td><td><code>eslint --fix .</code></td><td><code>eslint .</code> with a JSON report</td></tr>
+<tr><td><code>typecheck</code></td><td><code>vue-tsc --build</code></td><td>Same, output kept as a log</td></tr>
+<tr><td><code>arch</code></td><td><code>depcruise src</code></td><td>Same, plus a JSON report</td></tr>
 <tr><td><code>plugin-validate</code></td><td><code>claude plugin validate --strict plugin</code> and on the repository root (marketplace)</td><td>Same with <code>--json</code></td></tr>
-<tr><td><code>test</code></td><td><code>vitest run</code></td><td><code>vitest run --coverage</code> with GitHub, JUnit and summary reporters</td></tr>
-<tr><td><code>e2e</code></td><td><code>playwright test</code> (after <code>build</code>)</td><td>Same with the GitHub reporter; HTML report and traces uploaded on failure</td></tr>
+<tr><td><code>test</code></td><td><code>vitest run</code></td><td><code>vitest run --coverage</code> with JUnit and JSON reporters and the coverage summary</td></tr>
+<tr><td><code>e2e</code></td><td><code>playwright test</code> (after <code>build</code>)</td><td>Same with JSON and HTML reporters; HTML report and traces uploaded on failure</td></tr>
 <tr><td><code>test-agent</code></td><td><code>claude plugin eval plugin --runs 1</code></td><td><code>claude plugin eval plugin --json --threshold … --max-cost-usd … --trust-plugin</code></td></tr>
 <tr><td><code>check-fast</code></td><td>format, lint, typecheck, arch, plugin-validate</td><td>—</td></tr>
 <tr><td><code>check</code></td><td><code>check-fast</code> + <code>test</code> + <code>e2e</code></td><td>—</td></tr>
 <tr><td><code>check-ci</code></td><td>—</td><td>all <code>-ci</code> variants except <code>test-agent-ci</code>, plus <code>build</code></td></tr>
 </tbody>
 </table>
+<p>The <code>-ci</code> variants write their reports to <code>reports/&lt;task&gt;/</code> and contain nothing specific
+to GitHub. CI runs <code>check-ci</code> with <code>--continue-on-error</code>, so that one run reports every finding,
+and then a step (<code>.github/ci-report.ts</code>) reads the reports and writes the job summary — one row per check,
+then the findings of the failed checks with links to the lines — and the annotations. Rejected: GitHub reporters and
+problem matchers inside the tasks — every tool then writes its own summary section in its own style, and the tasks
+call GitHub-specific code.</p>
 <p>Unit tests use Vitest with two projects: Node for <code>src/cli</code>, <code>src/server</code> and
 <code>src/shared</code>, and happy-dom, a simulated DOM, for <code>src/web</code>. Most Vue components can be tested
 without a real browser; tests that need one — expected for the interactive Tiptap integration in F04 — switch to

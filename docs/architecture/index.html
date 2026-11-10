@@ -260,6 +260,9 @@ task that fixes what it can and a <code>-ci</code> variant that never changes fi
 <tr><td><code>test-agent</code></td><td>claude plugin eval</td><td>never; on demand only</td></tr>
 </tbody>
 </table>
+<p>The <code>-ci</code> variants fail on any finding and write a machine-readable report to
+<code>reports/&lt;task&gt;/</code> (Prettier and vue-tsc output as logs; ESLint, dependency-cruiser, plugin validation,
+Vitest and Playwright as JSON; Vitest also JUnit and the coverage summary). They contain nothing specific to GitHub.</p>
 <p>Coverage gate (<code>test-ci</code>): every source file changed since <code>COVERAGE_BASE</code> must reach 80 %
 line and branch coverage on its own. It uses Vitest's own <code>coverage.changed</code>: only the changed files
 are measured, each must pass the per-file threshold, and a changed file without tests counts as 0 %. The report in
@@ -275,7 +278,10 @@ Claude Code fixes this; F10 should check again before relying on bare commands i
 <h3 id="ci">CI</h3>
 <p>GitHub Actions on Linux. <code>ci.yml</code>: job <code>check</code> runs <code>mise run check-ci</code> as a matrix,
 once on the pinned Node 24 and once on the latest Node LTS (26, named explicitly), to notice early when a newer Node breaks something.
-<code>pr-title.yml</code> checks the pull-request title against Conventional Commits. <code>agent-tests.yml</code> runs
+<code>check-ci</code> runs with <code>--continue-on-error</code>, so every check runs even when one fails; a
+following step, <code>.github/ci-report.ts</code>, reads the reports and writes the job summary (one row per check,
+then the findings of the failed checks with links to the lines) and the annotations on the pull request. The reports
+are uploaded as an artifact of the run. <code>pr-title.yml</code> checks the pull-request title against Conventional Commits. <code>agent-tests.yml</code> runs
 the agent tests by hand or on the maintainer's <code>agent-tests</code> label. The required checks for
 <code>main</code> are <code>check (pinned)</code>, <code>check (lts)</code> and <code>pr-title</code>; merges are squash only
 (<a href="../adr/0006-setup.md">ADR 0006</a>).</p>

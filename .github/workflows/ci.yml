@@ -72,11 +72,14 @@ jobs:
             echo "COVERAGE_BASE=HEAD~1" >> "$GITHUB_ENV"
           fi
 
-      - name: Annotate type errors
-        run: echo "::add-matcher::.github/tsc-problem-matcher.json"
-
+      # Runs every check even when one fails, so that one run reports all findings.
       - name: mise run check-ci
-        run: mise run check-ci
+        run: mise run --continue-on-error check-ci
+
+      # Turns the reports the checks wrote into the job summary and annotations on the pull request.
+      - name: Report
+        if: ${{ !cancelled() }}
+        run: node .github/ci-report.ts
 
       # Every report the tools wrote: coverage, JUnit, import rules, end-to-end report (traces on failure).
       - name: Upload reports
